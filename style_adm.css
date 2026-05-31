@@ -1,0 +1,132 @@
+
+/* Alapbeállítások */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.admin_container {
+    display: flex;
+    height: 100vh;              /* teljes képernyőmagasság */
+}
+
+/* Bal oldali menü (Box1) */
+.admin_box1 {
+    width: 12%;              /* kb. 1/6 szélesség */
+    background-color: #281b6d;  /* csak láthatóság miatt */
+    padding: 20px;
+    border-right: 2px solid #ccc;
+    font-family: Arial, sans-serif;
+}
+
+/* Jobb oldali tartalom konténer */
+.admin_container2 {
+    flex: 1;                    /* kitölti a maradék helyet */
+    display: flex;
+    flex-direction: column;     /* Box2 és Box3 egymás alatt */
+}
+
+/* Felső sáv (Box2) */
+.admin_box2 {
+    height: 60px;               /* keskeny felső sáv */
+    background-color: #ffffff;
+    padding: 15px;
+    border-bottom: 2px solid #ccc;
+    display: flex;              /* flexbox bekapcsolása */
+    justify-content: flex-end;  /* vízszintesen jobbra igazít */
+    align-items: center;        /* függőlegesen középre igazít */
+}
+
+/* Alsó tartalom (Box3) */
+.admin_box3 {
+    flex: 1;                    /* kitölti a maradék helyet */
+    background-color: #ffffff;
+    padding: 20px;
+    overflow-y: auto;           /* ha sok tartalom van, görgethető */
+}
+
+.operator_container {
+    display: flex;
+    height: 100vh;              /* teljes képernyőmagasság */
+}
+
+/* Bal oldali menü (Box1) */
+.operator_box1 {
+    width: 12%;              /* kb. 1/6 szélesség */
+    background-color: #310a10;  /* csak láthatóság miatt */
+    padding: 5px;
+    border-right: 2px solid #ccc;
+}
+
+/* Jobb oldali tartalom konténer */
+.operator_container2 {
+    flex: 1;                    /* kitölti a maradék helyet */
+    display: flex;
+    flex-direction: column;     /* Box2 és Box3 egymás alatt */
+}
+
+/* Felső sáv (Box2) */
+.operator_box2 {
+    height: 60px;               /* keskeny felső sáv */
+    background-color: #ffffff;
+    padding: 15px;
+    border-bottom: 2px solid #ccc;
+    display: flex;              /* flexbox bekapcsolása */
+    justify-content: flex-end;  /* vízszintesen jobbra igazít */
+    align-items: center;        /* függőlegesen középre igazít */
+}
+
+/* Alsó tartalom (Box3) */
+.operator_box3 {
+    flex: 1;                    /* kitölti a maradék helyet */
+    background-color: #ffffff;
+    padding: 20px;
+    overflow-y: auto;           /* ha sok tartalom van, görgethető */
+}
+
+.menu_category {
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding: 8px;
+    background: #281b6d;
+    border-radius: 4px;
+    color: #cdcbcb;
+}
+
+.menu_items {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* jobbra zárás */
+    margin-bottom: 15px;
+    padding-right: 5px;
+}
+
+
+.menu_items a {
+    text-decoration: none;
+    color: #cdcbcb;
+    background: #e8e8e800;
+    padding: 4px 8px;
+    margin: 2px 0;
+    border-radius: 3px;
+    width: fit-content;
+    font-family: "Segoe UI", Arial, sans-serif; /* modern font */
+    font-size: 13px;                            /* kisebb betű */
+    font-weight: 300; /* vékonyabb betű */
+}
+
+.menu_items a:hover {
+    color: #d6d6d6;                /* erősebb szín hoverre */
+    font-weight: bold;          /* vastagabb lesz */
+    background: #e0e0e000;        /* enyhe háttér */
+}
+
+.logo_category {
+    height: 160px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding: 8px;
+    background: #281b6d;
+    border-radius: 4px;
+}

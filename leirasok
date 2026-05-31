@@ -1,0 +1,8 @@
+
+Hash-elt jelszó - bycript (hashelt_jelszavak.php)
+
+Jogosultságok:
+0 - operator (felhasználó)
+1 - administrator (dolgozó)
+2 - moderator (látja az administratorokat is)
+3 - superuser (mindent lát)

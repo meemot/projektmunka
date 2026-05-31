@@ -1,0 +1,39 @@
+eszköz állapot:
+uj, ujszerú, használt, selejt (már nincs) 
+
+szűrhető raktáron van vagy van valakinél
+
+kiadás -> eszköz mozgás
+kiadást és visszavétet külön kell szedni
+
+kategória: pda, védőeszközök 
+
+védőeszközök: cipő, esőkabát, láthatósági mellény van méret: 42, 44, xl, xs,
+pda: samsung s23, s24, a53 azonosítő: (IMEI szám)
+
+
+
+---------------------
+
+váratlan eseményre hibaág (hibakezelés)
+kategória táblát létre kell hozni (id, elnevezés)
+eszköz állapot táblát is létrehozni
+eszköz tábába felvezetni a kategória és állapot mezőket
+eszközökbe csak az eszközök tulajdonságai:
+    kiadás dátum nem kell
+    azonosító -> gyári szám
+    méret: egy oszlopban, string, itt lesz a 42, 43 és az l, m, xl is
+
+kiadás tábla:
+    + oszlopot felvinni, hogy ki van e adva? (kiadva, true-fals, vagy 0-1)
+
+
+ami fontos lesz a szűrésnél az ne legyen üresen hagyható!
+
+
+---------------------------
+
+Ötletek:
+Lekérdezni egy adott terméket, pl listázza az összes 62-es védőcipőt, ami nincs kiadva. (választható beállítások, mint pl méret, típus, stb)
+Ezt lehozza egy táblázatban. A sor mellett egy gomb, hogy kiadás -> ez rögtön átugrik a kiadás táblázatra, beolvasva az adott termék adatait,
+hogy már csak okézni kelljen.    
