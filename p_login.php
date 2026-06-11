@@ -1,22 +1,10 @@
+
 <?php
-    /* adatbázis kapcsolat létrehozása */
-    $servername = "localhost"; //127.0.0.1
-    $username = "root"; // most, WAMP alatt
-    $password = ""; // most, WAMP alatt
-    $dbname = "projectmunka";
+    require_once 'db.php';
 
     /* a bejelentkezési adatok lekérése a POST tömbből (p_index.php form-ból) */
     $fh = $_POST["fn"];
     $jl = $_POST["jl"];
-
-    /* a kapcsolat létrehozása + ellenőrzése */
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    if ($conn->connect_error) {
-            die("Kapcsolódási hiba: " . $conn->connect_error);
-        }    
-
-    $conn->set_charset("utf8");
-
     
     //SELECT u.dolgozo_id, u.jogkor, d.dolgozo_nev, d.beosztas FROM users u JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id WHERE u.usernev = 'memot' AND u.jelszo = 'jelszo11' AND u.torolve IS NULL
     $sql = "SELECT u.dolgozo_id, u.jogkor, d.dolgozo_nev, d.beosztas FROM users u JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id WHERE u.usernev = ? AND u.jelszo = ? AND (u.torolve IS NULL or u.torolve = 0)";
