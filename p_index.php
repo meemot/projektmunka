@@ -23,7 +23,7 @@
 <div class="overlay" id="loginBox">
     <div class="popup">
         <h2>Bejelentkezés</h2>
-        <form method="POST" action="p_login.php">                                  <!-- A form actionját a saját bejelentkeztető scriptedre állítsd -->
+        <form method="POST" action="p_login.php">                                  <!-- A form actionje a bejelentkeztető scriptre: p_login.php -->
             
             <input type="text" name="fn" placeholder="Felhasználónév"><br><br>     <!-- A felhasználónév mező típusa "text" -->
                

@@ -27,17 +27,17 @@
         <div class="logo_category">LOGO</div>
         <div class="menu_category">Dolgozók</div>
         <div class="menu_items">
-            <a href="#">dolgozók</a>
+            <a href="#" id="dolgozok_menu">dolgozók</a>
             <a href="#">új</a>
         </div>
         <div class="menu_category">Felhasználók</div>
         <div class="menu_items">
-            <a href="#">felhasználók</a>
+            <a href="#" id="felhasznalok_menu">felhasználók</a>
             <a href="#">új</a>
         </div>
         <div class="menu_category">Eszközök</div>
         <div class="menu_items">
-            <a href="#">eszközök</a>
+            <a href="#" id="eszkozok_menu">eszközök</a>
             <a href="#">új</a>
             <a href="#">módosítás</a>
         </div>
@@ -51,7 +51,9 @@
         <div class="admin_box3">Box3</div>
     </div>
 </div>
-    
+
+
+<script src="admin.js"></script>
 
 </body>
 </html>
