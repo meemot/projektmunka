@@ -3,7 +3,7 @@
 majd a választ beírja az admin_box3 div-be.*/
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Your code here:
+
     document.querySelectorAll(".menu_link").forEach(link => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
@@ -17,8 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .then(response => response.text())
             .then(data => {
-                document.querySelector(".admin_box3").innerHTML = data;
+
+                const targetBox = document.querySelector(".admin_box3") 
+                               || document.querySelector(".operator_box3");
+
+                if (targetBox) {
+                    targetBox.innerHTML = data;
+                }
+
             });
         });
     });
+
 });
+

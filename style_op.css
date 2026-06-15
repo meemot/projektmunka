@@ -6,28 +6,29 @@
     padding: 0;
 }
 
-.container {
+.operator_container {
     display: flex;
     height: 100vh;              /* teljes képernyőmagasság */
 }
 
 /* Bal oldali menü (Box1) */
-.box1 {
+.operator_box1 {
     width: 12%;              /* kb. 1/6 szélesség */
-    background-color: #310a10;  /* csak láthatóság miatt */
-    padding: 5px;
+    background-color: #681824;  /* csak láthatóság miatt */
+    padding: 20px;
     border-right: 2px solid #ccc;
+    font-family: Arial, sans-serif;
 }
 
 /* Jobb oldali tartalom konténer */
-.container2 {
+.operator_container2 {
     flex: 1;                    /* kitölti a maradék helyet */
     display: flex;
     flex-direction: column;     /* Box2 és Box3 egymás alatt */
 }
 
 /* Felső sáv (Box2) */
-.box2 {
+.operator_box2 {
     height: 60px;               /* keskeny felső sáv */
     background-color: #ffffff;
     padding: 15px;
@@ -38,42 +39,11 @@
 }
 
 /* Alsó tartalom (Box3) */
-.box3 {
+.operator_box3 {
     flex: 1;                    /* kitölti a maradék helyet */
     background-color: #ffffff;
     padding: 20px;
     overflow-y: auto;           /* ha sok tartalom van, görgethető */
-}
-
-.menu_category {
-    font-weight: bold;
-    margin-bottom: 5px;
-    padding: 8px;
-    background: #310a10;
-    border-radius: 4px;
-    color: #cdcbcb;
-}
-
-.menu_items {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; /* jobbra zárás */
-    margin-bottom: 15px;
-    padding-right: 5px;
-}
-
-
-.menu_items a {
-    text-decoration: none;
-    color: #cdcbcb;
-    background: #e8e8e800;
-    padding: 4px 8px;
-    margin: 2px 0;
-    border-radius: 3px;
-    width: fit-content;
-    font-family: "Segoe UI", Arial, sans-serif; /* modern font */
-    font-size: 13px;                            /* kisebb betű */
-    font-weight: 300; /* vékonyabb betű */
 }
 
 .menu_items a:hover {
@@ -90,4 +60,9 @@
     background: #310a10;
     border-radius: 4px;
     color: #cdcbcb;
+}
+
+.menu_link {
+    color: #efeded;
+    font-family: "Segoe UI", Arial, sans-serif; /* modern font */
 }
