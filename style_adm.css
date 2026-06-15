@@ -8,8 +8,9 @@
 
 .admin_container {
     display: flex;
-    height: 100vh;              /* teljes képernyőmagasság */
-}
+    height: 100vh;             /* teljes képernyőmagasság */ 
+} 
+
 
 /* Bal oldali menü (Box1) */
 .admin_box1 {
@@ -40,45 +41,6 @@
 
 /* Alsó tartalom (Box3) */
 .admin_box3 {
-    flex: 1;                    /* kitölti a maradék helyet */
-    background-color: #ffffff;
-    padding: 20px;
-    overflow-y: auto;           /* ha sok tartalom van, görgethető */
-}
-
-.operator_container {
-    display: flex;
-    height: 100vh;              /* teljes képernyőmagasság */
-}
-
-/* Bal oldali menü (Box1) */
-.operator_box1 {
-    width: 12%;              /* kb. 1/6 szélesség */
-    background-color: #310a10;  /* csak láthatóság miatt */
-    padding: 5px;
-    border-right: 2px solid #ccc;
-}
-
-/* Jobb oldali tartalom konténer */
-.operator_container2 {
-    flex: 1;                    /* kitölti a maradék helyet */
-    display: flex;
-    flex-direction: column;     /* Box2 és Box3 egymás alatt */
-}
-
-/* Felső sáv (Box2) */
-.operator_box2 {
-    height: 60px;               /* keskeny felső sáv */
-    background-color: #ffffff;
-    padding: 15px;
-    border-bottom: 2px solid #ccc;
-    display: flex;              /* flexbox bekapcsolása */
-    justify-content: flex-end;  /* vízszintesen jobbra igazít */
-    align-items: center;        /* függőlegesen középre igazít */
-}
-
-/* Alsó tartalom (Box3) */
-.operator_box3 {
     flex: 1;                    /* kitölti a maradék helyet */
     background-color: #ffffff;
     padding: 20px;
@@ -129,4 +91,9 @@
     padding: 8px;
     background: #281b6d;
     border-radius: 4px;
+}
+
+.menu_link {
+    color: #efeded;
+    font-family: "Segoe UI", Arial, sans-serif; /* modern font */
 }

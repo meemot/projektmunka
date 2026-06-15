@@ -25,25 +25,10 @@
 <div class="admin_container">
     <div class="admin_box1">
         <div class="logo_category">LOGO</div>
-        <div class="menu_category">Dolgozók</div>
-        <div class="menu_items">
-            <a href="#" id="dolgozok_menu">dolgozók</a>
-            <a href="#">új</a>
-        </div>
-        <div class="menu_category">Felhasználók</div>
-        <div class="menu_items">
-            <a href="#" id="felhasznalok_menu">felhasználók</a>
-            <a href="#">új</a>
-        </div>
-        <div class="menu_category">Eszközök</div>
-        <div class="menu_items">
-            <a href="#" id="eszkozok_menu">eszközök</a>
-            <a href="#">új</a>
-            <a href="#">módosítás</a>
-        </div>
-        <div class="menu_category">Lekérdezések</div>
-        <div class="menu_items">
-            <a href="#">(később)</a>
+        <div>
+            <a href="#" class="menu_link" data-action="dolgozok">Dolgozók</a>
+            <a href="#" class="menu_link" data-action="felhasznalok">Felhasználók</a>
+            <a href="#" class="menu_link" data-action="eszkozok">Eszközök</a>
         </div>
     </div>
     <div class="admin_container2">
