@@ -1,0 +1,27 @@
+.tabla {
+    border-collapse: collapse;
+    margin-top: 15px;
+    width: 80%;          /* vagy 70%, 60% */
+    margin: 0 auto;      /* középre igazítás */
+}
+
+.tabla th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    padding: 10px;
+    text-align: left;
+}
+
+.tabla td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.tabla tr:hover {
+    background: #f1f3f5;
+}
+
+.module_actions {
+    margin-bottom: 20px; /* hely a gombsor alatt */
+}
+

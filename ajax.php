@@ -77,7 +77,7 @@ function a_dolgozok_modul($conn) {
 
     
 
-    echo "<table class='tabla'>
+    echo "<table class='tabla table table-striped table-hover'>
             <tr>
                 <th>Név</th>
                 <th>Beosztás</th>
@@ -114,7 +114,7 @@ function a_felhasznalok_modul($conn) {
     $result = $conn->query($sql);
 
     
-    echo "<table class='tabla'>
+    echo "<table class='tabla table table-striped table-hover'>
             <tr>
                 <th>Név</th>
                 <th>Beosztás</th>
@@ -172,7 +172,7 @@ function a_eszkozok_modul($conn) {
     $result = $conn->query($sql);
 
     
-    echo "<table class='tabla'>
+    echo "<table class='tabla table table-striped table-hover'>
             <tr>
                 <th>Megnevezés</th>
                 <th>Kategória</th>
@@ -218,7 +218,7 @@ function operator_eszkozok_modul($conn) {
     $result = $conn->query($sql);
 
     
-    echo "<table class='tabla'>
+    echo "<table class='tabla table table-striped table-hover'>
             <tr>
                 <th>Megnevezés</th>
                 <th>Kategória</th>
@@ -258,7 +258,7 @@ function operator_dolgozok_modul($conn) {
     $result = $conn->query($sql);
 
 
-    echo "<table class='tabla'>
+    echo "<table class='tabla table table-striped table-hover'>
             <tr>
                 <th>Név</th>
                 <th>Beosztás</th>
@@ -275,8 +275,6 @@ function operator_dolgozok_modul($conn) {
 
     echo "</table>";
 }
-
-
 
 
 ?>
