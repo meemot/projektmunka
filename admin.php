@@ -43,13 +43,15 @@
         <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2">
 
             <!-- Felső sáv -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
-                <span class="badge bg-primary">Admin</span>
+            <div class="card mb-4">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
+                    <span class="badge bg-primary">Admin</span>
+                </div>
             </div>
 
             <!-- AJAX tartalom -->
-            <div class="admin_box3 card p-3">
+            <div class="admin_box3">
                 Box3
             </div>
 
