@@ -26,6 +26,14 @@ if ($jog === "a") {
         case "a_eszkozok":
             a_eszkozok_modul($conn);
             break;
+        
+        case "a_kiadas":
+            a_kiadas_modul($conn);
+            break;
+
+        case "a_visszavetel":
+            a_visszavetel_modul($conn);
+            break;
 
         default:
             echo "Ismeretlen admin modul.";
@@ -166,7 +174,7 @@ function a_eszkozok_modul($conn) {
         "SELECT et.megnevezes, ek.kategoria, e.azonosito, e.meret, ea.allapot ,e.megjegyzes 
         FROM eszkozok e 
         JOIN eszkoz_allapot ea ON e.allapot = ea.allapot_id 
-        JOIN eszkoz_kategoria ek ON e.ketegoria = ek.kategoria_id
+        JOIN eszkoz_kategoria ek ON e.kategoria = ek.kategoria_id
         JOIN eszkoz_tipus et ON e.tipus = et.tipus_id
         WHERE e.allapot != 4;";
     $result = $conn->query($sql);
@@ -196,6 +204,76 @@ function a_eszkozok_modul($conn) {
     echo "</table>";
 }
 
+function a_kiadas_modul($conn) {
+
+    // FELSŐ MŰVELETI SÁV
+    echo "
+    <div class='module_actions'>
+        <button onclick=\"ujKiadast()\">Új kiadás</button>
+        <input type='text' id='kereses' placeholder='Keresés...'>
+        <button onclick=\"szures()\">Szűrés</button>
+    </div>
+    ";
+
+    // TÁBLÁZAT
+    $sql = 
+        "SELECT
+            k.kiadas_datum, 
+            d1.dolgozo_nev AS ki_vette_fel,
+            kat.kategoria AS eszkoz_kategoria,
+            t.megnevezes,
+            e.azonosito AS eszkoz_azonosito,
+            e.meret,
+            ea.allapot,
+            e.megjegyzes,
+            d2.dolgozo_nev AS ki_adta_ki
+        FROM kiadas k
+            JOIN dolgozok d1
+                ON k.ki_vette_fel = d1.dolgozo_id
+            JOIN eszkozok e
+                ON k.eszkoz_id = e.eszkoz_id
+            JOIN dolgozok d2
+                ON k.ki_adta_ki = d2.dolgozo_id
+            JOIN eszkoz_tipus t
+                ON e.tipus = t.tipus_id
+            JOIN eszkoz_kategoria kat
+                ON e.kategoria = kat.kategoria_id
+            JOIN eszkoz_allapot ea
+    			ON e.allapot = ea.allapot_id
+        ORDER BY k.kiadas_datum ASC;";
+    $result = $conn->query($sql);
+
+    
+    echo "<table class='tabla table table-striped table-hover'>
+            <tr>
+                <th>Kiadás dátuma</th>
+                <th>Ki vette fel</th>
+                <th>Eszköz kategória</th>
+                <th>Megnevezés</th>
+                <th>Eszköz azonosító</th>
+                <th>Méret</th>
+                <th>Állapot</th>
+                <th>Megjegyzés</th>
+                <th>Ki adta ki</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>{$row['kiadas_datum']}</td>
+                <td>{$row['ki_vette_fel']}</td>
+                <td>{$row['eszkoz_kategoria']}</td>
+                <td>{$row['megnevezes']}</td>
+                <td>{$row['eszkoz_azonosito']}</td>
+                <td>{$row['meret']}</td>
+                <td>{$row['allapot']}</td>
+                <td>{$row['megjegyzes']}</td>
+                <td>{$row['ki_adta_ki']}</td>
+              </tr>";
+    }
+
+    echo "</table>";
+}
+
 function operator_eszkozok_modul($conn) {
 
     // FELSŐ MŰVELETI SÁV
@@ -212,7 +290,7 @@ function operator_eszkozok_modul($conn) {
         "SELECT et.megnevezes, ek.kategoria, e.azonosito, e.meret, ea.allapot ,e.megjegyzes 
         FROM eszkozok e 
         JOIN eszkoz_allapot ea ON e.allapot = ea.allapot_id 
-        JOIN eszkoz_kategoria ek ON e.ketegoria = ek.kategoria_id
+        JOIN eszkoz_kategoria ek ON e.kategoria = ek.kategoria_id
         JOIN eszkoz_tipus et ON e.tipus = et.tipus_id
         WHERE e.allapot != 4;";
     $result = $conn->query($sql);

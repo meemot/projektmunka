@@ -23,42 +23,42 @@
 
 <body>
 
-<body>
+    <div class="container-fluid">
+        <div class="row">
 
-<div class="container-fluid">
-    <div class="row">
+            <!-- Bal oldali menü -->
+            <nav class="col-12 col-md-3 col-lg-2 bg-dark text-white min-vh-100 p-3 admin_box1">
+                
+                <div class="logo_category mb-4">LOGO</div>
 
-        <!-- Bal oldali menü -->
-        <nav class="col-12 col-md-3 col-lg-2 bg-dark text-white min-vh-100 p-3 admin_box1">
-            
-            <div class="logo_category mb-4">LOGO</div>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_eszkozok">Eszközök</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Kiadások</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavétel</a>
 
-            <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
-            <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
-            <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_eszkozok">Eszközök</a>
+            </nav>
 
-        </nav>
+            <!-- Jobb oldali tartalom -->
+            <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2">
 
-        <!-- Jobb oldali tartalom -->
-        <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2">
-
-            <!-- Felső sáv -->
-            <div class="card mb-4">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
-                    <span class="badge bg-primary">Admin</span>
+                <!-- Felső sáv -->
+                <div class="card mb-4">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
+                        <span class="badge bg-primary">Admin</span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- AJAX tartalom -->
-            <div class="admin_box3">
-                Box3
-            </div>
+                <!-- AJAX tartalom -->
+                <div class="admin_box3">
+                    Box3
+                </div>
 
-        </main>
+            </main>
 
+        </div>
     </div>
-</div>
 
 <script src="scripts.js"></script>
 
