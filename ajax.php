@@ -217,30 +217,29 @@ function a_kiadas_modul($conn) {
 
     // TÁBLÁZAT
     $sql = 
-        "SELECT
-            k.kiadas_datum, 
-            d1.dolgozo_nev AS ki_vette_fel,
-            kat.kategoria AS eszkoz_kategoria,
-            t.megnevezes,
-            e.azonosito AS eszkoz_azonosito,
-            e.meret,
-            ea.allapot,
+        "SELECT 
+            k.kiadas_datum,
+            d.dolgozo_nev AS ki_vette_fel,
+            et.megnevezes AS kiadott_eszkoz,
+            e.azonosito,
+            ea.allapot AS kiadott_allapot,
             e.megjegyzes,
-            d2.dolgozo_nev AS ki_adta_ki
+            d2.dolgozo_nev AS ki_adta_ki    
         FROM kiadas k
-            JOIN dolgozok d1
-                ON k.ki_vette_fel = d1.dolgozo_id
+            JOIN dolgozok d
+                ON k.ki_vette_fel = d.dolgozo_id
             JOIN eszkozok e
                 ON k.eszkoz_id = e.eszkoz_id
+            JOIN eszkoz_tipus et
+                ON e.tipus = et.tipus_id
+            JOIN eszkoz_allapot ea
+                ON e.allapot = ea.allapot_id
             JOIN dolgozok d2
                 ON k.ki_adta_ki = d2.dolgozo_id
-            JOIN eszkoz_tipus t
-                ON e.tipus = t.tipus_id
-            JOIN eszkoz_kategoria kat
-                ON e.kategoria = kat.kategoria_id
-            JOIN eszkoz_allapot ea
-    			ON e.allapot = ea.allapot_id
-        ORDER BY k.kiadas_datum ASC;";
+            LEFT JOIN visszavet v
+            	ON k.kiad_id = v.kiadas_id
+        WHERE v.kiadas_id IS null
+        ORDER BY kiadas_datum ASC;";
     $result = $conn->query($sql);
 
     
@@ -248,10 +247,8 @@ function a_kiadas_modul($conn) {
             <tr>
                 <th>Kiadás dátuma</th>
                 <th>Ki vette fel</th>
-                <th>Eszköz kategória</th>
                 <th>Megnevezés</th>
                 <th>Eszköz azonosító</th>
-                <th>Méret</th>
                 <th>Állapot</th>
                 <th>Megjegyzés</th>
                 <th>Ki adta ki</th>
@@ -261,11 +258,9 @@ function a_kiadas_modul($conn) {
         echo "<tr>
                 <td>{$row['kiadas_datum']}</td>
                 <td>{$row['ki_vette_fel']}</td>
-                <td>{$row['eszkoz_kategoria']}</td>
-                <td>{$row['megnevezes']}</td>
-                <td>{$row['eszkoz_azonosito']}</td>
-                <td>{$row['meret']}</td>
-                <td>{$row['allapot']}</td>
+                <td>{$row['kiadott_eszkoz']}</td>
+                <td>{$row['azonosito']}</td>
+                <td>{$row['kiadott_allapot']}</td>
                 <td>{$row['megjegyzes']}</td>
                 <td>{$row['ki_adta_ki']}</td>
               </tr>";
@@ -273,6 +268,72 @@ function a_kiadas_modul($conn) {
 
     echo "</table>";
 }
+
+function a_visszavetel_modul($conn) {
+
+    // FELSŐ MŰVELETI SÁV
+    echo "
+    <div class='module_actions'>
+        <button onclick=\"ujVisszavetel()\">Új visszavétel</button>
+        <input type='text' id='kereses' placeholder='Keresés...'>
+        <button onclick=\"szures()\">Szűrés</button>
+    </div>
+    ";
+
+    // TÁBLÁZAT
+    $sql = 
+        "SELECT
+            v.visszavet_datum,
+            et.megnevezes,
+            e.azonosito,
+            ea.allapot AS allapot_kiadaskor,
+            ea1.allapot AS allapot_visszavet,
+            d.dolgozo_nev AS ki_vette_vissza,
+            v.megjegyzes
+            FROM visszavet v
+            JOIN eszkozok e
+                ON v.eszkoz_id =  e.eszkoz_id
+            JOIN eszkoz_tipus et
+                ON e.tipus = et.tipus_id
+            JOIN eszkoz_allapot ea
+                ON v.allapot_kiadas = ea.allapot_id
+            JOIN eszkoz_allapot ea1
+                ON v.allapot_visszavet = ea1.allapot_id
+            JOIN dolgozok d
+            ON v.ki_vette_vissza = d.dolgozo_id
+        ORDER BY visszavet_datum ASC;";
+    $result = $conn->query($sql);
+
+    
+    echo "<table class='tabla table table-striped table-hover'>
+            <tr>
+                <th>Visszavétel dátuma</th>
+                <th>Megnevezés</th>
+                <th>Eszköz azonosító</th>
+                <th>Állapot kiadáskor</th>
+                <th>Állapot visszavételkor</th>
+                <th>Visszavette</th>
+                <th>Megjegyzés</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        // a visszavétel állapota még nem jó adatot ír ki, mert az eszköz állapot azonosítójából veszi az adatot. JAVÍTANI KELL!!!
+        echo "<tr>
+                <td>{$row['visszavet_datum']}</td>
+                <td>{$row['megnevezes']}</td>
+                <td>{$row['azonosito']}</td>
+                <td>{$row['allapot_kiadaskor']}</td>
+                <td>{$row['allapot_visszavet']}</td>
+                <td>{$row['ki_vette_vissza']}</td>
+                <td>{$row['megjegyzes']}</td>
+              </tr>";
+    }
+
+    echo "</table>";
+}
+
+
+
 
 function operator_eszkozok_modul($conn) {
 
@@ -353,6 +414,5 @@ function operator_dolgozok_modul($conn) {
 
     echo "</table>";
 }
-
 
 ?>

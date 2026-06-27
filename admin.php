@@ -34,8 +34,8 @@
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_eszkozok">Eszközök</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Kiadások</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavétel</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Kiadott</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavett</a>
 
             </nav>
 
