@@ -1,0 +1,10 @@
+.menu_link {
+    text-decoration: none;
+    color: #333;
+}
+
+.menu_link:hover {
+    text-decoration: none;
+    color: #000;
+    font-weight: 600;
+}

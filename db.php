@@ -3,7 +3,7 @@
     $servername = "localhost"; //127.0.0.1
     $username = "root"; // most, WAMP alatt
     $password = ""; // most, WAMP alatt
-    $dbname = "projectmunka";
+    $dbname = "projektmunka";
 
 
     /* a kapcsolat létrehozása + ellenőrzése */
