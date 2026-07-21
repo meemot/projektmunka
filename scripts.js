@@ -1,6 +1,8 @@
 
-/*Elküld egy kérést az ajax_dolgozok.php fájlnak,
+/*Elküld egy kérést az ajax.php fájlnak,
 majd a választ beírja az admin_box3 div-be.*/
+console.log("JS betöltve!");
+
 
 document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése után fut le a kód */
 
@@ -34,4 +36,3 @@ document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése u
     });
 
 });
-

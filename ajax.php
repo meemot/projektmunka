@@ -290,13 +290,13 @@ function a_osszes_kiadas_modul($conn) {
             e.azonosito,
             e.meret,
             ea.allapot,
-            e.megjegyzes,
+            e.megjegyzes AS megjegyzes_kiadasnal,
             d.dolgozo_nev AS felvette,
             d1.dolgozo_nev AS kiadta,
             r.visszavet_datum,
             ea1.allapot AS visszavet_allapot,
             d2.dolgozo_nev AS visszavette,
-            r.megjegyzes
+            r.megjegyzes AS megjegyzes_visszavetnel
         FROM reszletek r
             JOIN kiadas k
                 ON r.kiad_id = k.kiad_id
@@ -315,6 +315,7 @@ function a_osszes_kiadas_modul($conn) {
             LEFT JOIN dolgozok d2
                 ON d2.dolgozo_id = r.ki_vette_vissza
         ORDER BY kiadas_datum ASC;";
+
     $result = $conn->query($sql);
 
     
@@ -341,13 +342,13 @@ function a_osszes_kiadas_modul($conn) {
                 <td>{$row['azonosito']}</td>
                 <td>{$row['meret']}</td>
                 <td>{$row['allapot']}</td>
-                <td>{$row['megjegyzes']}</td>
+                <td>{$row['megjegyzes_kiadasnal']}</td>
                 <td>{$row['felvette']}</td>
                 <td>{$row['kiadta']}</td>
                 <td>{$row['visszavet_datum']}</td>
                 <td>{$row['visszavet_allapot']}</td>
                 <td>{$row['visszavette']}</td>
-                <td>{$row['megjegyzes']}</td>
+                <td>{$row['megjegyzes_visszavetnel']}</td>
               </tr>";
     }
 
