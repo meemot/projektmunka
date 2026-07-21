@@ -13,7 +13,7 @@ $action = $_POST["action"] ?? "";
 
 if ($jog === "a") {
 
-    // ADMIN MODULOK
+/* --- ADMIN MODULOK --- */
     switch ($action) {
         case "a_dolgozok":
             a_dolgozok_modul($conn);
@@ -37,6 +37,22 @@ if ($jog === "a") {
 
         case "a_visszavetel":
             a_visszavetel_modul($conn);
+            break;
+        //"ÚJ" MŰVELETEK
+        case "uj_dolgozo_form":
+            uj_dolgozo_form();
+            break;
+
+        case "uj_dolgozo_mentes":
+            uj_dolgozo_mentes($conn);
+            break;
+
+        case "uj_felhasznalo_form":
+            uj_felhasznalo_form();
+            break;
+
+        case "uj_felhasznalo_mentes":
+            uj_felhasznalo_mentes($conn);
             break;
 
         default:
@@ -71,6 +87,8 @@ if ($jog === "a") {
     echo "Nincs jogosultság.";
 }
 
+
+/* ADMIN FÜGGVÉNYEK */
 
 function a_dolgozok_modul($conn) {
 
@@ -416,8 +434,110 @@ function a_visszavetel_modul($conn) {
     echo "</table>";
 }
 
+// "ÚJ" MŰVELETEK
+function uj_dolgozo_form() {
+    echo "
+    <h3>Új dolgozó létrehozása</h3>
+
+    <form id='ujDolgozoForm'>
+
+        <label>Név:</label>
+        <input type='text' name='nev' required>
+
+        <label>Beosztás:</label>
+        <input type='text' name='beosztas' required>
+
+        <label>Email:</label>
+        <input type='text' name='email' required>
+
+        <label>Telefon:</label>
+        <input type='text' name='telefon' required>
+
+        <button type='button' onclick='ujDolgozoMentes()'>Mentés</button>
+
+    </form>
+    ";
+}
+
+function uj_dolgozo_mentes($conn) {
+    $nev        = $_POST["nev"];
+    $beosztas   = $_POST["beosztas"];
+    $email      = $_POST["email"];
+    $telefon    = $_POST["telefon"];
+
+    // 1) dolgozó mentése
+    //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
+    $sql1 = "INSERT INTO dolgozok (dolgozo_nev, beosztas, email, telefon)
+             VALUES ('$nev', '$beosztas', '$email', '$telefon')";
+    $conn->query($sql1);
+
+    $dolgozo_id = $conn->insert_id;
+
+    // 2) felhasználó mentése
+    $sql2 = "INSERT INTO users (dolgozo_id, jogkor, usernev, jelszo)
+             VALUES ($dolgozo_id, '$jogkor', '$usernev', '$jelszo')";
+    $conn->query($sql2);
+
+    echo "OK";
+}
 
 
+
+function uj_felhasznalo_form() {
+    echo "
+    <h3>Új felhasználó létrehozása</h3>
+
+    <form id='ujFelhasznaloForm'>
+
+        <label>Név:</label>
+        <input type='text' name='nev' required>
+
+        <label>Beosztás:</label>
+        <input type='text' name='beosztas' required>
+
+        <label>Jogkör:</label>
+        <select name='jogkor'>
+            <option value='a'>Admin</option>
+            <option value='o'>Operátor</option>
+        </select>
+
+        <label>Felhasználónév:</label>
+        <input type='text' name='usernev' required>
+
+        <label>Jelszó:</label>
+        <input type='password' name='jelszo' required>
+
+        <button type='button' onclick='ujFelhasznaloMentes()'>Mentés</button>
+
+    </form>
+    ";
+}
+
+function uj_felhasznalo_mentes($conn) {
+    $nev        = $_POST["nev"];
+    $beosztas   = $_POST["beosztas"];
+    $jogkor     = $_POST["jogkor"];
+    $usernev    = $_POST["usernev"];
+    $jelszo     = password_hash($_POST["jelszo"], PASSWORD_DEFAULT);
+
+    // 1) dolgozó mentése
+    //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
+    $sql1 = "INSERT INTO dolgozok (dolgozo_nev, beosztas)
+             VALUES ('$nev', '$beosztas')";
+    $conn->query($sql1);
+
+    $dolgozo_id = $conn->insert_id;
+
+    // 2) felhasználó mentése
+    $sql2 = "INSERT INTO users (dolgozo_id, jogkor, usernev, jelszo)
+             VALUES ($dolgozo_id, '$jogkor', '$usernev', '$jelszo')";
+    $conn->query($sql2);
+
+    echo "OK";
+}
+
+
+/* OPERÁTOR FÜGGVÉNYEK */
 
 function operator_eszkozok_modul($conn) {
 

@@ -6,7 +6,7 @@ console.log("JS betöltve!");
 
 document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése után fut le a kód */
 
-    /* Megkeressük az összes menü linket, és eseményfigyelőt adunk hozzá */
+// Megkeressük az összes menü linket, és eseményfigyelőt adunk hozzá
     document.querySelectorAll(".menu_link").forEach(link => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
@@ -36,3 +36,29 @@ document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése u
     });
 
 });
+
+
+// FORM-ok megjelenítése az admin_box3 div-ben
+function ujDolgozo() {
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=uj_dolgozo_form"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+function ujFelhasznalo() {
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=uj_felhasznalo_form"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
