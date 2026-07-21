@@ -14,3 +14,86 @@
     border-bottom: 1px solid rgba(255,255,255,0.4);
     margin-bottom: 8px;
 }
+
+/* Desktop: ne törjön a szöveg */
+@media (min-width: 992px) {
+    .admin_box3 table td,
+    .admin_box3 table th {
+       /* white-space: nowrap; */
+    }
+}
+
+
+@media (min-width: 768px) {
+    .admin_box1 {
+        min-height: 100vh;
+    }
+}
+
+.admin_container2 {
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .admin_container2 {
+        padding: 2rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .admin_container2 {
+        padding: 3rem;
+    }
+}
+
+/* Mobilon: a menü normál blokk */
+.admin_box1 {
+    height: auto;
+}
+
+/* Asztali nézetben: fix, teljes képernyő magasságú oldalsáv */
+@media (min-width: 768px) {
+    .admin_box1 {
+        position: sticky;
+        top: 0;
+        height: 100vh;       /* mindig a teljes képernyő magasság */
+        overflow-y: auto;    /* ha sok menüpont van, görgethető */
+    }
+}
+
+
+.admin_box3 {
+    padding: 1rem 0;          /* kényelmes tér a tartalomnak */
+    overflow-x: auto;         /* ha széles a táblázat, legyen vízszintes scroll */
+   /* overflow-y: visible;      ne vágja le a tartalmat */
+}
+
+.admin_box3 table {
+    width: max-content;          /* a táblázat szélessége a tartalomhoz igazodik */
+    min-width: 100%;             /* de legalább a konténer szélessége */
+    table-layout: auto;          /* ne legyen fix, automatikus szélesség */
+}
+
+.admin_box3 table th {         /* a táblázat fejléc celláinak formázása */
+    white-space: nowrap;       /* egy sorban legyen minden */
+    /*word-break: break-word;     email, ID, hosszú nevek is törhetők 
+    padding: 0.75rem;           kényelmes cella 
+    vertical-align: middle;     szép igazítás */
+    text-align: left;          /* balra igazítás */
+}
+
+.admin_box3 table td {         /* a táblázat adat celláinak formázása */
+    white-space: nowrap;       /* egy sorban legyen minden */
+    text-align: left;          /* balra igazítás */
+    padding: 0.75rem;          /* kényelmes cella */
+    vertical-align: middle;    /* szép igazítás */
+}
+
+.admin_box3 table thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;          /* vagy sötét, ha dark theme */
+    z-index: 2;
+}
+
+

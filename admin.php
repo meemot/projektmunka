@@ -27,7 +27,7 @@
         <div class="row">
 
             <!-- Bal oldali menü -->
-            <nav class="col-12 col-md-3 col-lg-2 bg-dark text-white min-vh-100 p-3 admin_box1">
+            <nav class="col-12 col-md-3 col-lg-2 bg-dark text-white p-3 admin_box1">
                 
                 <div class="logo_category mb-4">LOGO</div>
 
