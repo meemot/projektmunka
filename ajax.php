@@ -467,20 +467,21 @@ function uj_dolgozo_mentes($conn) {
 
     // 1) dolgozó mentése
     //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
-    $sql1 = "INSERT INTO dolgozok (dolgozo_nev, beosztas, email, telefon)
-             VALUES ('$nev', '$beosztas', '$email', '$telefon')";
-    $conn->query($sql1);
 
-    $dolgozo_id = $conn->insert_id;
+        /*   INSERT INTO `dolgozok`(`dolgozo_nev`, `beosztas`, `email`, `telefon`)
+             VALUES ('laca faca','lacafacázó', 'laca@faca.com','06201234567');*/
 
-    // 2) felhasználó mentése
-    $sql2 = "INSERT INTO users (dolgozo_id, jogkor, usernev, jelszo)
-             VALUES ($dolgozo_id, '$jogkor', '$usernev', '$jelszo')";
-    $conn->query($sql2);
+    $sql = "INSERT INTO dolgozok(dolgozo_nev, beosztas, email, telefon)
+            VALUES ('$nev', '$beosztas', '$email', '$telefon')";
+    
 
-    echo "OK";
+    if ($conn->query($sql)) {
+        echo "OK";
+    } else {
+        echo "Hiba: " . $sql . "<br>" . $conn->error;
+    }
+
 }
-
 
 
 function uj_felhasznalo_form() {

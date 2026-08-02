@@ -2,6 +2,65 @@
 /*Elküld egy kérést az ajax.php fájlnak,
 majd a választ beírja az admin_box3 div-be.*/
 console.log("JS betöltve!");
+// FORM-ok megjelenítése és mentése az admin_box3 div-ben
+
+function ujDolgozo() {
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=uj_dolgozo_form"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+function ujDolgozoMentes() {
+    const form = document.getElementById("ujDolgozoForm"); //a böngésző megkeresi a formot az ID alapján
+    const formData = new FormData(form); // a form adatainak összegyűjtése a FormData objektumba: nem kell kézzel írni a mezőket, a FormData automatikusan összegyűjti az összes mezőt a formból
+
+    formData.append("action", "uj_dolgozo_mentes"); // hozzáadjuk az action mezőt a formData-hoz, ez mondja meg a php-nak, hogy melyik függvényt hívja meg
+
+    /* AJAX kérést küldünk a szervernek (ajax.php) a form adataival */
+    fetch("ajax.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(r => r.text()) // válasz beolvasása szövegként
+    .then(valasz => {    // itt kapjuk meg a szerver válaszát, amit a php visszaadott
+
+        if (valasz.trim() === "OK") {
+
+            // sikeres mentés után újratöltjük a dolgozók táblát
+            fetch("ajax.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "action=a_dolgozok"
+            })
+            .then(r => r.text())
+            .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
+                document.querySelector(".admin_box3").innerHTML = html;
+            });
+
+        } else {
+            alert("Hiba történt: " + valasz);
+        }
+    });
+}
+
+
+function ujFelhasznalo() {
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=uj_felhasznalo_form"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
 
 
 document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése után fut le a kód */
@@ -38,27 +97,4 @@ document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése u
 });
 
 
-// FORM-ok megjelenítése az admin_box3 div-ben
-function ujDolgozo() {
-    fetch("ajax.php", {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "action=uj_dolgozo_form"
-    })
-    .then(r => r.text())
-    .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
-    });
-}
 
-function ujFelhasznalo() {
-    fetch("ajax.php", {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "action=uj_felhasznalo_form"
-    })
-    .then(r => r.text())
-    .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
-    });
-}
