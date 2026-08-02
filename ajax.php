@@ -11,9 +11,11 @@ if (!isset($_SESSION['dolgozo_id'])) {
 $jog = $_SESSION['jogkor'];
 $action = $_POST["action"] ?? "";
 
-if ($jog === "a") {
+// xxxxxxxxxxxxxxxxx
+// -=ADMIN MODULOK=-
+// xxxxxxxxxxxxxxxxx
 
-/* --- ADMIN MODULOK --- */
+if ($jog === "a") {
     switch ($action) {
         case "a_dolgozok":
             a_dolgozok_modul($conn);
@@ -38,7 +40,9 @@ if ($jog === "a") {
         case "a_visszavetel":
             a_visszavetel_modul($conn);
             break;
-        //"ÚJ" MŰVELETEK
+
+//"ÚJ" MŰVELETEK
+// -------------
         case "uj_dolgozo_form":
             uj_dolgozo_form();
             break;
@@ -48,20 +52,25 @@ if ($jog === "a") {
             break;
 
         case "uj_felhasznalo_form":
-            uj_felhasznalo_form();
+            uj_felhasznalo_form($conn);
             break;
 
         case "uj_felhasznalo_mentes":
             uj_felhasznalo_mentes($conn);
             break;
 
+
+
+
         default:
             echo "Ismeretlen admin modul.";
     }
 
-} elseif ($jog === "o") {
+// xxxxxxxxxxxxxxxxxxxx
+// -=OPERÁTOR MODULOK=-
+// xxxxxxxxxxxxxxxxxxxx
 
-    // OPERÁTOR MODULOK
+} elseif ($jog === "o") {
     switch ($action) {
         case "o_eszkozok":
             operator_eszkozok_modul($conn);
@@ -87,8 +96,9 @@ if ($jog === "a") {
     echo "Nincs jogosultság.";
 }
 
-
-/* ADMIN FÜGGVÉNYEK */
+// xxxxxxxxxxxxxxxxxxxx
+// -=ADMIN FÜGGVÉNYEK=-
+// xxxxxxxxxxxxxxxxxxxx
 
 function a_dolgozok_modul($conn) {
 
@@ -435,6 +445,8 @@ function a_visszavetel_modul($conn) {
 }
 
 // "ÚJ" MŰVELETEK
+// --------------
+
 function uj_dolgozo_form() {
     echo "
     <h3>Új dolgozó létrehozása</h3>
@@ -483,23 +495,34 @@ function uj_dolgozo_mentes($conn) {
 
 }
 
+function uj_felhasznalo_form($conn) {
+    
+    // dolgozók lekérése adatbázisból
+    $sql = "SELECT dolgozo_nev, dolgozo_id
+            FROM dolgozok 
+            ORDER BY dolgozo_nev";
+    $result = $conn->query($sql);
 
-function uj_felhasznalo_form() {
     echo "
     <h3>Új felhasználó létrehozása</h3>
-
     <form id='ujFelhasznaloForm'>
-
         <label>Név:</label>
-        <input type='text' name='nev' required>
+        <select name='dolgozo_id' id='dolgozo_id' required>
+            <option value=''>-- válassz dolgozót --</option>
+    ";
 
-        <label>Beosztás:</label>
-        <input type='text' name='beosztas' required>
+    // legördülő lista feltöltése
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value=\"{$row['dolgozo_id']}\">{$row['dolgozo_nev']}</option>";
+    }
+
+    echo "
+        </select>
 
         <label>Jogkör:</label>
         <select name='jogkor'>
-            <option value='a'>Admin</option>
             <option value='o'>Operátor</option>
+            <option value='a'>Admin</option>
         </select>
 
         <label>Felhasználónév:</label>
@@ -515,30 +538,32 @@ function uj_felhasznalo_form() {
 }
 
 function uj_felhasznalo_mentes($conn) {
-    $nev        = $_POST["nev"];
-    $beosztas   = $_POST["beosztas"];
+    $dolgozo_id = $_POST["dolgozo_id"];
     $jogkor     = $_POST["jogkor"];
     $usernev    = $_POST["usernev"];
-    $jelszo     = password_hash($_POST["jelszo"], PASSWORD_DEFAULT);
+    $jelszo     = $_POST["jelszo"];
 
-    // 1) dolgozó mentése
+    // 1) felhasználó mentése
     //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
-    $sql1 = "INSERT INTO dolgozok (dolgozo_nev, beosztas)
-             VALUES ('$nev', '$beosztas')";
-    $conn->query($sql1);
 
-    $dolgozo_id = $conn->insert_id;
+        /*   INSERT INTO `dolgozok`(`dolgozo_nev`, `beosztas`, `email`, `telefon`)
+             VALUES ('laca faca','lacafacázó', 'laca@faca.com','06201234567');*/
 
-    // 2) felhasználó mentése
-    $sql2 = "INSERT INTO users (dolgozo_id, jogkor, usernev, jelszo)
-             VALUES ($dolgozo_id, '$jogkor', '$usernev', '$jelszo')";
-    $conn->query($sql2);
+    $sql = "INSERT INTO users(dolgozo_id, jogkor, usernev, jelszo)
+            VALUES ('$dolgozo_id', '$jogkor', '$usernev', '$jelszo')";
 
-    echo "OK";
+    if ($conn->query($sql)) {
+        echo "OK";
+    } else {
+        echo "Hiba: " . $sql . "<br>" . $conn->error;
+    }
+
 }
 
 
-/* OPERÁTOR FÜGGVÉNYEK */
+// xxxxxxxxxxxxxxxxxxxxxxx
+// -=OPERÁTOR FÜGGVÉNYEK=-
+// xxxxxxxxxxxxxxxxxxxxxxx
 
 function operator_eszkozok_modul($conn) {
 
