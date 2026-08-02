@@ -41,7 +41,9 @@ if ($jog === "a") {
             a_visszavetel_modul($conn);
             break;
 
-//"ÚJ" MŰVELETEK
+ 
+
+// "ÚJ" MŰVELETEK
 // -------------
         case "uj_dolgozo_form":
             uj_dolgozo_form();
@@ -64,6 +66,19 @@ if ($jog === "a") {
         case "uj_eszkoz_mentes":
             uj_eszkoz_mentes($conn);
             break;
+        case "dolgozo_szerkesztes_form": //
+            dolgozo_szerkesztes_form($conn);
+            break;
+        case "update_dolgozo": // Dolgozó adatainak frissítése az adatbázisban
+            update_dolgozo($conn);
+            break;
+        case "felhasznalo_szerkesztes_form":
+            felhasznalo_szerkesztes_form($conn);
+            break;
+        case "update_felhasznalo":
+            update_felhasznalo($conn);
+            break;
+
         default:
             echo "Ismeretlen admin modul.";
     }
@@ -107,6 +122,7 @@ function a_dolgozok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
+        <h3>Dolgozók</h3>
         <button onclick=\"ujDolgozo()\">Új dolgozó</button>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
@@ -114,7 +130,7 @@ function a_dolgozok_modul($conn) {
     ";
 
     // TÁBLÁZAT
-    $sql = "SELECT `dolgozo_nev`,`beosztas`,`email`,`telefon` FROM `dolgozok` ORDER BY `dolgozo_nev` ASC";
+    $sql = "SELECT dolgozo_id, dolgozo_nev, beosztas, email, telefon FROM dolgozok ORDER BY dolgozo_nev ASC";
     $result = $conn->query($sql);
 
     
@@ -128,7 +144,7 @@ function a_dolgozok_modul($conn) {
             </tr>";
 
     while ($row = $result->fetch_assoc()) {
-        echo "<tr>
+        echo "<tr ondblclick=\"dolgozoSzerkesztes({$row['dolgozo_id']})\">
                 <td>{$row['dolgozo_nev']}</td>
                 <td>{$row['beosztas']}</td>
                 <td>{$row['email']}</td>
@@ -139,11 +155,97 @@ function a_dolgozok_modul($conn) {
     echo "</table>";
 }
 
+function dolgozo_szerkesztes_form($conn) { // Dolgozó adatainak lekérése az adatbázisból és a szerkesztő űrlap megjelenítése
+
+    $id = $_POST["id"];
+
+    $sql = "SELECT dolgozo_nev, beosztas, email, telefon
+            FROM dolgozok
+            WHERE dolgozo_id = $id";
+
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    echo "
+        <h3>Dolgozó módosítása</h3>
+
+        <form id='modDolgozoForm'>
+            <input type='hidden' name='id' value='$id'>
+
+            <label>Név:</label>
+            <input type='text' name='nev' value='{$row['dolgozo_nev']}' class='form-control'>
+
+            <label>Beosztás:</label>
+            <input type='text' name='beosztas' value='{$row['beosztas']}' class='form-control'>
+
+            <label>Email:</label>
+            <input type='text' name='email' value='{$row['email']}' class='form-control'>
+
+            <label>Telefon:</label>
+            <input type='text' name='telefon' value='{$row['telefon']}' class='form-control'>
+
+            <button type='button' onclick='modDolgozoMentes()' class='btn btn-primary mt-3'>Mentés</button>
+            <button type='button' onclick='modDolgozoMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
+        </form>
+    ";
+}
+
+function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázisban
+
+    $id       = $_POST["id"];
+    $nev      = $_POST["nev"];
+    $beosztas = $_POST["beosztas"];
+    $email    = $_POST["email"];
+    $telefon  = $_POST["telefon"];
+
+    // -1) Ellenőrzés: minden szó nagybetűs-e?
+    $szavak = explode(" ", $nev);
+
+    foreach ($szavak as $szo) {
+        if ($szo === "") continue; // ha véletlen dupla space van
+
+        if ($szo[0] !== strtoupper($szo[0])) {
+            echo "HIBA: Minden szó nagybetűvel kezdődjön!";
+            return;
+        }
+    }
+
+    // 0) Ellenőrzés: létezik-e már ilyen név másik dolgozónál?
+    $ellenorzes = "SELECT dolgozo_id 
+                   FROM dolgozok 
+                   WHERE dolgozo_nev = '$nev' AND dolgozo_id != $id";
+
+    $result = $conn->query($ellenorzes);
+
+    if ($result->num_rows > 0) {
+        echo "HIBA: Már létezik ilyen nevű dolgozó!";
+        return;
+    }
+    
+    // 1) Dolgozó adatainak frissítése az adatbázisban
+    $sql = "UPDATE dolgozok
+            SET dolgozo_nev='$nev',
+                beosztas='$beosztas',
+                email='$email',
+                telefon='$telefon'
+            WHERE dolgozo_id = $id";
+
+    if ($conn->query($sql)) {
+        echo "OK";
+    } else {
+        echo "Hiba: " . $conn->error;
+    }
+
+    exit;
+}
+
+
 function a_felhasznalok_modul($conn) {
 
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
+        <h3>Felhasználók</h3>
         <button onclick=\"ujFelhasznalo()\">Új felhasználó</button>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
@@ -151,7 +253,7 @@ function a_felhasznalok_modul($conn) {
     ";
 
     // TÁBLÁZAT, INNEN KELL FOLYTATNOM A FELHASZNÁLÓKRA AKTUALIZÁLÁST!!!
-    $sql = "SELECT d.dolgozo_nev, d.beosztas, u.jogkor, u.usernev, u.torolve 
+    $sql = "SELECT d.dolgozo_nev, d.beosztas, u.user_id, u.jogkor, u.usernev, u.torolve 
             FROM users u JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id";
     $result = $conn->query($sql);
 
@@ -179,8 +281,7 @@ function a_felhasznalok_modul($conn) {
             ? "Inaktív  ({$row['torolve']})" 
             : "Aktív";
 
-
-        echo "<tr>
+        echo "<tr ondblclick=\"felhasznaloSzerkesztes({$row['user_id']})\">
                 <td>{$row['dolgozo_nev']}</td>
                 <td>{$row['beosztas']}</td>
                 <td>{$jogkor}</td>
@@ -192,11 +293,111 @@ function a_felhasznalok_modul($conn) {
     echo "</table>";
 }
 
+function felhasznalo_szerkesztes_form($conn) {
+
+    $id = $_POST["id"];
+
+    $sql = "SELECT u.usernev, u.jogkor, d.dolgozo_nev, u.jelszo, u.torolve
+            FROM users u
+            JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id
+            WHERE u.user_id = $id";
+
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    echo "
+        <h3>Felhasználó módosítása</h3>
+
+        <form id='modFelhasznaloForm'>
+            <input type='hidden' name='id' value='$id'>
+
+            <label>Dolgozó neve:</label>
+            <input type='text' class='form-control' value='{$row['dolgozo_nev']}' disabled>
+
+            <label>Felhasználónév:</label>
+            <input type='text' name='usernev' value='{$row['usernev']}' class='form-control'>
+
+            <label>Jogkör:</label>
+            <select name='jogkor' class='form-control'>
+                <option value='a' ".($row['jogkor']=='a'?'selected':'').">Admin</option>
+                <option value='o' ".($row['jogkor']=='o'?'selected':'').">Operátor</option>
+            </select>
+
+            <label>Jelszó:</label>
+            <input type='password' name='jelszo' value='{$row['jelszo']}' class='form-control'>
+
+            <label>Jelszó újra:</label>
+            <input type='password' name='jelszo2' value='{$row['jelszo']}' class='form-control'>
+
+            <label>Törölve:</label>
+            <input type='checkbox' name='torolve' ".($row['torolve'] ? "checked" : "").">
+            <br>
+
+            <button type='button' onclick='modFelhasznaloMentes()' class='btn btn-primary mt-3'>Mentés</button>
+            <button type='button' onclick='modFelhasznaloMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
+        </form>
+    ";
+}
+
+function update_felhasznalo($conn) {
+
+    $id      = $_POST["id"];
+    $usernev = $_POST["usernev"];
+    $jogkor  = $_POST["jogkor"];
+    $jelszo  = $_POST["jelszo"];
+    $jelszo2 = $_POST["jelszo2"];
+    $torolve = $_POST["torolve"];   // dátum vagy üres string
+
+    // Duplikáció ellenőrzés
+    $ellenorzes = "SELECT user_id 
+                   FROM users 
+                   WHERE usernev = '$usernev' AND user_id != $id";
+
+    $result = $conn->query($ellenorzes);
+
+    // Jelszó ellenőrzés
+    if ($jelszo !== $jelszo2) {
+        echo "A két jelszó nem egyezik!";
+        return;
+    }
+
+    // Ha üres → NULL
+    if ($torolve === "") {
+        $torolve_sql = "NULL";
+    } else {
+        // Dátum → idézőjelbe kell tenni
+        $torolve_sql = "'$torolve'";
+    }
+
+    // Jelszó hash
+    $jelszo_hash = password_hash($jelszo, PASSWORD_DEFAULT);
+
+    // SQL frissítés
+    $sql = "
+        UPDATE users SET
+            usernev = '$usernev',
+            jogkor = '$jogkor',
+            jelszo = '$jelszo',
+            jelszo_hash = '$jelszo_hash',
+            torolve = $torolve_sql
+        WHERE user_id = $id
+    ";
+
+    if ($conn->query($sql)) {
+        echo "OK";
+    } else {
+        echo "Hiba történt: " . $conn->error;
+    }
+}
+
+
+
 function a_eszkozok_modul($conn) {
 
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
+        <h3>Eszközök</h3>
         <button onclick=\"ujEszkozok()\">Új eszköz</button>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
@@ -243,6 +444,7 @@ function a_kiadas_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
+        <h3>Kiadott, még nem visszavett eszközök</h3>
         <button onclick=\"ujKiadast()\">Új kiadás</button>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
@@ -306,7 +508,7 @@ function a_osszes_kiadas_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <button onclick=\"ujKiadast()\">Új kiadás</button>
+        <h3>Összes eszközmozgás</h3>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
     </div>
@@ -390,6 +592,7 @@ function a_visszavetel_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
+        <h3>Visszavett eszközök</h3>
         <button onclick=\"ujVisszavetel()\">Új visszavétel</button>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
@@ -445,6 +648,8 @@ function a_visszavetel_modul($conn) {
 
     echo "</table>";
 }
+
+
 
 // "ÚJ" MŰVELETEK
 // --------------
@@ -693,6 +898,8 @@ function uj_eszkoz_mentes($conn) {
     }
 
 }
+
+
 
 // xxxxxxxxxxxxxxxxxxxxxxx
 // -=OPERÁTOR FÜGGVÉNYEK=-

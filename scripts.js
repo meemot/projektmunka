@@ -49,6 +49,65 @@ function ujDolgozoMentes() {
     });
 }
 
+function dolgozoSzerkesztes(id) {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=dolgozo_szerkesztes_form&id=" + id
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+function modDolgozoMentes() {
+
+    const form = document.getElementById("modDolgozoForm");
+    const formData = new FormData(form);
+
+    formData.append("action", "update_dolgozo");
+
+    fetch("ajax.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(r => r.text())
+    .then(valasz => {
+
+        if (valasz.trim() === "OK") {
+
+            fetch("ajax.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "action=a_dolgozok"
+            })
+            .then(r => r.text())
+            .then(html => {
+                document.querySelector(".admin_box3").innerHTML = html;
+            });
+
+        } else {
+            alert("Hiba: " + valasz);
+        }
+    });
+}
+
+function modDolgozoMegse() {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=a_dolgozok"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+
 function ujFelhasznalo() {
     fetch("ajax.php", {
         method: "POST",
@@ -94,6 +153,75 @@ function ujFelhasznaloMentes() {
     });
 }
 
+function felhasznaloSzerkesztes(id) {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=felhasznalo_szerkesztes_form&id=" + id
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+function modFelhasznaloMentes() {
+
+    const form = document.getElementById("modFelhasznaloForm");
+    const formData = new FormData(form);
+
+    // TÖRÖLVE checkbox → dátum vagy üres
+    let torolveChecked = form.querySelector("input[name='torolve']").checked;
+
+    if (torolveChecked) {
+        let datum = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        formData.set("torolve", datum);   // dátumot írunk be
+    } else {
+        formData.set("torolve", "");      // üres → PHP NULL-t fog menteni
+    }
+
+    formData.append("action", "update_felhasznalo");
+
+    fetch("ajax.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(r => r.text())
+    .then(valasz => {
+
+        if (valasz.trim() === "OK") {
+
+            fetch("ajax.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "action=a_felhasznalok"
+            })
+            .then(r => r.text())
+            .then(html => {
+                document.querySelector(".admin_box3").innerHTML = html;
+            });
+
+        } else {
+            alert(valasz);
+        }
+    });
+}
+
+function modFelhasznaloMegse() {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=a_felhasznalok"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+
 function ujEszkozok() {
     fetch("ajax.php", {
         method: "POST",
@@ -138,6 +266,8 @@ function ujEszkozMentes() {
         }
     });
 }
+
+
 
 document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése után fut le a kód */
 

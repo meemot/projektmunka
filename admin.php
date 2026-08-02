@@ -34,9 +34,9 @@
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
                 <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="a_eszkozok">Eszközök</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_osszes_kiadas">Összes kiadás</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Kiadott, még nem visszavett</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavett</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_osszes_kiadas">Összes eszközmozgás</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Kiadás</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavétel</a>
 
             </nav>
 
