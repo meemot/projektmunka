@@ -58,10 +58,12 @@ if ($jog === "a") {
         case "uj_felhasznalo_mentes":
             uj_felhasznalo_mentes($conn);
             break;
-
-
-
-
+        case "uj_eszkoz_form":
+            uj_eszkoz_form($conn);
+            break;
+        case "uj_eszkoz_mentes":
+            uj_eszkoz_mentes($conn);
+            break;
         default:
             echo "Ismeretlen admin modul.";
     }
@@ -477,6 +479,28 @@ function uj_dolgozo_mentes($conn) {
     $email      = $_POST["email"];
     $telefon    = $_POST["telefon"];
 
+
+    // -1) Ellenőrzés: minden szó nagybetűs-e?
+    $szavak = explode(" ", $nev);
+
+    foreach ($szavak as $szo) {
+        if ($szo === "") continue; // ha véletlen dupla space van
+
+        if ($szo[0] !== strtoupper($szo[0])) {
+            echo "HIBA: Minden szó nagybetűvel kezdődjön!";
+            return;
+        }
+    }
+
+    // 0) Ellenőrzés: létezik-e már ilyen név?
+        $ellenorzes = "SELECT dolgozo_id FROM dolgozok WHERE dolgozo_nev = '$nev'";
+        $result = $conn->query($ellenorzes);
+
+        if ($result->num_rows > 0) {
+            echo "HIBA: Már létezik ilyen nevű dolgozó! Adja meg máshogy a nevet, vagy használjon kiegészítő azonosítót a név mellett!";
+            return; // fontos: ne fusson tovább a mentés
+        }
+
     // 1) dolgozó mentése
     //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
 
@@ -560,6 +584,115 @@ function uj_felhasznalo_mentes($conn) {
 
 }
 
+function uj_eszkoz_form($conn) {
+    echo "
+    <h3>Új eszköz létrehozása</h3>
+    
+    <form id='ujEszkozForm'>
+        <label>Eszköz kategória:</label>
+        <select name='eszköz_kategoria' id='eszkoz_kategoria' required>
+            <option value=''>-- Válaszd ki az eszköz kategóriáját! --</option>
+    ";
+
+    // Eszköz KATEGORIA legördülő lista létrehozása
+    $sql = "SELECT * 
+            FROM eszkoz_kategoria
+            ORDER BY kategoria";
+    $result = $conn->query($sql);
+
+
+    // legördülő lista feltöltése
+    while ($row = $result->fetch_assoc()) {
+         echo "<option value=\"{$row['kategoria_id']}\">{$row['kategoria']}</option>";
+    }
+
+    echo "
+        </select>
+    ";
+
+
+    // Eszköz TIPUS legördülő lista létrehozása
+    $sql = "SELECT * 
+            FROM eszkoz_tipus
+            ORDER BY megnevezes";
+    $result = $conn->query($sql);
+
+    echo "
+        <label>Eszköz típus:</label>
+        <select name='tipus' id='tipus' required>
+            <option value=''>-- Válaszd ki az eszköz típusát! --</option>
+    ";
+    
+    // legördülő lista feltöltése
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value=\"{$row['tipus_id']}\">{$row['megnevezes']}</option>";
+    }
+
+    echo "
+        </select>
+    
+        <label>Eszköz azonosító:</label>
+        <input type='text' name='azonosito' required>
+        ";
+
+        // Eszköz ÁLLAPOT legördülő lista létrehozása
+    $sql = "SELECT allapot, allapot_id
+            FROM eszkoz_allapot
+            ORDER BY allapot_id";
+    $result = $conn->query($sql);
+
+    echo "
+        <label>Eszköz állapota:</label>
+        <select name='allapot' id='allapot' required>
+            <option value=''>-- Válaszd ki az eszköz állapotát! --</option>
+    ";
+    
+    // legördülő lista feltöltése
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value=\"{$row['allapot_id']}\">{$row['allapot']}</option>";
+    }
+
+        
+    echo "
+        </select>
+    
+        <label>Eszköz méret:</label>
+        <input type='text' name='meret' required>
+    
+        <label>Megjegyzés:</label>
+        <input type='text' name='megjegyzes' required>
+    
+
+        <button type='button' onclick='ujEszkozMentes()'>Mentés</button>
+
+    </form>
+    ";
+}
+
+function uj_eszkoz_mentes($conn) {
+    $kategoria_id = $_POST["eszköz_kategoria"];
+    $tipus_id     = $_POST["tipus"];
+    $azonosito    = $_POST["azonosito"];
+    $meret     = $_POST["meret"];
+    $allapot     = $_POST["allapot"];
+    $megjegyzes     = $_POST["megjegyzes"];
+
+    // 1) eszköz mentése
+    //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
+
+        /*   INSERT INTO `dolgozok`(`dolgozo_nev`, `beosztas`, `email`, `telefon`)
+             VALUES ('laca faca','lacafacázó', 'laca@faca.com','06201234567');*/
+
+    $sql = "INSERT INTO eszkozok(kategoria_id, tipus_id, azonosito, meret, allapot_id, megjegyzes)
+            VALUES ('$kategoria_id', '$tipus_id', '$azonosito', '$meret', '$allapot', '$megjegyzes')";
+
+    if ($conn->query($sql)) {
+        echo "OK";
+    } else {
+        echo "Hiba: " . $sql . "<br>" . $conn->error;
+    }
+
+}
 
 // xxxxxxxxxxxxxxxxxxxxxxx
 // -=OPERÁTOR FÜGGVÉNYEK=-

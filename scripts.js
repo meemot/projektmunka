@@ -94,6 +94,50 @@ function ujFelhasznaloMentes() {
     });
 }
 
+function ujEszkozok() {
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=uj_eszkoz_form"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+function ujEszkozMentes() {
+    const form = document.getElementById("ujEszkozForm"); //a böngésző megkeresi a formot az ID alapján
+    const formData = new FormData(form); // a form adatainak összegyűjtése a FormData objektumba: nem kell kézzel írni a mezőket, a FormData automatikusan összegyűjti az összes mezőt a formból
+
+    formData.append("action", "uj_eszkoz_mentes"); // hozzáadjuk az action mezőt a formData-hoz, ez mondja meg a php-nak, hogy melyik függvényt hívja meg
+
+    /* AJAX kérést küldünk a szervernek (ajax.php) a form adataival */
+    fetch("ajax.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(r => r.text()) // válasz beolvasása szövegként
+    .then(valasz => {    // itt kapjuk meg a szerver válaszát, amit a php visszaadott
+
+        if (valasz.trim() === "OK") {
+
+            // sikeres mentés után újratöltjük a dolgozók táblát
+            fetch("ajax.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "action=a_eszkozok"
+            })
+            .then(r => r.text())
+            .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
+                document.querySelector(".admin_box3").innerHTML = html;
+            });
+
+        } else {
+            alert("Hiba történt: " + valasz);
+        }
+    });
+}
 
 document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése után fut le a kód */
 
