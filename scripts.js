@@ -49,6 +49,19 @@ function ujDolgozoMentes() {
     });
 }
 
+function ujDolgozoMegse() {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=a_dolgozok"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
 function dolgozoSzerkesztes(id) {
 
     fetch("ajax.php", {
@@ -150,6 +163,19 @@ function ujFelhasznaloMentes() {
         } else {
             alert("Hiba történt: " + valasz);
         }
+    });
+}
+
+function ujFelhasznaloMegse() {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=a_felhasznalok"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
     });
 }
 
@@ -267,6 +293,76 @@ function ujEszkozMentes() {
     });
 }
 
+function ujEszkozMegse() {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=a_eszkozok"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+function eszkozSzerkesztes(id) {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=eszkoz_szerkesztes_form&id=" + id
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
+
+function modEszkozMentes() {
+
+    const form = document.getElementById("modEszkozForm");
+    const formData = new FormData(form);
+
+    formData.append("action", "update_eszkoz");
+
+    fetch("ajax.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(r => r.text())
+    .then(valasz => {
+
+        if (valasz.trim() === "OK") {
+
+            fetch("ajax.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "action=a_eszkozok"
+            })
+            .then(r => r.text())
+            .then(html => {
+                document.querySelector(".admin_box3").innerHTML = html;
+            });
+
+        } else {
+            alert("Hiba: " + valasz);
+        }
+    });
+}
+
+function modEszkozMegse() {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=a_eszkozok"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+}
 
 
 document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése után fut le a kód */
@@ -301,6 +397,28 @@ document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése u
     });
 
 });
+
+// a kategoria select változását figyeljük, és a tipus selectet frissítjük az ajax.php-ból kapott adatokkal
+// új eszköz létrehozásakor csak a kiválasztott kategóriához tartoz ó típusok jelenjenek meg
+document.addEventListener("change", function(e) {
+    if (e.target && e.target.id === "eszkoz_kategoria") {
+
+        const kat = e.target.value;
+        const tipusSelect = document.getElementById("tipus");
+
+        fetch("ajax.php", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: "action=tipusok_kategoria_szerint&kategoria=" + kat
+        })
+        .then(r => r.text())
+        .then(html => {
+            tipusSelect.innerHTML = html;
+        });
+    }
+});
+
+
 
 
 
