@@ -12,7 +12,9 @@ function ujDolgozo() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -40,7 +42,9 @@ function ujDolgozoMentes() {
             })
             .then(r => r.text())
             .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
-                document.querySelector(".admin_box3").innerHTML = html;
+                const box = document.querySelector(".admin_box3");
+                box.innerHTML = html;
+                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -58,7 +62,9 @@ function ujDolgozoMegse() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -71,14 +77,26 @@ function dolgozoSzerkesztes(id) {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
 function modDolgozoMentes() {
-
+    
     const form = document.getElementById("modDolgozoForm");
     const formData = new FormData(form);
+
+    // KILÉPETT checkbox → dátum vagy üres
+    let kilepettChecked = form.querySelector("input[name='kilepett']").checked;
+
+    if (kilepettChecked) {
+        let datum = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        formData.set("kilepett", datum);   // dátumot írunk be
+    } else {
+        formData.set("kilepett", "");      // üres → PHP NULL-t fog menteni
+    }
 
     formData.append("action", "update_dolgozo");
 
@@ -98,11 +116,13 @@ function modDolgozoMentes() {
             })
             .then(r => r.text())
             .then(html => {
-                document.querySelector(".admin_box3").innerHTML = html;
+                const box = document.querySelector(".admin_box3");
+                box.innerHTML = html;
+                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
-            alert("Hiba: " + valasz);
+            alert(valasz);
         }
     });
 }
@@ -116,7 +136,9 @@ function modDolgozoMegse() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -129,7 +151,9 @@ function ujFelhasznalo() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -157,7 +181,9 @@ function ujFelhasznaloMentes() {
             })
             .then(r => r.text())
             .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
-                document.querySelector(".admin_box3").innerHTML = html;
+                const box = document.querySelector(".admin_box3");
+                box.innerHTML = html;
+                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -175,7 +201,9 @@ function ujFelhasznaloMegse() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -188,7 +216,9 @@ function felhasznaloSzerkesztes(id) {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -225,7 +255,9 @@ function modFelhasznaloMentes() {
             })
             .then(r => r.text())
             .then(html => {
-                document.querySelector(".admin_box3").innerHTML = html;
+                const box = document.querySelector(".admin_box3");
+                box.innerHTML = html;
+                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -243,10 +275,11 @@ function modFelhasznaloMegse() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
-
 
 function ujEszkozok() {
     fetch("ajax.php", {
@@ -256,7 +289,9 @@ function ujEszkozok() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -284,7 +319,9 @@ function ujEszkozMentes() {
             })
             .then(r => r.text())
             .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
-                document.querySelector(".admin_box3").innerHTML = html;
+                const box = document.querySelector(".admin_box3");
+                box.innerHTML = html;
+                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -302,7 +339,9 @@ function ujEszkozMegse() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -315,7 +354,9 @@ function eszkozSzerkesztes(id) {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -342,7 +383,9 @@ function modEszkozMentes() {
             })
             .then(r => r.text())
             .then(html => {
-                document.querySelector(".admin_box3").innerHTML = html;
+                const box = document.querySelector(".admin_box3");
+                box.innerHTML = html;
+                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -360,7 +403,9 @@ function modEszkozMegse() {
     })
     .then(r => r.text())
     .then(html => {
-        document.querySelector(".admin_box3").innerHTML = html;
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 

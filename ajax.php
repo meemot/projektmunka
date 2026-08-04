@@ -139,7 +139,8 @@ function a_dolgozok_modul($conn) {
     ";
 
     // TÁBLÁZAT
-    $sql = "SELECT dolgozo_id, dolgozo_nev, beosztas, email, telefon FROM dolgozok ORDER BY dolgozo_nev ASC";
+    $sql = "SELECT dolgozo_id, dolgozo_nev, beosztas, email, telefon, kilepett 
+            FROM dolgozok ORDER BY dolgozo_nev ASC";
     $result = $conn->query($sql);
 
     
@@ -150,14 +151,22 @@ function a_dolgozok_modul($conn) {
                 <th>Beosztás</th>
                 <th>Email</th>
                 <th>Telefon</th>
+                <th>Kilépett</th>
             </tr>";
 
     while ($row = $result->fetch_assoc()) {
+
+        // Kilépett mező átalakítása
+        $kilepett = $row['kilepett'] 
+            ? "Igen ({$row['kilepett']})" 
+            : "";
+
         echo "<tr ondblclick=\"dolgozoSzerkesztes({$row['dolgozo_id']})\">
                 <td>{$row['dolgozo_nev']}</td>
                 <td>{$row['beosztas']}</td>
                 <td>{$row['email']}</td>
                 <td>{$row['telefon']}</td>
+                <td>{$kilepett}</td>
               </tr>";
     }
 
@@ -168,7 +177,7 @@ function dolgozo_szerkesztes_form($conn) { // Dolgozó adatainak lekérése az a
 
     $id = $_POST["id"];
 
-    $sql = "SELECT dolgozo_nev, beosztas, email, telefon
+    $sql = "SELECT dolgozo_nev, beosztas, email, telefon, kilepett
             FROM dolgozok
             WHERE dolgozo_id = $id";
 
@@ -193,6 +202,10 @@ function dolgozo_szerkesztes_form($conn) { // Dolgozó adatainak lekérése az a
             <label>Telefon:</label>
             <input type='text' name='telefon' value='{$row['telefon']}' class='form-control'>
 
+            <label>Kilépett:</label>
+            <input type='checkbox' name='kilepett' ".($row['kilepett'] ? "checked" : "").">
+            <br>
+
             <button type='button' onclick='modDolgozoMentes()' class='btn btn-primary mt-3'>Mentés</button>
             <button type='button' onclick='modDolgozoMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
         </form>
@@ -206,6 +219,7 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
     $beosztas = $_POST["beosztas"];
     $email    = $_POST["email"];
     $telefon  = $_POST["telefon"];
+    $kilepett = $_POST["kilepett"];   // dátum vagy üres string
 
     // -1) Ellenőrzés: minden szó nagybetűs-e?
     $szavak = explode(" ", $nev);
@@ -230,13 +244,23 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
         echo "HIBA: Már létezik ilyen nevű dolgozó!";
         return;
     }
+
+    // Ha üres → NULL
+    if ($kilepett === "") {
+        $kilepett_sql = "NULL";
+    } else {
+        // Dátum → idézőjelbe kell tenni
+        $kilepett_sql = "'$kilepett'";
+    }
+
     
     // 1) Dolgozó adatainak frissítése az adatbázisban
     $sql = "UPDATE dolgozok
             SET dolgozo_nev='$nev',
                 beosztas='$beosztas',
                 email='$email',
-                telefon='$telefon'
+                telefon='$telefon',
+                kilepett=$kilepett_sql
             WHERE dolgozo_id = $id";
 
     if ($conn->query($sql)) {
@@ -507,6 +531,9 @@ function uj_felhasznalo_form($conn) {
         <label>Jelszó:</label>
         <input type='password' name='jelszo' class='form-control' required>
 
+        <label>Jelszó újra:</label>
+            <input type='password' name='jelszo2' class='form-control'>
+
         <button type='button' onclick='ujFelhasznaloMentes()' class='btn btn-primary mt-3'>Mentés</button>
         <button type='button' onclick='ujFelhasznaloMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
 
@@ -519,6 +546,14 @@ function uj_felhasznalo_mentes($conn) {
     $jogkor     = $_POST["jogkor"];
     $usernev    = $_POST["usernev"];
     $jelszo     = $_POST["jelszo"];
+    $jelszo2    = $_POST["jelszo2"];
+
+    // Jelszó ellenőrzés
+    if ($jelszo !== $jelszo2) {
+        echo "A két jelszó nem egyezik!";
+        return;
+    }
+
 
     // 1) felhasználó mentése
     //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
@@ -544,7 +579,7 @@ function a_eszkozok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h3>Eszközök</h3>
+        <h3>Eszközök (a selejtezett eszközök nem jelennek meg! Javítani kell majd a szűrésnél!)</h3>
         <button onclick=\"ujEszkozok()\">Új eszköz</button>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
@@ -849,7 +884,7 @@ function uj_eszkoz_mentes($conn) {
     $kategoria_id = $_POST["eszkoz_kategoria"];
     $tipus_id     = $_POST["tipus"];
     $azonosito    = $_POST["azonosito"];
-    $meret     = $_POST["meret"];
+    $meret     = strtoupper($_POST["meret"]);
     $allapot     = $_POST["allapot"];
     $megjegyzes     = $_POST["megjegyzes"];
 
