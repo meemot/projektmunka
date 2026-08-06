@@ -41,18 +41,18 @@
             </nav>
 
             <!-- Jobb oldali tartalom -->
-            <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2">
+            <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2 d-flex flex-column h-100">
 
-                <!-- Felső sáv -->
-                <div class="card mb-4">
+                <!-- Felső sáv (fix rész) -->
+                <div class="admin_top card mb-3">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
                         <span class="badge bg-primary">Admin</span>
                     </div>
                 </div>
 
-                <!-- AJAX tartalom -->
-                <div class="admin_box3">
+                <!-- AJAX tartalom - görgethető -->
+                <div class="admin_box3 flex-grow-1 overflow-auto">
                     Box3
                 </div>
 

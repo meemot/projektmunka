@@ -131,7 +131,7 @@ function a_dolgozok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h3>Dolgozók</h3>
+        <h3>Dolgozók - (név szerint sorba rendezve)</h3>
         <button onclick=\"ujDolgozo()\">Új dolgozó</button>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
@@ -221,6 +221,12 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
     $telefon  = $_POST["telefon"];
     $kilepett = $_POST["kilepett"];   // dátum vagy üres string
 
+     // -2) Ellenőrzés: minden mező ki van-e töltve?
+    if ($nev === "" || $beosztas === "" || $email === "" || $telefon === "") {
+        echo "HIBA: Minden mezőt ki kell tölteni!";
+        return;
+    }
+
     // -1) Ellenőrzés: minden szó nagybetűs-e?
     $szavak = explode(" ", $nev);
 
@@ -303,6 +309,11 @@ function uj_dolgozo_mentes($conn) {
     $email      = $_POST["email"];
     $telefon    = $_POST["telefon"];
 
+    // -2) Ellenőrzés: minden mező ki van-e töltve?
+    if ($nev === "" || $beosztas === "" || $email === "" || $telefon === "") {
+        echo "HIBA: Minden mezőt ki kell tölteni!";
+        return;
+    }
 
     // -1) Ellenőrzés: minden szó nagybetűs-e?
     $szavak = explode(" ", $nev);
@@ -453,12 +464,18 @@ function update_felhasznalo($conn) {
     $jelszo2 = $_POST["jelszo2"];
     $torolve = $_POST["torolve"];   // dátum vagy üres string
 
-    // Duplikáció ellenőrzés
+    /* Duplikáció ellenőrzés - kell ez bele??????
     $ellenorzes = "SELECT user_id 
                    FROM users 
                    WHERE usernev = '$usernev' AND user_id != $id";
 
-    $result = $conn->query($ellenorzes);
+    $result = $conn->query($ellenorzes); */
+
+     // -2) Ellenőrzés: minden mező ki van-e töltve?
+    if ($usernev === "" || $jogkor === "" || $jelszo === "" || $jelszo2 === "") {
+        echo "HIBA: Minden mezőt ki kell tölteni!";
+        return;
+    }
 
     // Jelszó ellenőrzés
     if ($jelszo !== $jelszo2) {
@@ -548,12 +565,27 @@ function uj_felhasznalo_mentes($conn) {
     $jelszo     = $_POST["jelszo"];
     $jelszo2    = $_POST["jelszo2"];
 
+      // -2) Ellenőrzés: minden mező ki van-e töltve?
+    if (empty($dolgozo_id) || $jogkor === "" || $usernev === "" || $jelszo === "" || $jelszo2 === "") {
+        echo "HIBA: Minden mezőt ki kell tölteni!";
+        return;
+    }
+
     // Jelszó ellenőrzés
     if ($jelszo !== $jelszo2) {
         echo "A két jelszó nem egyezik!";
         return;
     }
 
+
+    // 0) Ellenőrzés: van-e már felhasználó ehhez a dolgozóhoz?
+    $ellenorzes = "SELECT user_id FROM users WHERE dolgozo_id = '$dolgozo_id'";
+    $result = $conn->query($ellenorzes);
+
+    if ($result->num_rows > 0) {
+        echo "HIBA: Ehhez a dolgozóhoz már tartozik felhasználói fiók!";
+        return;
+    }
 
     // 1) felhasználó mentése
     //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
@@ -593,7 +625,7 @@ function a_eszkozok_modul($conn) {
         JOIN eszkoz_allapot ea ON e.allapot_id = ea.allapot_id 
         JOIN eszkoz_kategoria ek ON e.kategoria_id = ek.kategoria_id
         JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
-        WHERE e.allapot_id != 4;";
+       /* WHERE e.allapot_id != 4;*/";
     $result = $conn->query($sql);
 
     
@@ -763,6 +795,12 @@ function update_eszkoz($conn) {
     $meret          = $_POST["meret"];
     $megjegyzes     = $_POST["megjegyzes"];
 
+      // -2) Ellenőrzés: minden mező ki van-e töltve?
+    if ($azonosito === "" || $kategoria_id === "" || $tipus_id === "" || $allapot_id === "" || $meret === "" || $megjegyzes === "") {
+        echo "HIBA: Minden mezőt ki kell tölteni!";
+        return;
+    }
+
     // Adatok frissítése az adatbázisban
     $sql = "UPDATE eszkozok
             SET azonosito = '$azonosito',
@@ -887,6 +925,12 @@ function uj_eszkoz_mentes($conn) {
     $meret     = strtoupper($_POST["meret"]);
     $allapot     = $_POST["allapot"];
     $megjegyzes     = $_POST["megjegyzes"];
+
+    // -2) Ellenőrzés: minden mező ki van-e töltve?
+    if ($azonosito === "" || $kategoria_id === "" || $tipus_id === "" || $allapot === "" || $meret === "" || $megjegyzes === "") {
+        echo "HIBA: Minden mezőt ki kell tölteni!";
+        return;
+    }
 
     // 1) eszköz mentése
     //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!

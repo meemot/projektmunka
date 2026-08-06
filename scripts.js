@@ -5,6 +5,9 @@ console.log("JS betöltve!");
 // FORM-ok megjelenítése és mentése az admin_box3 div-ben
 
 function ujDolgozo() {
+
+    window.scrollTo(0, 0); // görgetés az oldal tetejére, hogy a felhasználó az elejéről lássa a formot
+
     fetch("ajax.php", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -14,8 +17,7 @@ function ujDolgozo() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
-    });
+        });
 }
 
 function ujDolgozoMentes() {
@@ -44,7 +46,6 @@ function ujDolgozoMentes() {
             .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
                 const box = document.querySelector(".admin_box3");
                 box.innerHTML = html;
-                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -64,7 +65,6 @@ function ujDolgozoMegse() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -79,7 +79,6 @@ function dolgozoSzerkesztes(id) {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -118,7 +117,6 @@ function modDolgozoMentes() {
             .then(html => {
                 const box = document.querySelector(".admin_box3");
                 box.innerHTML = html;
-                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -138,7 +136,6 @@ function modDolgozoMegse() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -153,7 +150,6 @@ function ujFelhasznalo() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -183,7 +179,6 @@ function ujFelhasznaloMentes() {
             .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
                 const box = document.querySelector(".admin_box3");
                 box.innerHTML = html;
-                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -203,7 +198,6 @@ function ujFelhasznaloMegse() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -218,7 +212,6 @@ function felhasznaloSzerkesztes(id) {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -257,7 +250,6 @@ function modFelhasznaloMentes() {
             .then(html => {
                 const box = document.querySelector(".admin_box3");
                 box.innerHTML = html;
-                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -277,7 +269,6 @@ function modFelhasznaloMegse() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -291,7 +282,6 @@ function ujEszkozok() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -321,7 +311,6 @@ function ujEszkozMentes() {
             .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
                 const box = document.querySelector(".admin_box3");
                 box.innerHTML = html;
-                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -341,7 +330,6 @@ function ujEszkozMegse() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -356,7 +344,6 @@ function eszkozSzerkesztes(id) {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
@@ -385,7 +372,6 @@ function modEszkozMentes() {
             .then(html => {
                 const box = document.querySelector(".admin_box3");
                 box.innerHTML = html;
-                box.scrollTo({ top: 0, behavior: "smooth" });
             });
 
         } else {
@@ -405,14 +391,13 @@ function modEszkozMegse() {
     .then(html => {
         const box = document.querySelector(".admin_box3");
         box.innerHTML = html;
-        box.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
 
 
-document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése után fut le a kód */
+document.addEventListener("DOMContentLoaded", () => { // A html betöltődése után fut le a kód, aztán az eseményfigyelő!!
 
-// Megkeressük az összes menü linket, és eseményfigyelőt adunk hozzá
+    // Megkeressük az összes menü linket, és eseményfigyelőt adunk hozzá
     document.querySelectorAll(".menu_link").forEach(link => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
@@ -428,13 +413,14 @@ document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése u
             .then(response => response.text()) /* A szerver válaszát szövegként olvassuk be */
             .then(data => {
 
-
                 /* Megkeressük az admin_box3 vagy operator_box3 div-et, és beírjuk a választ */
                 const targetBox = document.querySelector(".admin_box3") 
                                || document.querySelector(".operator_box3");
 
                 if (targetBox) {
                     targetBox.innerHTML = data;
+
+                    targetBox.scrollTo({ top: 0, behavior: "smooth" }); // görgetés az oldal tetejére, hogy a felhasználó az elejéről lássa a tartalmat
                 }
 
             });
@@ -443,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => { /* A html betöltődése u
 
 });
 
-// a kategoria select változását figyeljük, és a tipus selectet frissítjük az ajax.php-ból kapott adatokkal
+// az eszközöknél a kategoria select változását figyeljük, és a tipus selectet frissítjük az ajax.php-ból kapott adatokkal
 // új eszköz létrehozásakor csak a kiválasztott kategóriához tartoz ó típusok jelenjenek meg
 document.addEventListener("change", function(e) {
     if (e.target && e.target.id === "eszkoz_kategoria") {
