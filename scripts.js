@@ -394,6 +394,19 @@ function modEszkozMegse() {
     });
 }
 
+function ujKiadas() {
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=uj_kiadas_form"
+    })
+    .then(r => r.text())
+    .then(html => {
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", () => { // A html betöltődése után fut le a kód, aztán az eseményfigyelő!!
 
@@ -429,8 +442,9 @@ document.addEventListener("DOMContentLoaded", () => { // A html betöltődése u
 
 });
 
-// az eszközöknél a kategoria select változását figyeljük, és a tipus selectet frissítjük az ajax.php-ból kapott adatokkal
-// új eszköz létrehozásakor csak a kiválasztott kategóriához tartoz ó típusok jelenjenek meg
+
+/* az eszközöknél a kategoria select változását figyeljük, és a tipus selectet frissítjük az ajax.php-ból kapott adatokkal.
+    új eszköz létrehozásakor csak a kiválasztott kategóriához tartoz ó típusok jelenjenek meg */
 document.addEventListener("change", function(e) {
     if (e.target && e.target.id === "eszkoz_kategoria") {
 
@@ -450,6 +464,54 @@ document.addEventListener("change", function(e) {
 });
 
 
+/* (Az eszközökhöz hasonlóan) a KIADÁS-nál is egy globális "change listener" figyeli a változásokat, hogy a
+    kiválasztott típusnak megfelelő azonosítókat tudjuk megjeleníteni a legördülőben
+    + az eszköz azonosítóhoz is jó 
+document.addEventListener("change", function(e) {
+    if (e.target && e.target.id === "tipus") {
 
+        const tipus = e.target.value;
+        const eszkozSelect = document.getElementById("eszkoz_id");
 
+        fetch("ajax.php", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: "action=eszkozok_tipus_szerint&tipus=" + tipus
+        })
+        .then(r => r.text())
+        .then(html => {
+            eszkozSelect.innerHTML = html;
+        });
+    }
+}); */
 
+document.addEventListener("change", function(e) {
+
+    if (e.target && e.target.id === "tipus") {
+
+        const tipus = e.target.value;
+        const eszkozSelect = document.getElementById("eszkoz_id");
+
+        console.log("TIPUS:", tipus);
+        console.log("ESZKOZ SELECT:", eszkozSelect);
+
+        fetch("ajax.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "action=eszkozok_tipus_szerint&tipus=" + encodeURIComponent(tipus)
+        })
+        .then(r => r.text())
+        .then(html => {
+
+            console.log("AJAX VÁLASZ:");
+            console.log(html);
+
+            eszkozSelect.innerHTML = html;
+        })
+        .catch(error => {
+            console.error("AJAX HIBA:", error);
+        });
+    }
+});

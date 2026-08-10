@@ -8,10 +8,20 @@ if (!isset($_SESSION['dolgozo_id'])) {
     exit;
 }
 
+
 if (isset($_POST['action']) && $_POST['action'] === 'tipusok_kategoria_szerint') {
     tipusok_kategoria_szerint($conn);
     exit;
 }
+
+if (isset($_POST['action']) && $_POST['action'] === 'eszkozok_tipus_szerint') {
+    eszkozok_tipus_szerint($conn);
+    exit;
+}
+
+
+
+
 
 $jog = $_SESSION['jogkor'];
 $action = $_POST["action"] ?? "";
@@ -84,6 +94,9 @@ if ($jog === "a") {
             break;
         case "update_eszkoz":
             update_eszkoz($conn);
+            break;
+        case "uj_kiadas_form":
+            uj_kiadas_form($conn);
             break;
 
         default:
@@ -610,11 +623,14 @@ function a_eszkozok_modul($conn) {
 
     // FELSŐ MŰVELETI SÁV
     echo "
-    <div class='module_actions'>
-        <h3>Eszközök (a selejtezett eszközök nem jelennek meg! Javítani kell majd a szűrésnél!)</h3>
-        <button onclick=\"ujEszkozok()\">Új eszköz</button>
-        <input type='text' id='kereses' placeholder='Keresés...'>
-        <button onclick=\"szures()\">Szűrés</button>
+    <div class='module_actions' d-flex justify-content-between align-items-center'>
+        <h3 class='m-0'>Eszközök</h3>
+
+        <div class='d-flex align-items-center gap-2'>
+            <button onclick=\"ujEszkozok()\">Új eszköz</button>
+            <input type='text' id='kereses' placeholder='Keresés...'>
+            <button onclick=\"szures()\">Szűrés</button>
+        </div>
     </div>
     ";
 
@@ -737,6 +753,14 @@ function eszkoz_szerkesztes_form($conn) {
     // ===============================
     // 4. ÁLLAPOT – teljes lista + selected
     // ===============================
+
+
+    /*    $order = "allapot_id";
+
+    $sql = "SELECT allapot, allapot_id
+                FROM eszkoz_allapot
+                ORDER BY " . ($order) ; */
+
 
     $sql = "SELECT allapot, allapot_id
             FROM eszkoz_allapot
@@ -957,7 +981,7 @@ function a_kiadas_modul($conn) {
     echo "
     <div class='module_actions'>
         <h3>Kiadott, még nem visszavett eszközök</h3>
-        <button onclick=\"ujKiadast()\">Új kiadás</button>
+        <button onclick=\"ujKiadas()\">Új kiadás</button>
         <input type='text' id='kereses' placeholder='Keresés...'>
         <button onclick=\"szures()\">Szűrés</button>
     </div>
@@ -1161,8 +1185,8 @@ function a_visszavetel_modul($conn) {
     echo "</table>";
 }
 
-
-function tipusok_kategoria_szerint($conn) {// kiegészítés az új eszköz felvitelhez, hogy a típusok csak az adott kategóriához tartozóak legyenek
+//kiegészítés az ÚJ ESZKÖZ felvitelhez, hogy a típuok csak az adott kategóriához tartozóak legyenek
+function tipusok_kategoria_szerint($conn) {
 
     $kat = intval($_POST['kategoria']);
 
@@ -1183,8 +1207,119 @@ function tipusok_kategoria_szerint($conn) {// kiegészítés az új eszköz felv
 }
 
 
-// "ÚJ" MŰVELETEK
-// --------------
+// KIADÁS
+// ------
+
+function uj_kiadas_form($conn) {
+
+    $tipus = $_POST['tipus'] ?? null; // AJAX-ból érkező típus
+
+    // dolgozók lekérése
+    $sql = "SELECT dolgozo_nev, dolgozo_id
+            FROM dolgozok 
+            ORDER BY dolgozo_nev";
+    $result = $conn->query($sql);
+
+    echo "
+    <h3>Új eszköz kiadása (A selejtezett tételek nem jelennek meg!)</h3>
+
+    <form id='ujKiadasForm' class='form-control'>
+        
+        <label>Dolgozó:</label>
+        <select name='dolgozo_id' id='dolgozo_id' class='form-control' required>
+            <option value=''>-- Válaszd ki a dolgozót! --</option>
+    ";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value=\"{$row['dolgozo_id']}\">{$row['dolgozo_nev']}</option>";
+    }
+
+    echo "</select><br><br>";
+
+
+    // ESZKÖZ TÍPUS LISTA
+    $sql = "SELECT tipus_id, megnevezes 
+            FROM eszkoz_tipus
+            ORDER BY megnevezes";
+    $result = $conn->query($sql);
+
+    echo "
+        <label>Eszköz típus:</label>
+        <select name='tipus' id='tipus' class='form-control' required>
+            <option value=''>-- Válaszd ki az eszköz típusát! --</option>
+    ";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value=\"{$row['tipus_id']}\">{$row['megnevezes']}</option>";
+    }
+
+    echo "</select><br><br>";
+
+
+    // ESZKÖZ LISTA – AJAX fogja frissíteni
+    echo "
+        <label>Eszköz azonosító:</label>
+        <select name='eszkoz_id' id='eszkoz_id' class='form-control' required>
+    ";
+
+    if ($tipus) {
+
+        // csak a kiválasztott típushoz tartozó eszközök, amelyek nem hibásak (allapot != 4)
+        $tipus = intval($tipus);
+        
+        $sql = "SELECT eszkoz_id, azonosito, allapot_id, megjegyzes
+                FROM eszkozok
+                WHERE tipus_id = $tipus
+                AND allapot_id != 4
+                ORDER BY azonosito";
+
+        $result = $conn->query($sql);
+
+        echo "<option value=''>-- Válaszd ki az eszközt! --</option>";
+
+        while ($row = $result->fetch_assoc()) {
+            echo "<option value=\"{$row['eszkoz_id']}\">{$row['azonosito']} (állapot: {$row['allapot']})</option>";
+        }
+
+    } else {
+        echo "<option value=''>-- Előbb válassz típust! --</option>";
+    }
+
+    echo "</select><br><br>";
+
+
+    // GOMBOK
+    echo "
+        <button type='button' onclick='ujKiadásMentes()' class='btn btn-primary mt-3'>Kiadás mentése</button>
+        <button type='button' onclick='ujKiadásMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
+    ";
+
+    echo "</form>";
+}
+
+
+//kiegészítés az ÚJ KIADÁS-hoz, az eszköz azonosítójának kiválasztásához (korábban kiválasztott típus alapján)
+function eszkozok_tipus_szerint($conn) {
+
+    $tipus = intval($_POST['tipus']);
+
+    $sql = "SELECT eszkoz_id, azonosito, allapot_id
+            FROM eszkozok
+            WHERE tipus_id = $tipus
+            AND allapot_id != 4
+            ORDER BY azonosito";
+
+    $result = $conn->query($sql);
+
+    echo "<option value=''>-- Válaszd ki az eszközt! --</option>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value=\"{$row['eszkoz_id']}\">{$row['azonosito']}</option>";
+    }
+}
+
+
+
 
 
 // xxxxxxxxxxxxxxxxxxxxxxx
