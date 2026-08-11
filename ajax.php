@@ -1212,7 +1212,7 @@ function tipusok_kategoria_szerint($conn) {
 
 function uj_kiadas_form($conn) {
 
-    $tipus = $_POST['tipus'] ?? null; // AJAX-ból érkező típus
+   // $tipus = $_POST['tipus'] ?? null; // AJAX-ból érkező típus
 
     // dolgozók lekérése
     $sql = "SELECT dolgozo_nev, dolgozo_id
@@ -1234,7 +1234,7 @@ function uj_kiadas_form($conn) {
         echo "<option value=\"{$row['dolgozo_id']}\">{$row['dolgozo_nev']}</option>";
     }
 
-    echo "</select><br><br>";
+    echo "</select><br>";
 
 
     // ESZKÖZ TÍPUS LISTA
@@ -1253,39 +1253,65 @@ function uj_kiadas_form($conn) {
         echo "<option value=\"{$row['tipus_id']}\">{$row['megnevezes']}</option>";
     }
 
-    echo "</select><br><br>";
+    echo "</select><br>";
 
 
     // ESZKÖZ LISTA – AJAX fogja frissíteni
     echo "
         <label>Eszköz azonosító:</label>
-        <select name='eszkoz_id' id='eszkoz_id' class='form-control' required>
+        <select name='eszkoz_id' id='eszkoz_id' class='form-control'>
+        <option value=''>--Előbb válassz típust!--</option>
+        </select>
     ";
-
+/*
     if ($tipus) {
 
         // csak a kiválasztott típushoz tartozó eszközök, amelyek nem hibásak (allapot != 4)
         $tipus = intval($tipus);
         
-        $sql = "SELECT eszkoz_id, azonosito, allapot_id, megjegyzes
-                FROM eszkozok
-                WHERE tipus_id = $tipus
+        $sql = "SELECT e.eszkoz_id, e.azonosito, e.allapot_id, et.megnevezes AS tipus_nev, megjegyzes
+                FROM eszkozok e
+                JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
+                WHERE e.tipus_id = $tipus
                 AND allapot_id != 4
-                ORDER BY azonosito";
+                ORDER BY e.azonosito";
 
         $result = $conn->query($sql);
 
         echo "<option value=''>-- Válaszd ki az eszközt! --</option>";
 
         while ($row = $result->fetch_assoc()) {
-            echo "<option value=\"{$row['eszkoz_id']}\">{$row['azonosito']} (állapot: {$row['allapot']})</option>";
+            echo "<option value=\"{$row['eszkoz_id']}\" 
+                    data-tipus=\"{$row['tipus_nev']}\"
+                    data-allapot=\"{$row['allapot_id']}\">
+                {$row['tipus_nev']} - {$row['azonosito']} (állapot: {$row['allapot_id']})</option>";
         }
 
     } else {
         echo "<option value=''>-- Előbb válassz típust! --</option>";
-    }
+    }*/
 
-    echo "</select><br><br>";
+    echo "</select><br>";
+
+    // A következő eszköz felvitele
+    echo "
+        <button type='button' id='hozzaadEszkozBtn' class='btn btn-success mb-3'>
+            Eszköz hozzáadása
+        </button><br><br>
+        <h3>Kiadásra előkészített eszközök</h3><br>
+
+        <table id='kiadottEszkozok' class='table table-bordered'>
+            <thead>
+                <tr>
+                    <th>Típus</th>
+                    <th>Azonosító</th>
+                    <th>Törlés</th> 
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    ";
+
 
 
     // GOMBOK
@@ -1303,22 +1329,24 @@ function eszkozok_tipus_szerint($conn) {
 
     $tipus = intval($_POST['tipus']);
 
-    $sql = "SELECT eszkoz_id, azonosito, allapot_id
-            FROM eszkozok
-            WHERE tipus_id = $tipus
-            AND allapot_id != 4
-            ORDER BY azonosito";
+    $sql = "SELECT e.eszkoz_id, e.azonosito, e.allapot_id, et.megnevezes AS tipus_nev, megjegyzes
+                FROM eszkozok e
+                JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
+                WHERE e.tipus_id = $tipus
+                AND allapot_id != 4
+                ORDER BY e.azonosito";
 
     $result = $conn->query($sql);
 
     echo "<option value=''>-- Válaszd ki az eszközt! --</option>";
 
     while ($row = $result->fetch_assoc()) {
-        echo "<option value=\"{$row['eszkoz_id']}\">{$row['azonosito']}</option>";
+        echo "<option value=\"{$row['eszkoz_id']}\" 
+                    data-tipus=\"{$row['tipus_nev']}\"
+                    data-allapot=\"{$row['allapot_id']}\">
+                    {$row['azonosito']}</option>";
     }
 }
-
-
 
 
 

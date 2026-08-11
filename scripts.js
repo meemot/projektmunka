@@ -446,6 +446,7 @@ document.addEventListener("DOMContentLoaded", () => { // A html betöltődése u
 /* az eszközöknél a kategoria select változását figyeljük, és a tipus selectet frissítjük az ajax.php-ból kapott adatokkal.
     új eszköz létrehozásakor csak a kiválasztott kategóriához tartoz ó típusok jelenjenek meg */
 document.addEventListener("change", function(e) {
+
     if (e.target && e.target.id === "eszkoz_kategoria") {
 
         const kat = e.target.value;
@@ -485,6 +486,8 @@ document.addEventListener("change", function(e) {
     }
 }); */
 
+
+// ez kezeli az új kiadás formban a további eszköz hozzáadását
 document.addEventListener("change", function(e) {
 
     if (e.target && e.target.id === "tipus") {
@@ -497,9 +500,7 @@ document.addEventListener("change", function(e) {
 
         fetch("ajax.php", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
             body: "action=eszkozok_tipus_szerint&tipus=" + encodeURIComponent(tipus)
         })
         .then(r => r.text())
@@ -515,3 +516,44 @@ document.addEventListener("change", function(e) {
         });
     }
 });
+
+// az eszköz hozzáadása gomb!
+function hozzaadEszkoz() {
+    const select = document.getElementById("eszkoz_id");
+    const eszkozId = select.value;
+
+    if (!eszkozId) {
+        alert("Előbb válassz ki egy eszközt!");
+        return;
+    }
+
+    const option = select.options[select.selectedIndex];
+    const eszkozTipus = option.dataset.tipus || "";
+    const eszkozText = select.options[select.selectedIndex].text;
+
+    const tbody = document.querySelector("#kiadottEszkozok tbody");
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${eszkozTipus}</td>
+        <td>${eszkozText}</td>
+        <td><button class='btn btn-danger btn-sm' onclick='torolEszkoz(this)'>Törlés</button></td>
+        <input type='hidden' name='eszkozok[]' value='${eszkozId}'>
+    `;
+
+    tbody.appendChild(row);
+}
+
+// a formban már betöltött adatok táblázatba mentéséhez (LISTENER")
+document.addEventListener("click", function(e) {
+    if (e.target && e.target.id === "hozzaadEszkozBtn") {
+        hozzaadEszkoz();
+    }
+});
+
+
+// új kiadás - hozzáadott eszközt táblázatban - törlés gomb
+function torolEszkoz(btn) {
+    btn.closest("tr").remove();
+}
+
