@@ -24,6 +24,7 @@
             session_destroy();
             session_start();
             $_SESSION["dolgozo_id"] = $row["dolgozo_id"];
+            $_SESSION["user_id"] = $row["dolgozo_id"];
             $_SESSION["jogkor"] = $row["jogkor"];
             $_SESSION["nev"] = $row["dolgozo_nev"];
             $_SESSION["beosztas"] = $row["beosztas"];

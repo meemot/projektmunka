@@ -407,6 +407,54 @@ function ujKiadas() {
     });
 }
 
+function ujKiadasMentes() {
+    const formData = new FormData(document.getElementById('ujKiadasForm'));
+
+    formData.append("action", "kiadas_mentes");
+
+    fetch('ajax.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.text())
+    .then(valasz => {
+
+        // sikeres mentés esetén a PHP visszaadja pl.:
+        // "A kiadás sikeresen mentve (ID: 123)"
+        alert(valasz);
+
+        if (!valasz.startsWith("HIBA")) {
+            
+            // UGYANAZ, mint az új eszköznél
+            // csak itt a KIADÁS modult töltjük újra
+            fetch("ajax.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "action=a_kiadas"
+            })
+            .then(r => r.text())
+            .then(html => {
+                const box = document.querySelector(".admin_box3");
+                box.innerHTML = html;
+            });
+        }
+    });
+}
+
+function ujKiadasMegse() {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=a_kiadas"
+    })
+    .then(r => r.text())
+    .then(html => {
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", () => { // A html betöltődése után fut le a kód, aztán az eseményfigyelő!!
 
@@ -517,7 +565,7 @@ document.addEventListener("change", function(e) {
     }
 });
 
-// az eszköz hozzáadása gomb!
+// KIADÁSBAN, az eszköz hozzáadása gomb!
 function hozzaadEszkoz() {
     const select = document.getElementById("eszkoz_id");
     const eszkozId = select.value;
@@ -542,6 +590,10 @@ function hozzaadEszkoz() {
     `;
 
     tbody.appendChild(row);
+
+    // HOZZÁADÁS UTÁN A LEGÖRDÜLŐK VISSZAÁLLÍTÁSA ALAPÉRTELMEZETTRE
+    document.getElementById("tipus").value = "";
+    document.getElementById("eszkoz_id").innerHTML = "<option value=''>--Előbb válassz típust!--</option>";
 }
 
 // a formban már betöltött adatok táblázatba mentéséhez (LISTENER")
@@ -556,4 +608,5 @@ document.addEventListener("click", function(e) {
 function torolEszkoz(btn) {
     btn.closest("tr").remove();
 }
+
 

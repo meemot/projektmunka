@@ -1,9 +1,8 @@
-
 <?php
 session_start();
 require_once 'db.php'; // adatbázis kapcsolat
 
-if (!isset($_SESSION['dolgozo_id'])) {
+if (!isset($_SESSION['user_id'])){
     echo "Nincs bejelentkezve.";
     exit;
 }
@@ -18,6 +17,13 @@ if (isset($_POST['action']) && $_POST['action'] === 'eszkozok_tipus_szerint') {
     eszkozok_tipus_szerint($conn);
     exit;
 }
+
+// a kiadás menüben a mentés gombra kattintva
+if (isset($_POST['action']) && $_POST['action'] === 'kiadas_mentes') {
+    kiadas_mentes($conn);
+    exit;
+}
+
 
 
 
@@ -98,7 +104,9 @@ if ($jog === "a") {
         case "uj_kiadas_form":
             uj_kiadas_form($conn);
             break;
-
+        case "kiadas_mentes":
+            kiadas_mentes($conn);
+            break;
         default:
             echo "Ismeretlen admin modul.";
     }
@@ -974,7 +982,6 @@ function uj_eszkoz_mentes($conn) {
 }
 
 
-
 function a_kiadas_modul($conn) {
 
     // FELSŐ MŰVELETI SÁV
@@ -1216,7 +1223,8 @@ function uj_kiadas_form($conn) {
 
     // dolgozók lekérése
     $sql = "SELECT dolgozo_nev, dolgozo_id
-            FROM dolgozok 
+            FROM dolgozok
+            WHERE kilepett IS NULL
             ORDER BY dolgozo_nev";
     $result = $conn->query($sql);
 
@@ -1263,33 +1271,7 @@ function uj_kiadas_form($conn) {
         <option value=''>--Előbb válassz típust!--</option>
         </select>
     ";
-/*
-    if ($tipus) {
 
-        // csak a kiválasztott típushoz tartozó eszközök, amelyek nem hibásak (allapot != 4)
-        $tipus = intval($tipus);
-        
-        $sql = "SELECT e.eszkoz_id, e.azonosito, e.allapot_id, et.megnevezes AS tipus_nev, megjegyzes
-                FROM eszkozok e
-                JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
-                WHERE e.tipus_id = $tipus
-                AND allapot_id != 4
-                ORDER BY e.azonosito";
-
-        $result = $conn->query($sql);
-
-        echo "<option value=''>-- Válaszd ki az eszközt! --</option>";
-
-        while ($row = $result->fetch_assoc()) {
-            echo "<option value=\"{$row['eszkoz_id']}\" 
-                    data-tipus=\"{$row['tipus_nev']}\"
-                    data-allapot=\"{$row['allapot_id']}\">
-                {$row['tipus_nev']} - {$row['azonosito']} (állapot: {$row['allapot_id']})</option>";
-        }
-
-    } else {
-        echo "<option value=''>-- Előbb válassz típust! --</option>";
-    }*/
 
     echo "</select><br>";
 
@@ -1313,15 +1295,75 @@ function uj_kiadas_form($conn) {
     ";
 
 
-
     // GOMBOK
     echo "
-        <button type='button' onclick='ujKiadásMentes()' class='btn btn-primary mt-3'>Kiadás mentése</button>
-        <button type='button' onclick='ujKiadásMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
+        <button type='button' onclick='ujKiadasMentes()' class='btn btn-primary mt-3'>Kiadás mentése</button>
+        <button type='button' onclick='ujKiadasMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
     ";
 
     echo "</form>";
 }
+
+
+function kiadas_mentes($conn) {
+
+    // 0) Dolgozó kiválasztva?
+    if (!isset($_POST['dolgozo_id']) || $_POST['dolgozo_id'] === "") {
+        echo "HIBA: Válaszd ki a dolgozót!";
+        return;
+    }
+
+    // 1) Van-e legalább 1 eszköz?
+    if (!isset($_POST['eszkozok']) || count($_POST['eszkozok']) === 0) {
+        echo "HIBA: Legalább egy eszközt ki kell választani!";
+        return;
+    }
+
+    // 2) A bejelentkezett user ID-ja
+    if (!isset($_SESSION['user_id'])) {
+        echo "HIBA: Nincs bejelentkezve!";
+        return;
+    }
+
+    $dolgozo_id = intval($_POST['dolgozo_id']);
+    $user_id = $_SESSION['user_id'];   // bejelentkezett user
+    $datum = date('Y-m-d H:i:s');
+
+    // 1) új kiadás létrehozása
+    $sql = "INSERT INTO kiadas (ki_vette_fel, ki_adta_ki, kiadas_datum)
+            VALUES ($dolgozo_id, $user_id, '$datum')";
+
+    if (!$conn->query($sql)) {
+        echo "SQL hiba: " . $conn->error;
+        return;
+    }
+
+    // 2) az új kiadás ID-ja
+    $kiad_id = $conn->insert_id;
+
+    // 3) eszközök mentése a reszletek táblába
+    if (!empty($_POST['eszkozok'])) {
+
+        foreach ($_POST['eszkozok'] as $eszkoz_id) {
+
+            $eszkoz_id = intval($eszkoz_id);
+
+            // lekérjük az eszköz aktuális állapotát
+            $sql = "SELECT allapot_id FROM eszkozok WHERE eszkoz_id = $eszkoz_id";
+            $res = $conn->query($sql);
+            $row = $res->fetch_assoc();
+            $allapot = intval($row['allapot_id']);
+
+            // beszúrjuk a részletet
+            $sql2 = "INSERT INTO reszletek (kiad_id, eszkoz_id, kiadas_allapot)
+                     VALUES ($kiad_id, $eszkoz_id, $allapot)";
+            $conn->query($sql2);
+        }
+    }
+
+    echo "A kiadás sikeresen mentve (ID: $kiad_id)";
+}
+
 
 
 //kiegészítés az ÚJ KIADÁS-hoz, az eszköz azonosítójának kiválasztásához (korábban kiválasztott típus alapján)
@@ -1329,11 +1371,21 @@ function eszkozok_tipus_szerint($conn) {
 
     $tipus = intval($_POST['tipus']);
 
-    $sql = "SELECT e.eszkoz_id, e.azonosito, e.allapot_id, et.megnevezes AS tipus_nev, megjegyzes
+    $sql = "SELECT e.eszkoz_id,
+                    e.azonosito,
+                    e.allapot_id,
+                    e.meret,
+                    et.megnevezes AS tipus_nev,
+                    megjegyzes
                 FROM eszkozok e
-                JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
+                    JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
                 WHERE e.tipus_id = $tipus
-                AND allapot_id != 4
+                    AND e.allapot_id != 4
+                    AND e.eszkoz_id NOT IN (
+                        SELECT eszkoz_id 
+                        FROM reszletek
+                        WHERE visszavet_datum IS NULL
+                )
                 ORDER BY e.azonosito";
 
     $result = $conn->query($sql);
@@ -1343,11 +1395,11 @@ function eszkozok_tipus_szerint($conn) {
     while ($row = $result->fetch_assoc()) {
         echo "<option value=\"{$row['eszkoz_id']}\" 
                     data-tipus=\"{$row['tipus_nev']}\"
-                    data-allapot=\"{$row['allapot_id']}\">
-                    {$row['azonosito']}</option>";
+                    data-allapot=\"{$row['allapot_id']}\"
+                    data-meret=\"{$row['meret']}\">
+                    {$row['azonosito']} (Méret: {$row['meret']})</option>";
     }
 }
-
 
 
 // xxxxxxxxxxxxxxxxxxxxxxx
