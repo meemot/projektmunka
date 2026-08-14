@@ -35,8 +35,8 @@
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
                 <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="a_eszkozok">Eszközök</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_osszes_kiadas">Összes eszközmozgás</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Kiadás</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavétel</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Eszköz kiadás</a>
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Eszköz visszavétel</a>
 
             </nav>
 
@@ -50,7 +50,7 @@
                         <span class="badge bg-primary">Admin</span>
                     </div>
                 </div>
-
+                
                 <!-- AJAX tartalom - görgethető -->
                 <div class="admin_box3 flex-grow-1 overflow-auto">
                     Box3
