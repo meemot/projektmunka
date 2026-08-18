@@ -107,6 +107,9 @@ if ($jog === "a") {
         case "kiadas_mentes":
             kiadas_mentes($conn);
             break;
+        case "visszavet_form":
+            visszavet_form($conn);
+            break;
         default:
             echo "Ismeretlen admin modul.";
     }
@@ -996,7 +999,9 @@ function a_kiadas_modul($conn) {
 
     // TÁBLÁZAT
     $sql = 
-        "SELECT 
+        "SELECT
+            r.reszletek_id,
+            k.kiad_id,
             k.kiadas_datum,
             d.dolgozo_nev AS felvette,
             et.megnevezes AS eszkoz_megnevezese,
@@ -1022,6 +1027,7 @@ function a_kiadas_modul($conn) {
     
     echo "<table class='tabla table table-striped table-hover'>
             <tr>
+                <th></th>
                 <th>Kiadás dátuma</th>
                 <th>Ki vette fel</th>
                 <th>Eszköz megnevezése</th>
@@ -1033,6 +1039,7 @@ function a_kiadas_modul($conn) {
 
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
+                <td><button type='button' class='btn btn-outline-primary btn-sm btn-visszavet' data-id='{$row['reszletek_id']}'>Visszavesz</button></td>
                 <td>{$row['kiadas_datum']}</td>
                 <td>{$row['felvette']}</td>
                 <td>{$row['eszkoz_megnevezese']}</td>
@@ -1363,6 +1370,88 @@ function kiadas_mentes($conn) {
 
     echo "A kiadás sikeresen mentve (ID: $kiad_id)";
 }
+
+function visszavet_form($conn) {
+
+    // ID beolvasása
+    if (!isset($_POST["reszletek_id"])) {
+        echo "<p class='text-danger'>Hiba: nincs kiadás ID!</p>";
+        return;
+    }
+
+    $reszletek_id = intval($_POST["reszletek_id"]);
+    echo "<p>DEBUG: kapott kiad_id = $reszletek_id</p>";
+
+    // A kiadás részleteinek lekérése
+    $sql = "SELECT
+                r.reszletek_id,
+                r.kiadas_allapot,
+                k.kiad_id,
+                d.dolgozo_nev AS felvette,
+                et.megnevezes AS eszkoz_megnevezes,
+                e.azonosito AS eszkoz_azonosito
+            FROM reszletek r
+                JOIN kiadas k ON r.kiad_id = k.kiad_id
+                JOIN dolgozok d ON k.ki_vette_fel = d.dolgozo_id
+                JOIN eszkozok e ON e.eszkoz_id = r.eszkoz_id
+                JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
+            WHERE r.reszletek_id = $reszletek_id";
+
+    $result = $conn->query($sql);
+
+    if (!$result || $result->num_rows === 0) {
+        echo "<p class='text-danger'>Hiba: a kiadás nem található!</p>";
+        return;
+    }
+
+    $row = $result->fetch_assoc();
+
+    // FORM KIÍRÁSA
+    echo "
+    <h3>Eszköz visszavétele</h3>
+
+    <form id='VisszavetForm' class='form-control'>
+
+        <label>Ki vette fel:</label>
+        <input type='text' class='form-control' value='{$row['felvette']}' readonly>
+
+        <label>Eszköz megnevezése:</label>
+        <input type='text' class='form-control' value='{$row['eszkoz_megnevezes']}' readonly>
+
+        <label>Eszköz azonosítója:</label>
+        <input type='text' class='form-control' value='{$row['eszkoz_azonosito']}' readonly>
+
+        <label>Eszköz állapota visszavételkor:</label>
+        <select name='visszavett_allapot' class='form-control' required>
+            <option value=''>--Milyen az eszköz állapota visszavételkor?--</option>
+    ";
+           
+        $sql2 = "SELECT
+                    allapot_id,
+                    allapot
+                FROM eszkoz_allapot
+                WHERE allapot_id >= {$row['kiadas_allapot']}
+                ORDER BY allapot_id";
+        $res2 = $conn->query($sql2);
+
+    while ($sor = $res2->fetch_assoc()) {
+        echo "<option value='{$sor['allapot_id']}'>{$sor['allapot']}</option>";
+    }
+
+    echo "</select>
+
+        <label>Megjegyzés:</label>
+        <input type='text' name='visszavett_megjegyzes' class='form-control' required>
+
+        <input type='hidden' name='kiad_id' value='{$row['reszletek_id']}'>
+
+        <button type='button' onclick='VisszavetMentes()' class='btn btn-primary mt-3'>Mentés</button>
+        <button type='button' onclick='VisszavetMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
+
+    </form>
+    ";
+}
+
 
 
 

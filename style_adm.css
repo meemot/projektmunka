@@ -102,6 +102,6 @@ html, body {
 .admin_box3 table thead th {
     position: sticky;
     top: 0;
-    background: #fff;          /* vagy sötét, ha dark theme */
+    background: #cfcfcf;          /* vagy sötét, ha dark theme */
     z-index: 2;
 }

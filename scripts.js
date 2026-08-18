@@ -455,6 +455,22 @@ function ujKiadasMegse() {
     });
 }
 
+function Visszavet(reszletek_id) {
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=visszavet_form&reszletek_id=" + reszletek_id
+    })
+    .then(r => r.text())
+    .then(html => {
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+    });
+}
+
+
+
+
 
 document.addEventListener("DOMContentLoaded", () => { // A html betöltődése után fut le a kód, aztán az eseményfigyelő!!
 
@@ -596,12 +612,26 @@ function hozzaadEszkoz() {
     document.getElementById("eszkoz_id").innerHTML = "<option value=''>--Előbb válassz típust!--</option>";
 }
 
-// a formban már betöltött adatok táblázatba mentéséhez (LISTENER")
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// a formban már betöltött adatok táblázatba mentéséhez ("LISTENER" - globális kattintásfigyelő)
+// Mert a scrips js nem kerül be az AJAX-ból betöltött modulba! (admin_box3 -ba az ajax-szal kiírt adatok)
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+// figyelő az eszköz hozzáadásánál
 document.addEventListener("click", function(e) {
     if (e.target && e.target.id === "hozzaadEszkozBtn") {
         hozzaadEszkoz();
     }
 });
+
+// figyelő a visszavét gombhoz a kiadás menüben (ez futtatja le a function-t)
+document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("btn-visszavet")) {
+        const reszletek_id = e.target.dataset.id;
+        Visszavet(reszletek_id);
+    }
+});
+
 
 
 // új kiadás - hozzáadott eszközt táblázatban - törlés gomb
