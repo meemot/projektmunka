@@ -94,15 +94,13 @@ function modDolgozoMentes() {
     const form = document.getElementById("modDolgozoForm");
     const formData = new FormData(form);
 
-    // KILÉPETT checkbox → dátum vagy üres
-    let kilepettChecked = form.querySelector("input[name='kilepett']").checked;
+    console.log("checkbox:", form.querySelector("input[name='kilepett']"));
+    console.log("checked:", form.querySelector("input[name='kilepett']").checked);
 
-    if (kilepettChecked) {
-        let datum = new Date().toISOString().slice(0, 19).replace('T', ' ');
-        formData.set("kilepett", datum);   // dátumot írunk be
-    } else {
-        formData.set("kilepett", "");      // üres → PHP NULL-t fog menteni
-    }
+
+    // KILÉPETT checkbox → pipálva van vagy sem
+    let kilepettChecked = form.querySelector("input[name='kilepett']").checked;
+    formData.set("kilepett", kilepettChecked ? "1" : "0");
 
     formData.append("action", "update_dolgozo");
 
@@ -521,6 +519,19 @@ function VisszavetMentes(){
 
 }
 
+function VisszavetMegse() {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=a_kiadas"
+    })
+    .then(r => r.text())
+    .then(html => {
+        const box = document.querySelector(".admin_box3");
+        box.innerHTML = html;
+    });
+}
 
 
 
@@ -669,6 +680,22 @@ document.addEventListener("click", function(e) {
         Visszavet(reszletek_id);
     }
 });
+
+// KEZDŐOLDAL
+document.addEventListener("DOMContentLoaded", () => {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=kezdolap"
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.querySelector(".admin_box3").innerHTML = html;
+    });
+
+});
+
 
 
 

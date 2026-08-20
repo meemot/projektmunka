@@ -10,6 +10,7 @@
     }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="hu">
 <head>
@@ -21,6 +22,7 @@
     <title>Admin oldal</title>
 </head>
 
+
 <body>
 
     <div class="container-fluid">
@@ -31,6 +33,7 @@
                 
                 <div class="logo_category mb-4">LOGO</div>
 
+                <a href="#" class="d-block text-white mb-2 menu_link" data-action="kezdolap">Kezdőoldal</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
                 <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="a_eszkozok">Eszközök</a>

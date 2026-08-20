@@ -35,6 +35,10 @@ $action = $_POST["action"] ?? "";
 
 if ($jog === "a") {
     switch ($action) {
+        case "kezdolap":
+            kezdolap_modul();
+            break;
+
         case "a_dolgozok":
             a_dolgozok_modul($conn);
             break;
@@ -159,6 +163,17 @@ if ($jog === "a") {
 
 // ==========================================================================================================================
 
+// XXXXXXXXXXXXXXXX
+// XXX KEZDŐLAP XXX
+// XXXXXXXXXXXXXXXX
+
+function kezdolap_modul() {
+    echo "
+        <h3>Kezdőoldal</h3>
+        <p>joaergra äjg aőr gjőa gjő</p>
+    ";
+}
+
 // xxxxxxxxxxxxxxxxxxxx
 // -=ADMIN FÜGGVÉNYEK=-
 // xxxxxxxxxxxxxxxxxxxx
@@ -242,7 +257,7 @@ function dolgozo_szerkesztes_form($conn) { // Dolgozó adatainak lekérése az a
             <input type='text' name='telefon' value='{$row['telefon']}' class='form-control'>
 
             <label>Kilépett:</label>
-            <input type='checkbox' name='kilepett' ".($row['kilepett'] ? "checked" : "").">
+            <input type='checkbox' name='kilepett' ".($row['kilepett'] !== NULL ? "checked" : "").">
             <br>
 
             <button type='button' onclick='modDolgozoMentes()' class='btn btn-primary mt-3'>Mentés</button>
@@ -258,7 +273,7 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
     $beosztas = $_POST["beosztas"];
     $email    = $_POST["email"];
     $telefon  = $_POST["telefon"];
-    $kilepett = $_POST["kilepett"];   // dátum vagy üres string
+    $kilepett = $_POST["kilepett"];   // "1" = pipa, "0" = ninc pipa
 
      // -2) Ellenőrzés: minden mező ki van-e töltve?
     if ($nev === "" || $beosztas === "" || $email === "" || $telefon === "") {
@@ -290,14 +305,29 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
         return;
     }
 
-    // Ha üres → NULL
-    if ($kilepett === "") {
-        $kilepett_sql = "NULL";
-    } else {
-        // Dátum → idézőjelbe kell tenni
-        $kilepett_sql = "'$kilepett'";
-    }
+    // KILÉPETT Checkbox
+    // lekérjük a régi értéket
+    $sql_old = "SELECT kilepett FROM dolgozok WHERE dolgozo_id = $id";
+    $result_old = $conn->query($sql_old);
+    $old = $result_old->fetch_assoc();
+    $regi_datum = $old['kilepett'];   // lehet NULL vagy dátum
 
+    //Döntés
+
+    if ($kilepett === "1") {
+
+        if ($regi_datum === NULL) {
+            // most lép ki, tehát új dátumot kap
+            $kilepett_sql = "NOW()";
+        } else {
+            // már kilépett (volt dátum), a régi dátum marad
+            $kilepett_sql = "'$regi_datum'";
+        }
+    
+    } else {
+        // nincs pipálva - NULL
+        $kilepett_sql = "NULL";
+    }
     
     // 1) Dolgozó adatainak frissítése az adatbázisban
     $sql = "UPDATE dolgozok
