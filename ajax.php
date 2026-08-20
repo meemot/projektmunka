@@ -174,6 +174,7 @@ function kezdolap_modul() {
     ";
 }
 
+
 // xxxxxxxxxxxxxxxxxxxx
 // -=ADMIN FÜGGVÉNYEK=-
 // xxxxxxxxxxxxxxxxxxxx
@@ -516,7 +517,7 @@ function felhasznalo_szerkesztes_form($conn) {
             <input type='password' name='jelszo2' value='{$row['jelszo']}' class='form-control'>
 
             <label>Törölve:</label>
-            <input type='checkbox' name='torolve' ".($row['torolve'] ? "checked" : "").">
+            <input type='checkbox' name='torolve' ".($row['torolve'] != NULL ? "checked" : "").">
             <br>
 
             <button type='button' onclick='modFelhasznaloMentes()' class='btn btn-primary mt-3'>Mentés</button>
@@ -552,17 +553,43 @@ function update_felhasznalo($conn) {
         echo "A két jelszó nem egyezik!";
         return;
     }
-
+/*
     // Ha üres → NULL
     if ($torolve === "") {
         $torolve_sql = "NULL";
     } else {
         // Dátum → idézőjelbe kell tenni
         $torolve_sql = "'$torolve'";
-    }
+    }*/
 
     // Jelszó hash
     $jelszo_hash = password_hash($jelszo, PASSWORD_DEFAULT);
+
+    // TÖRÖLVE Checkbox
+    // lekérjük a régi értéket
+    $sql_old = "SELECT torolve FROM users WHERE user_id = $id";
+    $result_old = $conn->query($sql_old);
+    $old = $result_old->fetch_assoc();
+    $regi_datum = $old['torolve'];   // lehet NULL vagy dátum
+
+    //Döntés
+
+    if ($torolve === "1") {
+
+        if ($regi_datum === NULL) {
+            // most lép ki, tehát új dátumot kap
+            $torolve_sql = "NOW()";
+        } else {
+            // már kilépett (volt dátum), a régi dátum marad
+            $torolve_sql = "'$regi_datum'";
+        }
+    
+    } else {
+        // nincs pipálva - NULL
+        $torolve_sql = "NULL";
+    }
+
+
 
     // SQL frissítés
     $sql = "
@@ -1054,7 +1081,7 @@ function a_osszes_kiadas_modul($conn) {
             e.azonosito,
             e.meret,
             ea.allapot,
-            e.megjegyzes AS megjegyzes_kiadasnal,
+            r.kiadas_megjegyzes AS megjegyzes_kiadasnal,
             d.dolgozo_nev AS felvette,
             d1.dolgozo_nev AS kiadta,
             r.visszavet_datum,
@@ -1255,8 +1282,6 @@ function a_visszavetel_modul($conn) {
 
 
 
-
-
 //kiegészítés az ÚJ ESZKÖZ felvitelhez, hogy a típuok csak az adott kategóriához tartozóak legyenek
 function tipusok_kategoria_szerint($conn) {
 
@@ -1375,9 +1400,8 @@ function uj_kiadas_form($conn) {
 
     echo "</select><br>";
 
-    // A következő eszköz felvitele
     echo "
-        <button type='button' id='hozzaadEszkozBtn' class='btn btn-success mb-3'>
+        <button type='button' class='btn btn-success mb-3' onclick='hozzaadEszkoz()'>
             Eszköz hozzáadása
         </button><br><br>
         <h3>Kiadásra előkészített eszközök</h3><br>
@@ -1449,14 +1473,17 @@ function kiadas_mentes($conn) {
             $eszkoz_id = intval($eszkoz_id);
 
             // lekérjük az eszköz aktuális állapotát
-            $sql = "SELECT allapot_id FROM eszkozok WHERE eszkoz_id = $eszkoz_id";
-            $res = $conn->query($sql);
-            $row = $res->fetch_assoc();
+            $sql = "SELECT allapot_id,megjegyzes
+                    FROM eszkozok
+                    WHERE eszkoz_id = $eszkoz_id";
+            $result = $conn->query($sql);
+            $row = $result->fetch_assoc();
             $allapot = intval($row['allapot_id']);
+            $kiadas_megjegyzes = $conn->real_escape_string($row['megjegyzes']);
 
-            // beszúrjuk a részletet
-            $sql2 = "INSERT INTO reszletek (kiad_id, eszkoz_id, kiadas_allapot)
-                     VALUES ($kiad_id, $eszkoz_id, $allapot)";
+            // beszúrjuk a részletet a kiadáskori megjegyzéssel
+            $sql2 = "INSERT INTO reszletek (kiad_id, eszkoz_id, kiadas_allapot, kiadas_megjegyzes)
+                     VALUES ($kiad_id, $eszkoz_id, $allapot, '$kiadas_megjegyzes')";
             $conn->query($sql2);
         }
     }
@@ -1547,6 +1574,13 @@ function visszavet_form($conn) {
 
 function VisszavetMentes() {
     global $conn;
+
+    // 0) Állapot kiválasztásának ellenőrzése
+    if (!isset($_POST['visszavett_allapot']) || $_POST['visszavett_allapot'] === "") {
+    echo "HIBA: Válaszd ki az eszköz állapotát visszavételkor!";
+    return;
+    }
+
    
     // POST-tal jön a FORM-ból
     $user_id = $_SESSION['user_id'];   // bejelentkezett user
@@ -1567,9 +1601,57 @@ function VisszavetMentes() {
         return;
     }
 
+    // 2) lekérjük, melyik eszköz tartozik ehhez a reszletek_id-hoz
+    $sql2 = "SELECT eszkoz_id FROM reszletek WHERE reszletek_id = $reszletek_id";
+    $result2 = $conn->query($sql2);
+
+    if ($result2 && $result2->num_rows > 0) {
+        $row = $result2->fetch_assoc();
+        $eszkoz_id = intval($row['eszkoz_id']);
+    }
+
+    // 3) frissítjük az eszközök táblában az állapotot
+        $sql3 = "UPDATE eszkozok
+                 SET allapot_id = $allapot
+                 WHERE eszkoz_id = $eszkoz_id";
+
+        if (!$conn->query($sql3)) {
+            echo "SQL hiba (eszkoz frissítés): " . $conn->error;
+            return;
+        }
+
+    // 4) megjegyzés hozzáfűzése az eszközök táblához
+    $sql4 = "SELECT megjegyzes
+             FROM eszkozok
+             WHERE eszkoz_id = $eszkoz_id";
+
+    $result4 = $conn->query($sql4);
+
+    if ($result4 && $result4->num_rows > 0) {
+        $row2 = $result4->fetch_assoc();
+        $regi_megjegyzes = $conn->real_escape_string($row2['megjegyzes']);
+
+    // új megjegyzés összeállítása, csak akkor, ha írtak hozzá
+        $uj_megjegyzes = $regi_megjegyzes;
+        
+        if (trim($megjegyzes) != "") {
+            $uj_megjegyzes .= "\n, " . $megjegyzes;
+        }
+
+        $sql5 = "UPDATE eszkozok
+                 SET megjegyzes = '$uj_megjegyzes'
+                 WHERE eszkoz_id = $eszkoz_id";
+
+        if (!$conn->query($sql5)) {
+            echo "SQL hiba (megjegyzes frissítés): " . $conn->error;
+            return;
+        }
+    }
+
     echo "A visszavétel sikeresen mentve (ID: $reszletek_id)";
 
 }
+
 
 
 

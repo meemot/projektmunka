@@ -229,13 +229,7 @@ function modFelhasznaloMentes() {
 
     // TÖRÖLVE checkbox → dátum vagy üres
     let torolveChecked = form.querySelector("input[name='torolve']").checked;
-
-    if (torolveChecked) {
-        let datum = new Date().toISOString().slice(0, 19).replace('T', ' ');
-        formData.set("torolve", datum);   // dátumot írunk be
-    } else {
-        formData.set("torolve", "");      // üres → PHP NULL-t fog menteni
-    }
+    formData.set("torolve", torolveChecked ? "1" : "0");
 
     formData.append("action", "update_felhasznalo");
 
@@ -468,6 +462,46 @@ function ujKiadasMegse() {
     });
 }
 
+// KIADÁSBAN, az eszköz hozzáadása gomb!
+let hozzaadottEszkozok = [];
+function hozzaadEszkoz() {
+    const select = document.getElementById("eszkoz_id");
+    const eszkozId = select.value;
+
+    if (!eszkozId) {
+        alert("Előbb válassz ki egy eszközt!");
+        return;
+    }
+
+    const option = select.options[select.selectedIndex];
+    const eszkozTipus = option.dataset.tipus || "";
+    const eszkozText = select.options[select.selectedIndex].text;
+
+    const tbody = document.querySelector("#kiadottEszkozok tbody");
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${eszkozTipus}</td>
+        <td>${eszkozText}</td>
+        <td><button class='btn btn-danger btn-sm' onclick='torolEszkoz(this)'>Törlés</button>
+            <input type='hidden' name='eszkozok[]' value='${eszkozId}'>
+        </td>
+    `;
+
+    tbody.appendChild(row);
+    hozzaadottEszkozok.push(eszkozId); //a kiválasztott eszközök tárolása a hozzaadottEszkozok-be (634. sor)
+
+
+    // HOZZÁADÁS UTÁN A LEGÖRDÜLŐK VISSZAÁLLÍTÁSA ALAPÉRTELMEZETTRE
+    document.getElementById("tipus").value = "";
+    document.getElementById("eszkoz_id").innerHTML = "<option value=''>--Előbb válassz típust!--</option>";
+
+    // Ha kiürült a lista, visszaállítjuk
+    if (select.options.length === 0) {
+        select.innerHTML = "<option value=''>--Nincs több eszköz--</option>";
+    }
+}
+
 
 // Visszavét gomb
 
@@ -535,19 +569,24 @@ function VisszavetMegse() {
 
 
 
-// ===== ESEMÉNYFIGYELŐ!!!! =====
-// A html betöltődése után fut le a kód, aztán az eseményfigyelő!!
 
-document.addEventListener("DOMContentLoaded", () => {
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                        LISTENER (ESEMÉNYFIGYELŐ)!!!                          x
+// x  Ez tölti be AJAX-szal a modulokat a tartalom dobozba (admin/operator_box3)  x
+// x           Kell a menüpontok működéséhez, figyeli a menü linkeket             x
+// x                        Lekéri a data-action értékét                          x
+// x                      AJAX kérést küld az ajax.php-nak                        x
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+document.addEventListener("DOMContentLoaded", () => { // megvárja, hogy betöltődjön a teljes html
 
     // Megkeressük az összes menü linket, és eseményfigyelőt adunk hozzá
-    document.querySelectorAll(".menu_link").forEach(link => {
-        link.addEventListener("click", (event) => {
-            event.preventDefault();
+    document.querySelectorAll(".menu_link").forEach(link => { //megkeresi az összes menü-linket
+        link.addEventListener("click", (event) => { // hozzáad egy eseményfigyelőt
+            event.preventDefault(); // aaz oldal újratöltésének megakadályozása
 
-            let action = link.dataset.action;
+            let action = link.dataset.action; // lekéri a data-action értéket
 
-            /* AJAX kérést küldünk a szervernek */
+            /* AJAX kérést küldünk a szervernek (ajax.php) */
             fetch("ajax.php", {
                 method: 'POST',
                 headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -556,7 +595,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(response => response.text()) /* A szerver válaszát szövegként olvassuk be */
             .then(data => {
 
-                /* Megkeressük az admin_box3 vagy operator_box3 div-et, és beírjuk a választ */
+                /* Megkeressük az admin_box3 vagy operator_box3 div-et, és beírjuk a visszakapott html-t */
                 const targetBox = document.querySelector(".admin_box3") 
                                || document.querySelector(".operator_box3");
 
@@ -573,8 +612,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* az eszközöknél a kategoria select változását figyeljük, és a tipus selectet frissítjük az ajax.php-ból kapott adatokkal.
-    új eszköz létrehozásakor csak a kiválasztott kategóriához tartoz ó típusok jelenjenek meg */
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                                LISTENER!!!                               x
+// x  ÚJ ESZKÖZ LÉTREHOZÁSakor figyeli, hogy mikor változik a KATEGÓRIA mező  x
+// x    A változásnak megfelelően tölti be az eszköz típust a legördülőbe     x
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 document.addEventListener("change", function(e) {
 
     if (e.target && e.target.id === "eszkoz_kategoria") {
@@ -595,22 +637,23 @@ document.addEventListener("change", function(e) {
 });
 
 
-/* (Az eszközökhöz hasonlóan) a KIADÁS-nál is egy globális "change listener" figyeli a változásokat, hogy a
-    kiválasztott típusnak megfelelő azonosítókat tudjuk megjeleníteni a legördülőben
-    + az eszköz azonosítóhoz is jó 
-*/
 
-// ez kezeli az új kiadás formban a további eszköz hozzáadását
-document.addEventListener("change", function(e) {
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                           LISTENER!!!                          x
+// x ÚJ ESZKÖZ KIADÁSakor figyeli, hogy mikor változik a tipus mező x
+// x  A változásnak megfelelően tölti be az azonosító legördülőbe   x
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+document.addEventListener("change", function(e) {  // esemény figyelése, változott e valami a dokumentumban
 
-    if (e.target && e.target.id === "tipus") {
+    if (e.target && e.target.id === "tipus") { // csak akkor fut, ha a tipus selectben változott valami
 
-        const tipus = e.target.value;
+        const tipus = e.target.value; //lekéri a kiválasztot tipus ID-jét
         const eszkozSelect = document.getElementById("eszkoz_id");
 
         console.log("TIPUS:", tipus);
         console.log("ESZKOZ SELECT:", eszkozSelect);
 
+        // AJAX hívás indul az adatbázis felé
         fetch("ajax.php", {
             method: "POST",
             headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -622,7 +665,13 @@ document.addEventListener("change", function(e) {
             console.log("AJAX VÁLASZ:");
             console.log(html);
 
-            eszkozSelect.innerHTML = html;
+            eszkozSelect.innerHTML = html; // a php által visszaadott html beillesztése a legördülőbe (törli a régit, beilleszti az ujat)
+            
+        // már hozzáadott eszközök eltávolítása a listából
+            for (let id of hozzaadottEszkozok) {
+                let opt = eszkozSelect.querySelector(`option[value="${id}"]`);
+                if (opt) opt.remove();
+            }
         })
         .catch(error => {
             console.error("AJAX HIBA:", error);
@@ -630,48 +679,6 @@ document.addEventListener("change", function(e) {
     }
 });
 
-// KIADÁSBAN, az eszköz hozzáadása gomb!
-function hozzaadEszkoz() {
-    const select = document.getElementById("eszkoz_id");
-    const eszkozId = select.value;
-
-    if (!eszkozId) {
-        alert("Előbb válassz ki egy eszközt!");
-        return;
-    }
-
-    const option = select.options[select.selectedIndex];
-    const eszkozTipus = option.dataset.tipus || "";
-    const eszkozText = select.options[select.selectedIndex].text;
-
-    const tbody = document.querySelector("#kiadottEszkozok tbody");
-
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td>${eszkozTipus}</td>
-        <td>${eszkozText}</td>
-        <td><button class='btn btn-danger btn-sm' onclick='torolEszkoz(this)'>Törlés</button></td>
-        <input type='hidden' name='eszkozok[]' value='${eszkozId}'>
-    `;
-
-    tbody.appendChild(row);
-
-    // HOZZÁADÁS UTÁN A LEGÖRDÜLŐK VISSZAÁLLÍTÁSA ALAPÉRTELMEZETTRE
-    document.getElementById("tipus").value = "";
-    document.getElementById("eszkoz_id").innerHTML = "<option value=''>--Előbb válassz típust!--</option>";
-}
-
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// a formban már betöltött adatok táblázatba mentéséhez ("LISTENER" - globális kattintásfigyelő)
-// Mert a scrips js nem kerül be az AJAX-ból betöltött modulba! (admin_box3 -ba az ajax-szal kiírt adatok)
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-// figyelő az eszköz hozzáadásánál
-document.addEventListener("click", function(e) {
-    if (e.target && e.target.id === "hozzaadEszkozBtn") {
-        hozzaadEszkoz();
-    }
-});
 
 // figyelő a visszavét gombhoz a kiadás menüben (ez futtatja le a function-t)
 document.addEventListener("click", function(e) {
@@ -695,7 +702,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
-
 
 
 

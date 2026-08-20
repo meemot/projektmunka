@@ -22,7 +22,6 @@
     <title>Admin oldal</title>
 </head>
 
-
 <body>
 
     <div class="container-fluid">
