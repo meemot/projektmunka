@@ -26,9 +26,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'kiadas_mentes') {
 
 
 
-
-
-
 $jog = $_SESSION['jogkor'];
 $action = $_POST["action"] ?? "";
 
@@ -61,7 +58,7 @@ if ($jog === "a") {
         case "a_visszavetel":
             a_visszavetel_modul($conn);
             break;
-// -----------------------------------------------------------------
+
         case "uj_dolgozo_form":
             uj_dolgozo_form();
             break;
@@ -77,39 +74,55 @@ if ($jog === "a") {
         case "uj_felhasznalo_mentes":
             uj_felhasznalo_mentes($conn);
             break;
+
         case "uj_eszkoz_form":
             uj_eszkoz_form($conn);
             break;
+
         case "uj_eszkoz_mentes":
             uj_eszkoz_mentes($conn);
             break;
-        case "dolgozo_szerkesztes_form": //
+
+        case "dolgozo_szerkesztes_form":
             dolgozo_szerkesztes_form($conn);
             break;
+
         case "update_dolgozo": // Dolgozó adatainak frissítése az adatbázisban
             update_dolgozo($conn);
             break;
+
         case "felhasznalo_szerkesztes_form":
             felhasznalo_szerkesztes_form($conn);
             break;
+
         case "update_felhasznalo":
             update_felhasznalo($conn);
             break;
+
         case "eszkoz_szerkesztes_form":
             eszkoz_szerkesztes_form($conn);
             break;
+
         case "update_eszkoz":
             update_eszkoz($conn);
             break;
+
         case "uj_kiadas_form":
             uj_kiadas_form($conn);
             break;
+
         case "kiadas_mentes":
             kiadas_mentes($conn);
             break;
+
         case "visszavet_form":
             visszavet_form($conn);
             break;
+
+        case "VisszavetMentes":
+            VisszavetMentes($conn);
+            break;
+
         default:
             echo "Ismeretlen admin modul.";
     }
@@ -144,11 +157,13 @@ if ($jog === "a") {
     echo "Nincs jogosultság.";
 }
 
+// ==========================================================================================================================
+
 // xxxxxxxxxxxxxxxxxxxx
 // -=ADMIN FÜGGVÉNYEK=-
 // xxxxxxxxxxxxxxxxxxxx
 
-// ----- Dolgozók -----
+// ====== Dolgozók =======
 
 function a_dolgozok_modul($conn) {
 
@@ -378,7 +393,8 @@ function uj_dolgozo_mentes($conn) {
 
 }
 
-// ----- Felhasználók -----
+
+// ====== Felhasználók ======
 
 function a_felhasznalok_modul($conn) {
 
@@ -628,7 +644,8 @@ function uj_felhasznalo_mentes($conn) {
 
 }
 
-// ----- Eszközök -----
+
+// ===== Eszközök =====
 
 function a_eszkozok_modul($conn) {
 
@@ -985,73 +1002,8 @@ function uj_eszkoz_mentes($conn) {
 }
 
 
-function a_kiadas_modul($conn) {
 
-    // FELSŐ MŰVELETI SÁV
-    echo "
-    <div class='module_actions'>
-        <h3>Kiadott, még nem visszavett eszközök</h3>
-        <button onclick=\"ujKiadas()\">Új kiadás</button>
-        <input type='text' id='kereses' placeholder='Keresés...'>
-        <button onclick=\"szures()\">Szűrés</button>
-    </div>
-    ";
-
-    // TÁBLÁZAT
-    $sql = 
-        "SELECT
-            r.reszletek_id,
-            k.kiad_id,
-            k.kiadas_datum,
-            d.dolgozo_nev AS felvette,
-            et.megnevezes AS eszkoz_megnevezese,
-            e.azonosito AS eszkoz_azonosito,
-            e.meret,
-            e.megjegyzes,
-            d1.dolgozo_nev AS kiadta
-        FROM kiadas k
-            JOIN dolgozok d
-                ON k.ki_vette_fel = d.dolgozo_id
-            JOIN reszletek r
-                ON r.kiad_id = k.kiad_id
-            JOIN eszkozok e
-                ON e.eszkoz_id = r.eszkoz_id
-            JOIN eszkoz_tipus et
-                ON e.tipus_id = et.tipus_id
-            JOIN dolgozok d1
-                ON k.ki_adta_ki = d1.dolgozo_id
-        WHERE r.visszavet_datum is null
-        ORDER BY kiadas_datum ASC;";
-    $result = $conn->query($sql);
-
-    
-    echo "<table class='tabla table table-striped table-hover'>
-            <tr>
-                <th></th>
-                <th>Kiadás dátuma</th>
-                <th>Ki vette fel</th>
-                <th>Eszköz megnevezése</th>
-                <th>Eszköz azonosító</th>
-                <th>Méret</th>
-                <th>Megjegyzés</th>
-                <th>Ki adta ki</th>
-            </tr>";
-
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>
-                <td><button type='button' class='btn btn-outline-primary btn-sm btn-visszavet' data-id='{$row['reszletek_id']}'>Visszavesz</button></td>
-                <td>{$row['kiadas_datum']}</td>
-                <td>{$row['felvette']}</td>
-                <td>{$row['eszkoz_megnevezese']}</td>
-                <td>{$row['eszkoz_azonosito']}</td>
-                <td>{$row['meret']}</td>
-                <td>{$row['megjegyzes']}</td>
-                <td>{$row['kiadta']}</td>
-              </tr>";
-    }
-
-    echo "</table>";
-}
+// ===== "ÖSSZES ESZKÖZMOZGÁS" modul =====
 
 function a_osszes_kiadas_modul($conn) {
 
@@ -1137,6 +1089,78 @@ function a_osszes_kiadas_modul($conn) {
     echo "</table>";
 }
 
+// ===== "ESZKÖZ KIADÁS" modul =====
+
+function a_kiadas_modul($conn) {
+
+    // FELSŐ MŰVELETI SÁV
+    echo "
+    <div class='module_actions'>
+        <h3>Kiadott, még nem visszavett eszközök</h3>
+        <button onclick=\"ujKiadas()\">Új kiadás</button>
+        <input type='text' id='kereses' placeholder='Keresés...'>
+        <button onclick=\"szures()\">Szűrés</button>
+    </div>
+    ";
+
+    // TÁBLÁZAT
+    $sql = 
+        "SELECT
+            r.reszletek_id,
+            k.kiad_id,
+            k.kiadas_datum,
+            d.dolgozo_nev AS felvette,
+            et.megnevezes AS eszkoz_megnevezese,
+            e.azonosito AS eszkoz_azonosito,
+            e.meret,
+            e.megjegyzes,
+            d1.dolgozo_nev AS kiadta
+        FROM kiadas k
+            JOIN dolgozok d
+                ON k.ki_vette_fel = d.dolgozo_id
+            JOIN reszletek r
+                ON r.kiad_id = k.kiad_id
+            JOIN eszkozok e
+                ON e.eszkoz_id = r.eszkoz_id
+            JOIN eszkoz_tipus et
+                ON e.tipus_id = et.tipus_id
+            JOIN dolgozok d1
+                ON k.ki_adta_ki = d1.dolgozo_id
+        WHERE r.visszavet_datum is null
+        ORDER BY kiadas_datum ASC;";
+    $result = $conn->query($sql);
+
+    
+    echo "<table class='tabla table table-striped table-hover'>
+            <tr>
+                <th></th>
+                <th>Kiadás dátuma</th>
+                <th>Ki vette fel</th>
+                <th>Eszköz megnevezése</th>
+                <th>Eszköz azonosító</th>
+                <th>Méret</th>
+                <th>Megjegyzés</th>
+                <th>Ki adta ki</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td><button type='button' class='btn btn-outline-primary btn-sm btn-visszavet' data-id='{$row['reszletek_id']}'>Visszavesz</button></td>
+                <td>{$row['kiadas_datum']}</td>
+                <td>{$row['felvette']}</td>
+                <td>{$row['eszkoz_megnevezese']}</td>
+                <td>{$row['eszkoz_azonosito']}</td>
+                <td>{$row['meret']}</td>
+                <td>{$row['megjegyzes']}</td>
+                <td>{$row['kiadta']}</td>
+              </tr>";
+    }
+
+    echo "</table>";
+}
+
+// ====== "ESZKÖZ VISSZAVÉTEL" modul =====
+
 function a_visszavetel_modul($conn) {
 
     // FELSŐ MŰVELETI SÁV
@@ -1199,6 +1223,10 @@ function a_visszavetel_modul($conn) {
     echo "</table>";
 }
 
+
+
+
+
 //kiegészítés az ÚJ ESZKÖZ felvitelhez, hogy a típuok csak az adott kategóriához tartozóak legyenek
 function tipusok_kategoria_szerint($conn) {
 
@@ -1220,9 +1248,44 @@ function tipusok_kategoria_szerint($conn) {
     exit;
 }
 
+//kiegészítés az ÚJ KIADÁS-hoz, az eszköz azonosítójának kiválasztásához (korábban kiválasztott típus alapján)
+function eszkozok_tipus_szerint($conn) {
 
-// KIADÁS
-// ------
+    $tipus = intval($_POST['tipus']);
+
+    $sql = "SELECT e.eszkoz_id,
+                    e.azonosito,
+                    e.allapot_id,
+                    e.meret,
+                    et.megnevezes AS tipus_nev,
+                    megjegyzes
+                FROM eszkozok e
+                    JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
+                WHERE e.tipus_id = $tipus
+                    AND e.allapot_id != 4
+                    AND e.eszkoz_id NOT IN (
+                        SELECT eszkoz_id 
+                        FROM reszletek
+                        WHERE visszavet_datum IS NULL
+                )
+                ORDER BY e.azonosito";
+
+    $result = $conn->query($sql);
+
+    echo "<option value=''>-- Válaszd ki az eszközt! --</option>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value=\"{$row['eszkoz_id']}\" 
+                    data-tipus=\"{$row['tipus_nev']}\"
+                    data-allapot=\"{$row['allapot_id']}\"
+                    data-meret=\"{$row['meret']}\">
+                    {$row['azonosito']} (Méret: {$row['meret']})</option>";
+    }
+}
+
+
+
+// ===== ÚJ KIADÁS  (gombra katt után)=====
 
 function uj_kiadas_form($conn) {
 
@@ -1375,12 +1438,12 @@ function visszavet_form($conn) {
 
     // ID beolvasása
     if (!isset($_POST["reszletek_id"])) {
-        echo "<p class='text-danger'>Hiba: nincs kiadás ID!</p>";
+        echo "<p class='text-danger'>Hiba: nincs reszletek ID!</p>";
         return;
     }
 
     $reszletek_id = intval($_POST["reszletek_id"]);
-    echo "<p>DEBUG: kapott kiad_id = $reszletek_id</p>";
+    echo "<p>DEBUG: kapott reszletek_id = $reszletek_id</p>";
 
     // A kiadás részleteinek lekérése
     $sql = "SELECT
@@ -1410,7 +1473,7 @@ function visszavet_form($conn) {
     echo "
     <h3>Eszköz visszavétele</h3>
 
-    <form id='VisszavetForm' class='form-control'>
+    <form id='visszavet_form' class='form-control'>
 
         <label>Ki vette fel:</label>
         <input type='text' class='form-control' value='{$row['felvette']}' readonly>
@@ -1443,7 +1506,7 @@ function visszavet_form($conn) {
         <label>Megjegyzés:</label>
         <input type='text' name='visszavett_megjegyzes' class='form-control' required>
 
-        <input type='hidden' name='kiad_id' value='{$row['reszletek_id']}'>
+        <input type='hidden' name='reszletek_id' value='{$row['reszletek_id']}'>
 
         <button type='button' onclick='VisszavetMentes()' class='btn btn-primary mt-3'>Mentés</button>
         <button type='button' onclick='VisszavetMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
@@ -1452,43 +1515,32 @@ function visszavet_form($conn) {
     ";
 }
 
+function VisszavetMentes() {
+    global $conn;
+   
+    // POST-tal jön a FORM-ból
+    $user_id = $_SESSION['user_id'];   // bejelentkezett user
+    $allapot = intval($_POST['visszavett_allapot']);
+    $megjegyzes = $conn->real_escape_string($_POST['visszavett_megjegyzes']);
+    $reszletek_id = intval($_POST['reszletek_id']);
 
+    // 1) visszavét mentése db-be
+    $sql = "UPDATE reszletek
+            SET ki_vette_vissza = $user_id,
+                visszavet_datum = NOW(),
+                visszavet_allapot = $allapot,
+                megjegyzes = '$megjegyzes'
+            WHERE reszletek_id = $reszletek_id";
 
-
-//kiegészítés az ÚJ KIADÁS-hoz, az eszköz azonosítójának kiválasztásához (korábban kiválasztott típus alapján)
-function eszkozok_tipus_szerint($conn) {
-
-    $tipus = intval($_POST['tipus']);
-
-    $sql = "SELECT e.eszkoz_id,
-                    e.azonosito,
-                    e.allapot_id,
-                    e.meret,
-                    et.megnevezes AS tipus_nev,
-                    megjegyzes
-                FROM eszkozok e
-                    JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
-                WHERE e.tipus_id = $tipus
-                    AND e.allapot_id != 4
-                    AND e.eszkoz_id NOT IN (
-                        SELECT eszkoz_id 
-                        FROM reszletek
-                        WHERE visszavet_datum IS NULL
-                )
-                ORDER BY e.azonosito";
-
-    $result = $conn->query($sql);
-
-    echo "<option value=''>-- Válaszd ki az eszközt! --</option>";
-
-    while ($row = $result->fetch_assoc()) {
-        echo "<option value=\"{$row['eszkoz_id']}\" 
-                    data-tipus=\"{$row['tipus_nev']}\"
-                    data-allapot=\"{$row['allapot_id']}\"
-                    data-meret=\"{$row['meret']}\">
-                    {$row['azonosito']} (Méret: {$row['meret']})</option>";
+    if (!$conn->query($sql)) {
+        echo "SQL hiba: " . $conn->error;
+        return;
     }
+
+    echo "A visszavétel sikeresen mentve (ID: $reszletek_id)";
+
 }
+
 
 
 // xxxxxxxxxxxxxxxxxxxxxxx

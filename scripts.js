@@ -4,6 +4,13 @@ majd a választ beírja az admin_box3 div-be.*/
 console.log("JS betöltve!");
 // FORM-ok megjelenítése és mentése az admin_box3 div-ben
 
+
+// xxxxxxxxxxxxxxxxxxxx
+// -=ADMIN FÜGGVÉNYEK=-
+// xxxxxxxxxxxxxxxxxxxx
+
+// ====== Dolgozók =======
+
 function ujDolgozo() {
 
     window.scrollTo(0, 0); // görgetés az oldal tetejére, hogy a felhasználó az elejéről lássa a formot
@@ -140,6 +147,8 @@ function modDolgozoMegse() {
 }
 
 
+// ====== Felhasználók ======
+
 function ujFelhasznalo() {
     fetch("ajax.php", {
         method: "POST",
@@ -272,6 +281,9 @@ function modFelhasznaloMegse() {
     });
 }
 
+
+// ===== Eszközök =====
+
 function ujEszkozok() {
     fetch("ajax.php", {
         method: "POST",
@@ -394,7 +406,10 @@ function modEszkozMegse() {
     });
 }
 
-function ujKiadas() {
+// =============================================================================================================================
+// ===== ÚJ KIADÁS =====
+
+function ujKiadas() { // katt az új kiadás gombra
     fetch("ajax.php", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -455,6 +470,9 @@ function ujKiadasMegse() {
     });
 }
 
+
+// Visszavét gomb
+
 function Visszavet(reszletek_id) {
     fetch("ajax.php", {
         method: "POST",
@@ -468,11 +486,48 @@ function Visszavet(reszletek_id) {
     });
 }
 
+function VisszavetMentes(){
+    const formData = new FormData(document.getElementById('visszavet_form'));
+
+    formData.append("action", "VisszavetMentes");
+
+    fetch('ajax.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.text())
+    .then(valasz => {
+
+        // sikeres mentés esetén a PHP visszaadja pl.:
+        // "A kiadás sikeresen mentve (ID: 123)"
+        alert(valasz);
+
+        if (!valasz.startsWith("HIBA")) {
+            
+            // UGYANAZ, mint az új eszköznél
+            // csak itt a KIADÁS modult töltjük újra
+            fetch("ajax.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "action=a_kiadas"
+            })
+            .then(r => r.text())
+            .then(html => {
+                const box = document.querySelector(".admin_box3");
+                box.innerHTML = html;
+            });
+        }
+    });
+
+}
 
 
 
 
-document.addEventListener("DOMContentLoaded", () => { // A html betöltődése után fut le a kód, aztán az eseményfigyelő!!
+// ===== ESEMÉNYFIGYELŐ!!!! =====
+// A html betöltődése után fut le a kód, aztán az eseményfigyelő!!
+
+document.addEventListener("DOMContentLoaded", () => {
 
     // Megkeressük az összes menü linket, és eseményfigyelőt adunk hozzá
     document.querySelectorAll(".menu_link").forEach(link => {
@@ -532,24 +587,7 @@ document.addEventListener("change", function(e) {
 /* (Az eszközökhöz hasonlóan) a KIADÁS-nál is egy globális "change listener" figyeli a változásokat, hogy a
     kiválasztott típusnak megfelelő azonosítókat tudjuk megjeleníteni a legördülőben
     + az eszköz azonosítóhoz is jó 
-document.addEventListener("change", function(e) {
-    if (e.target && e.target.id === "tipus") {
-
-        const tipus = e.target.value;
-        const eszkozSelect = document.getElementById("eszkoz_id");
-
-        fetch("ajax.php", {
-            method: "POST",
-            headers: {"Content-Type": "application/x-www-form-urlencoded"},
-            body: "action=eszkozok_tipus_szerint&tipus=" + tipus
-        })
-        .then(r => r.text())
-        .then(html => {
-            eszkozSelect.innerHTML = html;
-        });
-    }
-}); */
-
+*/
 
 // ez kezeli az új kiadás formban a további eszköz hozzáadását
 document.addEventListener("change", function(e) {
@@ -638,5 +676,4 @@ document.addEventListener("click", function(e) {
 function torolEszkoz(btn) {
     btn.closest("tr").remove();
 }
-
 
