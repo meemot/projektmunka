@@ -187,9 +187,7 @@ function a_dolgozok_modul($conn) {
     echo "
     <div class='module_actions'>
         <h3>Dolgozók - (név szerint sorba rendezve)</h3>
-        <button onclick=\"ujDolgozo()\">Új dolgozó</button>
-        <input type='text' id='kereses' placeholder='Keresés...'>
-        <button onclick=\"szures()\">Szűrés</button>
+        <button class='btn btn-primary' onclick=\"ujDolgozo()\">Új dolgozó</button>
     </div>
     ";
 
@@ -199,15 +197,26 @@ function a_dolgozok_modul($conn) {
     $result = $conn->query($sql);
 
     
-
     echo "<table class='tabla table table-striped table-hover'>
-            <tr>
-                <th>Név</th>
-                <th>Beosztás</th>
-                <th>Email</th>
-                <th>Telefon</th>
-                <th>Kilépett</th>
-            </tr>";
+            <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Beosztás</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                    <th>Kilépett</th>
+                </tr>
+                <tr class='filter-row'>
+                    <th><input type='text' class='filter-input' data-col='0'></th>
+                    <th><input type='text' class='filter-input' data-col='1'></th>
+                    <th><input type='text' class='filter-input' data-col='2'></th>
+                    <th><input type='text' class='filter-input' data-col='3'></th>
+                    <th class='d-flex justify-content-between align-items-center'>
+                        <input type='checkbox' class='filter-kilepett' data-col='4'>
+                        <button class='btn btn-sm btn-secondary ms-2' id='clearFiltersBtn'>Szűrők törlése</button>
+                    </th>
+                </tr>
+            </thead>";
 
     while ($row = $result->fetch_assoc()) {
 
@@ -433,9 +442,7 @@ function a_felhasznalok_modul($conn) {
     echo "
     <div class='module_actions'>
         <h3>Felhasználók</h3>
-        <button onclick=\"ujFelhasznalo()\">Új felhasználó</button>
-        <input type='text' id='kereses' placeholder='Keresés...'>
-        <button onclick=\"szures()\">Szűrés</button>
+        <button class='btn btn-primary' onclick=\"ujDolgozo()\">Új dolgozó</button>
     </div>
     ";
 
@@ -553,14 +560,6 @@ function update_felhasznalo($conn) {
         echo "A két jelszó nem egyezik!";
         return;
     }
-/*
-    // Ha üres → NULL
-    if ($torolve === "") {
-        $torolve_sql = "NULL";
-    } else {
-        // Dátum → idézőjelbe kell tenni
-        $torolve_sql = "'$torolve'";
-    }*/
 
     // Jelszó hash
     $jelszo_hash = password_hash($jelszo, PASSWORD_DEFAULT);
@@ -710,7 +709,7 @@ function a_eszkozok_modul($conn) {
     echo "
     <div class='module_actions' d-flex justify-content-between align-items-center'>
         <h3 class='m-0'>Eszközök</h3>
-
+            
         <div class='d-flex align-items-center gap-2'>
             <button onclick=\"ujEszkozok()\">Új eszköz</button>
             <input type='text' id='kereses' placeholder='Keresés...'>

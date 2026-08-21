@@ -27,6 +27,7 @@ function ujDolgozo() {
         });
 }
 
+
 function ujDolgozoMentes() {
     const form = document.getElementById("ujDolgozoForm"); //a böngésző megkeresi a formot az ID alapján
     const formData = new FormData(form); // a form adatainak összegyűjtése a FormData objektumba: nem kell kézzel írni a mezőket, a FormData automatikusan összegyűjti az összes mezőt a formból
@@ -687,6 +688,61 @@ document.addEventListener("click", function(e) {
         Visszavet(reszletek_id);
     }
 });
+
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                           LISTENER!!!                          x
+// x           Az oszlopok tetején lévő SZŰRŐ működése              x
+// x           Univerzális, mindegyik táblában működik              x
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+document.addEventListener("keyup", runFilters);
+document.addEventListener("change", runFilters);
+
+function runFilters(e) {
+    // Csak akkor fut, ha filter mezőben gépelünk vagy checkbox pipálás van
+    if (
+        !e.target.classList.contains("filter-input") &&
+        !e.target.classList.contains("filter-kilepett")
+    ) return;
+
+    let table = e.target.closest("table");
+    let rows = table.querySelectorAll("tbody tr");
+
+    let textFilters = table.querySelectorAll(".filter-input");
+    let kilepettFilter = table.querySelector(".filter-kilepett");
+
+    rows.forEach(row => {
+        let visible = true;
+
+        // 1) Szöveges mezők szűrése
+        textFilters.forEach(input => {
+            let colIndex = input.dataset.col;
+            let filterValue = input.value.toLowerCase().trim();
+
+            if (filterValue !== "") {
+                let cellText = row.children[colIndex].textContent.toLowerCase();
+                if (!cellText.includes(filterValue)) {
+                    visible = false;
+                }
+            }
+        });
+
+        // 2) Kilépett checkbox szűrés
+        if (kilepettFilter.checked) {
+            let colIndex = kilepettFilter.dataset.col;
+            let cellText = row.children[colIndex].textContent.trim();
+
+            // Csak akkor látszik, ha VAN érték a kilépett oszlopban
+            if (cellText === "") {
+                visible = false;
+            }
+        }
+
+        row.style.display = visible ? "" : "none";
+    });
+}
+
+
+
 
 // KEZDŐOLDAL
 document.addEventListener("DOMContentLoaded", () => {

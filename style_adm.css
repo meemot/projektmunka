@@ -105,3 +105,30 @@ html, body {
     background: #cfcfcf;          /* vagy sötét, ha dark theme */
     z-index: 2;
 }
+
+.module_actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logo_category {
+    width: 100%;
+    aspect-ratio: 1 / 1;   /* magasság = szélesség */
+    background-color: #444; /* csak hogy lásd a keretet */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.admin_top .card-body {
+    padding: 6px 12px;      /* kisebb belső margó */
+    min-height: 50px;       /* alacsonyabb doboz */
+    display: flex;          /* biztos flex */
+    justify-content: space-between; /* két szélre */
+    align-items: center;    /* függőlegesen középre */
+}
+
+
