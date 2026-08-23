@@ -28,7 +28,7 @@
         <div class="row">
 
             <!-- Bal oldali menü -->
-            <nav class="col-12 col-md-3 col-lg-2 bg-dark text-white p-3 admin_box1 d-flex flex-column">
+            <nav class="col-12 col-md-3 col-lg-2 bg-dark text-white p-3 admin_box1">
                 
                 <div class="logo_category mb-4">LOGO</div>
 
@@ -55,9 +55,9 @@
             </nav>
 
             <!-- Jobb oldali tartalom -->
-            <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2 d-flex flex-column h-100">
+            <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2">
                 <!-- AJAX tartalom - görgethető -->
-                <div class="admin_box3 flex-grow-1 overflow-auto">
+                <div class="admin_box3">
                     Box3
                 </div>
 

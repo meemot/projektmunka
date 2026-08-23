@@ -727,7 +727,7 @@ function runFilters(e) {
         });
 
         // 2) Kilépett checkbox szűrés
-        if (kilepettFilter.checked) {
+        if (kilepettFilter && kilepettFilter.checked) {
             let colIndex = kilepettFilter.dataset.col;
             let cellText = row.children[colIndex].textContent.trim();
 
@@ -740,6 +740,28 @@ function runFilters(e) {
         row.style.display = visible ? "" : "none";
     });
 }
+
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                           LISTENER!!!                          x
+// x           Az oszlopok tetején lévő SZŰRŐK törlése             x
+// x           Univerzális, mindegyik táblában működik              x
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+document.addEventListener("click", function(e) {
+    if (e.target.id !== "szuroTorlesBtn") return;
+
+    // 1) Minden szöveges szűrőmező kiürítése
+    let textFilters = document.querySelectorAll(".filter-input");
+    textFilters.forEach(input => input.value = "");
+
+    // 2) Checkbox kikapcsolása
+    let kilepettFilter = document.querySelector(".filter-kilepett");
+    if (kilepettFilter) kilepettFilter.checked = false;
+
+    // 3) Minden sor láthatóvá tétele
+    let rows = document.querySelectorAll("tbody tr");
+    rows.forEach(row => row.style.display = "");
+
+});
 
 
 

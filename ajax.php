@@ -187,7 +187,10 @@ function a_dolgozok_modul($conn) {
     echo "
     <div class='module_actions'>
         <h3>Dolgozók - (név szerint sorba rendezve)</h3>
-        <button class='btn btn-primary' onclick=\"ujDolgozo()\">Új dolgozó</button>
+        <div class='actionGombok'>
+            <button class='btn btn-primary' onclick=\"ujDolgozo()\">Új dolgozó</button>
+            <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
+        </div>
     </div>
     ";
 
@@ -211,9 +214,7 @@ function a_dolgozok_modul($conn) {
                     <th><input type='text' class='filter-input' data-col='1'></th>
                     <th><input type='text' class='filter-input' data-col='2'></th>
                     <th><input type='text' class='filter-input' data-col='3'></th>
-                    <th class='d-flex justify-content-between align-items-center'>
-                        <input type='checkbox' class='filter-kilepett' data-col='4'>
-                        <button class='btn btn-sm btn-secondary ms-2' id='clearFiltersBtn'>Szűrők törlése</button>
+                    <th><input type='checkbox' class='filter-kilepett' data-col='4'>
                     </th>
                 </tr>
             </thead>";
@@ -442,7 +443,10 @@ function a_felhasznalok_modul($conn) {
     echo "
     <div class='module_actions'>
         <h3>Felhasználók</h3>
-        <button class='btn btn-primary' onclick=\"ujDolgozo()\">Új dolgozó</button>
+        <div class='actionGombok'>
+            <button class='btn btn-primary' onclick=\"ujFelhasznalo()\">Új felhasználó</button>
+            <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
+        </div>
     </div>
     ";
 
@@ -453,13 +457,22 @@ function a_felhasznalok_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <tr>
-                <th>Név</th>
-                <th>Beosztás</th>
-                <th>Hozzáférés</th>
-                <th>Felhasználónév</th>
-                <th>Törölve</th>
-            </tr>";
+            <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Beosztás</th>
+                    <th>Hozzáférés</th>
+                    <th>Felhasználónév</th>
+                    <th>Törölve</th>
+                </tr>
+                <tr class='filter-row'>
+                    <th><input type='text' class='filter-input' data-col='0'></th>
+                    <th><input type='text' class='filter-input' data-col='1'></th>
+                    <th><input type='text' class='filter-input' data-col='2'></th>
+                    <th><input type='text' class='filter-input' data-col='3'></th>
+                    <th><input type='checkbox' class='filter-kilepett' data-col='4'>
+                </tr>
+            </thead>";
 
     while ($row = $result->fetch_assoc()) {
 
@@ -473,7 +486,7 @@ function a_felhasznalok_modul($conn) {
         // Törölve mező átalakítása
         $torolve = $row['torolve'] 
             ? "Inaktív  ({$row['torolve']})" 
-            : "Aktív";
+            : "";
 
         echo "<tr ondblclick=\"felhasznaloSzerkesztes({$row['user_id']})\">
                 <td>{$row['dolgozo_nev']}</td>
@@ -484,7 +497,7 @@ function a_felhasznalok_modul($conn) {
               </tr>";
     }
 
-    echo "</table>";
+    echo "</tbody></table>";
 }
 
 function felhasznalo_szerkesztes_form($conn) {
@@ -707,13 +720,11 @@ function a_eszkozok_modul($conn) {
 
     // FELSŐ MŰVELETI SÁV
     echo "
-    <div class='module_actions' d-flex justify-content-between align-items-center'>
-        <h3 class='m-0'>Eszközök</h3>
-            
-        <div class='d-flex align-items-center gap-2'>
-            <button onclick=\"ujEszkozok()\">Új eszköz</button>
-            <input type='text' id='kereses' placeholder='Keresés...'>
-            <button onclick=\"szures()\">Szűrés</button>
+    <div class='module_actions'>
+        <h3>Eszközök</h3>
+        <div class='actionGombok'>
+            <button class='btn btn-primary' onclick=\"ujEszkozok()\">Új eszköz</button>
+            <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
         </div>
     </div>
     ";
@@ -730,14 +741,26 @@ function a_eszkozok_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <tr>
-                <th>Megnevezés</th>
-                <th>Kategória</th>
-                <th>Azonosító</th>
-                <th>Méret</th>
-                <th>Állapot</th>
-                <th>Megjegyzés</th>
-            </tr>";
+            <thead>
+                <tr>
+                    <th>Megnevezés</th>
+                    <th>Kategória</th>
+                    <th>Azonosító</th>
+                    <th>Méret</th>
+                    <th>Állapot</th>
+                    <th>Megjegyzés</th>
+                </tr>
+                <tr class='filter-row'>
+                    <th><input type='text' class='filter-input' data-col='0'></th>
+                    <th><input type='text' class='filter-input' data-col='1'></th>
+                    <th><input type='text' class='filter-input' data-col='2'></th>
+                    <th><input type='text' class='filter-input' data-col='3'></th>
+                    <th><input type='text' class='filter-input' data-col='4'></th>
+                    <th><input type='text' class='filter-input' data-col='5'>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>";
 
     while ($row = $result->fetch_assoc()) {
         echo "<tr ondblclick=\"eszkozSzerkesztes({$row['eszkoz_id']})\">
@@ -750,7 +773,7 @@ function a_eszkozok_modul($conn) {
               </tr>";
     }
 
-    echo "</table>";
+    echo "</tbody></table>";
 }
 
 function eszkoz_szerkesztes_form($conn) {
@@ -1067,8 +1090,7 @@ function a_osszes_kiadas_modul($conn) {
     echo "
     <div class='module_actions'>
         <h3>Összes eszközmozgás</h3>
-        <input type='text' id='kereses' placeholder='Keresés...'>
-        <button onclick=\"szures()\">Szűrés</button>
+        <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn' onclick=\"szures()\">Szűrők törlése</button>
     </div>
     ";
 
@@ -1110,20 +1132,37 @@ function a_osszes_kiadas_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <tr>
-                <th>Kiadás dátuma</th>
-                <th>Eszköz megnevezése</th>
-                <th>Eszköz azonosító</th>
-                <th>Méret</th>
-                <th>Állapot kiadáskor</th>
-                <th>Megjegyzés</th>
-                <th>Felvette</th>
-                <th>Kiadta</th>
-                <th>Visszavétel dátuma</th>
-                <th>Állapot visszavételkor</th>
-                <th>Visszavette</th>
-                <th>Megjegyzés a visszavételhez</th>
-            </tr>";
+            <thead>
+                <tr>
+                    <th>Kiadás dátuma</th>
+                    <th>Eszköz megnevezése</th>
+                    <th>Eszköz azonosító</th>
+                    <th>Méret</th>
+                    <th>Állapot kiadáskor</th>
+                    <th>Megjegyzés</th>
+                    <th>Felvette</th>
+                    <th>Kiadta</th>
+                    <th>Visszavétel dátuma</th>
+                    <th>Állapot visszavételkor</th>
+                    <th>Visszavette</th>
+                    <th>Megjegyzés a visszavételhez</th>
+                </tr>
+                <tr class='filter-row'>
+                    <th><input type='text' class='filter-input' data-col='0'></th>
+                    <th><input type='text' class='filter-input' data-col='1'></th>
+                    <th><input type='text' class='filter-input' data-col='2'></th>
+                    <th><input type='text' class='filter-input' data-col='3'></th>
+                    <th><input type='text' class='filter-input' data-col='4'></th>
+                    <th><input type='text' class='filter-input' data-col='5'></th>
+                    <th><input type='text' class='filter-input' data-col='6'></th>
+                    <th><input type='text' class='filter-input' data-col='7'></th>
+                    <th><input type='text' class='filter-input' data-col='8'></th>
+                    <th><input type='text' class='filter-input' data-col='9'></th>
+                    <th><input type='text' class='filter-input' data-col='10'></th>
+                    <th><input type='text' class='filter-input' data-col='11'></th>
+                </tr>
+            </thead>
+            <tbody>";
 
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
@@ -1142,7 +1181,7 @@ function a_osszes_kiadas_modul($conn) {
               </tr>";
     }
 
-    echo "</table>";
+    echo "</tbody></table>";
 }
 
 // ===== "ESZKÖZ KIADÁS" modul =====
@@ -1153,9 +1192,10 @@ function a_kiadas_modul($conn) {
     echo "
     <div class='module_actions'>
         <h3>Kiadott, még nem visszavett eszközök</h3>
-        <button onclick=\"ujKiadas()\">Új kiadás</button>
-        <input type='text' id='kereses' placeholder='Keresés...'>
-        <button onclick=\"szures()\">Szűrés</button>
+        <div class='actionGombok'>
+            <button class='btn btn-primary' onclick=\"ujKiadas()\">Új kiadás</button>
+            <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
+        </div>
     </div>
     ";
 
@@ -1188,16 +1228,28 @@ function a_kiadas_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <tr>
-                <th></th>
-                <th>Kiadás dátuma</th>
-                <th>Ki vette fel</th>
-                <th>Eszköz megnevezése</th>
-                <th>Eszköz azonosító</th>
-                <th>Méret</th>
-                <th>Megjegyzés</th>
-                <th>Ki adta ki</th>
-            </tr>";
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Kiadás dátuma</th>
+                    <th>Ki vette fel</th>
+                    <th>Eszköz megnevezése</th>
+                    <th>Eszköz azonosító</th>
+                    <th>Méret</th>
+                    <th>Megjegyzés</th>
+                    <th>Ki adta ki</th>
+                </tr>
+                <tr class='filter-row'>
+                    <th></th>
+                    <th><input type='text' class='filter-input' data-col='1'></th>
+                    <th><input type='text' class='filter-input' data-col='2'></th>
+                    <th><input type='text' class='filter-input' data-col='3'></th>
+                    <th><input type='text' class='filter-input' data-col='4'></th>
+                    <th><input type='text' class='filter-input' data-col='5'></th>
+                    <th><input type='text' class='filter-input' data-col='6'></th>
+                    <th><input type='text' class='filter-input' data-col='7'></th>
+                </tr>
+            </thead>";
 
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
@@ -1212,7 +1264,7 @@ function a_kiadas_modul($conn) {
               </tr>";
     }
 
-    echo "</table>";
+    echo "</tbody></table>";
 }
 
 // ====== "ESZKÖZ VISSZAVÉTEL" modul =====
@@ -1223,9 +1275,7 @@ function a_visszavetel_modul($conn) {
     echo "
     <div class='module_actions'>
         <h3>Visszavett eszközök</h3>
-        <button onclick=\"ujVisszavetel()\">Új visszavétel</button>
-        <input type='text' id='kereses' placeholder='Keresés...'>
-        <button onclick=\"szures()\">Szűrés</button>
+        <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
     </div>
     ";
 
@@ -1254,15 +1304,27 @@ function a_visszavetel_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <tr>
-                <th>Visszavétel dátuma</th>
-                <th>Megnevezés</th>
-                <th>Eszköz azonosító</th>
-                <th>Állapot kiadáskor</th>
-                <th>Állapot visszavételkor</th>
-                <th>Visszavette</th>
-                <th>Megjegyzés</th>
-            </tr>";
+            <thead>
+                <tr>
+                    <th>Visszavétel dátuma</th>
+                    <th>Megnevezés</th>
+                    <th>Eszköz azonosító</th>
+                    <th>Állapot kiadáskor</th>
+                    <th>Állapot visszavételkor</th>
+                    <th>Visszavette</th>
+                    <th>Megjegyzés</th>
+                </tr>
+                <tr class='filter-row'>
+                    <th><input type='text' class='filter-input' data-col='0'></th>
+                    <th><input type='text' class='filter-input' data-col='1'></th>
+                    <th><input type='text' class='filter-input' data-col='2'></th>
+                    <th><input type='text' class='filter-input' data-col='3'></th>
+                    <th><input type='text' class='filter-input' data-col='4'></th>
+                    <th><input type='text' class='filter-input' data-col='5'></th>
+                    <th><input type='text' class='filter-input' data-col='6'></th>
+                </tr>
+            </thead>
+            </tbody>";
 
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
@@ -1276,7 +1338,7 @@ function a_visszavetel_modul($conn) {
               </tr>";
     }
 
-    echo "</table>";
+    echo "</tbody></table>";
 }
 
 
