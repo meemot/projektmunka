@@ -110,9 +110,8 @@ body {
 
     min-height: 0;
     width: 100%;
-
     padding: 1rem 0;
-
+    padding-top: 0;
     overflow-x: auto;
     overflow-y: auto;
 }
@@ -133,6 +132,11 @@ body {
     border-collapse: collapse;
 }
 
+/* Táblázat: összeérjenek a cellák */
+.admin_box3 table {
+    border-collapse: collapse;   /* összehúzza a cellákat */
+    border-spacing: 0;           /* eltünteti az alap 2px rést */
+}
 
 /* Fejléc */
 .admin_box3 table th {
@@ -140,6 +144,7 @@ body {
     text-align: left;
     padding: 0.75rem;
     vertical-align: middle;
+    line-height: 1.2;            /* ne legyen extra függőleges tér */
 }
 
 
@@ -149,7 +154,19 @@ body {
     text-align: left;
     padding: 0.75rem;
     vertical-align: middle;
+    line-height: 1.2;            /* ugyanaz, hogy szépen összeérjen */
 }
+
+/* A hajszálnyi rés eltüntetése */
+.admin_box3 table tr {
+    border-bottom: 0;
+}
+
+.admin_box3 table th,
+.admin_box3 table td {
+    border: 0;              /* minden cellahatár eltűnik */
+}
+
 
 
 /* =========================
@@ -165,6 +182,11 @@ body {
     z-index: 2;
 }
 
+.teszt1 {
+    position: sticky;
+    top: 0;
+}
+
 
 /* =========================
    MŰVELETEK
@@ -176,6 +198,8 @@ body {
     align-items: center;
     gap: 20px;
     margin-bottom: 15px;
+    position: sticky;
+    top: 0;
 }
 
 
@@ -192,6 +216,8 @@ body {
 .rendezes:hover {
     background-color: #bfd3f8;
 }
+
+
 
 
 /* =========================

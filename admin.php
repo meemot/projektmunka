@@ -56,6 +56,8 @@
 
             <!-- Jobb oldali tartalom -->
             <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2">
+                <!-- Táblázat feletti fix rész -->
+                 <div class="class cimsor"></div>
                 <!-- AJAX tartalom - görgethető -->
                 <div class="admin_box3">
                     Box3

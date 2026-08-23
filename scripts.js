@@ -577,6 +577,7 @@ function VisszavetMegse() {
 // x           Kell a menüpontok működéséhez, figyeli a menü linkeket             x
 // x                        Lekéri a data-action értékét                          x
 // x                      AJAX kérést küld az ajax.php-nak                        x
+// x    - a fejlécet megosztva tölti fel a html-be két divbe!!!                   x
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 document.addEventListener("DOMContentLoaded", () => { // megvárja, hogy betöltődjön a teljes html
 
@@ -597,15 +598,31 @@ document.addEventListener("DOMContentLoaded", () => { // megvárja, hogy betölt
             .then(data => {
 
                 /* Megkeressük az admin_box3 vagy operator_box3 div-et, és beírjuk a visszakapott html-t */
+                const cimsor = document.querySelector(".cimsor");
                 const targetBox = document.querySelector(".admin_box3") 
                                || document.querySelector(".operator_box3");
 
-                if (targetBox) {
-                    targetBox.innerHTML = data;
+                if (!targetBox) return;
+                
+                // Ideiglenes DOM létrehozása
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
 
-                    targetBox.scrollTo({ top: 0, behavior: "smooth" }); // görgetés az oldal tetejére, hogy a felhasználó az elejéről lássa a tartalmat
+                // module_actions kivétele
+                const moduleActions = tempDiv.querySelector(".module_actions");
+
+                // Ha van module_actions → cimsorba tesszük
+                if (cimsor) {
+                    cimsor.innerHTML = ""; // előző címsor törlése
+                    if (moduleActions) {
+                        cimsor.appendChild(moduleActions);
+                    }
                 }
 
+                // A maradék HTML megy az admin_box3-ba
+                targetBox.innerHTML = tempDiv.innerHTML;
+
+                targetBox.scrollTo({ top: 0, behavior: "smooth" }); // görgetés az oldal tetejére, hogy a felhasználó az elejéről lássa a tartalmat
             });
         });
     });

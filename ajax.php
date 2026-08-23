@@ -201,7 +201,7 @@ function a_dolgozok_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <thead>
+            <thead class='teszt1'>
                 <tr>
                     <th class='rendezes' data-col='0'>Név ▲▼</th>
                     <th class='rendezes' data-col='1'>Beosztás ▲▼</th>
@@ -457,7 +457,7 @@ function a_felhasznalok_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <thead>
+            <thead class='teszt1'>
                 <tr>
                     <th class='rendezes' data-col='0'>Név ▲▼</th>
                     <th class='rendezes' data-col='1'>Beosztás ▲▼</th>
@@ -741,7 +741,7 @@ function a_eszkozok_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <thead>
+            <thead class='teszt1'>
                 <tr>
                     <th class='rendezes' data-col='0'>Megnevezés ▲▼</th>
                     <th class='rendezes' data-col='1'>Kategória ▲▼</th>
@@ -1131,7 +1131,7 @@ function a_osszes_kiadas_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <thead>
+            <thead class='teszt1'>
                 <tr>
                     <th class='rendezes' data-col='0'>Kiadás dátuma ▲▼</th>
                     <th class='rendezes' data-col='1'>Eszköz megnevezése ▲▼</th>
@@ -1227,7 +1227,7 @@ function a_kiadas_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <thead>
+            <thead class='teszt1'>
                 <tr>
                     <th></th>
                     <th class='rendezes' data-col='1'>Kiadás dátuma ▲▼</th>
@@ -1303,7 +1303,7 @@ function a_visszavetel_modul($conn) {
 
     
     echo "<table class='tabla table table-striped table-hover'>
-            <thead>
+            <thead class='teszt1'>
                 <tr>
                     <th class='rendezes' data-col='0'>Visszavétel dátuma ▲▼</th>
                     <th class='rendezes' data-col='1'>Megnevezés ▲▼</th>
