@@ -184,6 +184,16 @@ body {
     gap: 10px;          /* gombok közti távolság */
 }
 
+.rendezes {
+    cursor: pointer;
+    user-select: none;
+}
+
+.rendezes:hover {
+    background-color: #bfd3f8;
+}
+
+
 /* =========================
    MOBIL
    ========================= */

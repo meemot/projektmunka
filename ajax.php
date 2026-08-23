@@ -203,11 +203,11 @@ function a_dolgozok_modul($conn) {
     echo "<table class='tabla table table-striped table-hover'>
             <thead>
                 <tr>
-                    <th>Név</th>
-                    <th>Beosztás</th>
-                    <th>Email</th>
-                    <th>Telefon</th>
-                    <th>Kilépett</th>
+                    <th class='rendezes' data-col='0'>Név ▲▼</th>
+                    <th class='rendezes' data-col='1'>Beosztás ▲▼</th>
+                    <th class='rendezes' data-col='2'>Email ▲▼</th>
+                    <th class='rendezes' data-col='3'>Telefon ▲▼</th>
+                    <th class='rendezes' data-col='4'>Kilépett ▲▼</th>
                 </tr>
                 <tr class='filter-row'>
                     <th><input type='text' class='filter-input' data-col='0'></th>
@@ -452,18 +452,18 @@ function a_felhasznalok_modul($conn) {
 
     // TÁBLÁZAT, INNEN KELL FOLYTATNOM A FELHASZNÁLÓKRA AKTUALIZÁLÁST!!!
     $sql = "SELECT d.dolgozo_nev, d.beosztas, u.user_id, u.jogkor, u.usernev, u.torolve 
-            FROM users u JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id";
+            FROM users u JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id ORDER BY d.dolgozo_nev";
     $result = $conn->query($sql);
 
     
     echo "<table class='tabla table table-striped table-hover'>
             <thead>
                 <tr>
-                    <th>Név</th>
-                    <th>Beosztás</th>
-                    <th>Hozzáférés</th>
-                    <th>Felhasználónév</th>
-                    <th>Törölve</th>
+                    <th class='rendezes' data-col='0'>Név ▲▼</th>
+                    <th class='rendezes' data-col='1'>Beosztás ▲▼</th>
+                    <th class='rendezes' data-col='2'>Hozzáférés ▲▼</th>
+                    <th class='rendezes' data-col='3'>Felhasználónév ▲▼</th>
+                    <th class='rendezes' data-col='4'>Törölve ▲▼</th>
                 </tr>
                 <tr class='filter-row'>
                     <th><input type='text' class='filter-input' data-col='0'></th>
@@ -743,12 +743,12 @@ function a_eszkozok_modul($conn) {
     echo "<table class='tabla table table-striped table-hover'>
             <thead>
                 <tr>
-                    <th>Megnevezés</th>
-                    <th>Kategória</th>
-                    <th>Azonosító</th>
-                    <th>Méret</th>
-                    <th>Állapot</th>
-                    <th>Megjegyzés</th>
+                    <th class='rendezes' data-col='0'>Megnevezés ▲▼</th>
+                    <th class='rendezes' data-col='1'>Kategória ▲▼</th>
+                    <th class='rendezes' data-col='2'>Azonosító ▲▼</th>
+                    <th class='rendezes' data-col='3'>Méret ▲▼</th>
+                    <th class='rendezes' data-col='4'>Állapot ▲▼</th>
+                    <th class='rendezes' data-col='5'>Megjegyzés ▲▼</th>
                 </tr>
                 <tr class='filter-row'>
                     <th><input type='text' class='filter-input' data-col='0'></th>
@@ -756,8 +756,7 @@ function a_eszkozok_modul($conn) {
                     <th><input type='text' class='filter-input' data-col='2'></th>
                     <th><input type='text' class='filter-input' data-col='3'></th>
                     <th><input type='text' class='filter-input' data-col='4'></th>
-                    <th><input type='text' class='filter-input' data-col='5'>
-                    </th>
+                    <th><input type='text' class='filter-input' data-col='5'></th>
                 </tr>
             </thead>
             <tbody>";
@@ -1134,18 +1133,18 @@ function a_osszes_kiadas_modul($conn) {
     echo "<table class='tabla table table-striped table-hover'>
             <thead>
                 <tr>
-                    <th>Kiadás dátuma</th>
-                    <th>Eszköz megnevezése</th>
-                    <th>Eszköz azonosító</th>
-                    <th>Méret</th>
-                    <th>Állapot kiadáskor</th>
-                    <th>Megjegyzés</th>
-                    <th>Felvette</th>
-                    <th>Kiadta</th>
-                    <th>Visszavétel dátuma</th>
-                    <th>Állapot visszavételkor</th>
-                    <th>Visszavette</th>
-                    <th>Megjegyzés a visszavételhez</th>
+                    <th class='rendezes' data-col='0'>Kiadás dátuma ▲▼</th>
+                    <th class='rendezes' data-col='1'>Eszköz megnevezése ▲▼</th>
+                    <th class='rendezes' data-col='2'>Eszköz azonosító ▲▼</th>
+                    <th class='rendezes' data-col='3'>Méret ▲▼</th>
+                    <th class='rendezes' data-col='4'>Állapot kiadáskor ▲▼</th>
+                    <th class='rendezes' data-col='5'>Megjegyzés ▲▼</th>
+                    <th class='rendezes' data-col='6'>Felvette ▲▼</th>
+                    <th class='rendezes' data-col='7'>Kiadta ▲▼</th>
+                    <th class='rendezes' data-col='8'>Visszavétel dátuma ▲▼</th>
+                    <th class='rendezes' data-col='9'>Állapot visszavételkor ▲▼</th>
+                    <th class='rendezes' data-col='10'>Visszavette ▲▼</th>
+                    <th class='rendezes' data-col='11'>Megjegyzés a visszavételhez ▲▼</th>
                 </tr>
                 <tr class='filter-row'>
                     <th><input type='text' class='filter-input' data-col='0'></th>
@@ -1231,13 +1230,13 @@ function a_kiadas_modul($conn) {
             <thead>
                 <tr>
                     <th></th>
-                    <th>Kiadás dátuma</th>
-                    <th>Ki vette fel</th>
-                    <th>Eszköz megnevezése</th>
-                    <th>Eszköz azonosító</th>
-                    <th>Méret</th>
-                    <th>Megjegyzés</th>
-                    <th>Ki adta ki</th>
+                    <th class='rendezes' data-col='1'>Kiadás dátuma ▲▼</th>
+                    <th class='rendezes' data-col='2'>Ki vette fel ▲▼</th>
+                    <th class='rendezes' data-col='3'>Eszköz megnevezése ▲▼</th>
+                    <th class='rendezes' data-col='4'>Eszköz azonosító ▲▼</th>
+                    <th class='rendezes' data-col='5'>Méret ▲▼</th>
+                    <th class='rendezes' data-col='6'>Megjegyzés ▲▼</th>
+                    <th class='rendezes' data-col='7'>Ki adta ki ▲▼</th>
                 </tr>
                 <tr class='filter-row'>
                     <th></th>
@@ -1306,13 +1305,13 @@ function a_visszavetel_modul($conn) {
     echo "<table class='tabla table table-striped table-hover'>
             <thead>
                 <tr>
-                    <th>Visszavétel dátuma</th>
-                    <th>Megnevezés</th>
-                    <th>Eszköz azonosító</th>
-                    <th>Állapot kiadáskor</th>
-                    <th>Állapot visszavételkor</th>
-                    <th>Visszavette</th>
-                    <th>Megjegyzés</th>
+                    <th class='rendezes' data-col='0'>Visszavétel dátuma ▲▼</th>
+                    <th class='rendezes' data-col='1'>Megnevezés ▲▼</th>
+                    <th class='rendezes' data-col='2'>Eszköz azonosító ▲▼</th>
+                    <th class='rendezes' data-col='3'>Állapot kiadáskor ▲▼</th>
+                    <th class='rendezes' data-col='4'>Állapot visszavételkor ▲▼</th>
+                    <th class='rendezes' data-col='5'>Visszavette ▲▼</th>
+                    <th class='rendezes' data-col='6'>Megjegyzés ▲▼</th>
                 </tr>
                 <tr class='filter-row'>
                     <th><input type='text' class='filter-input' data-col='0'></th>

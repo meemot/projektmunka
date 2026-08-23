@@ -743,7 +743,7 @@ function runFilters(e) {
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 // x                           LISTENER!!!                          x
-// x           Az oszlopok tetején lévő SZŰRŐK törlése             x
+// x           Az oszlopok tetején lévő SZŰRŐK törlése              x
 // x           Univerzális, mindegyik táblában működik              x
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 document.addEventListener("click", function(e) {
@@ -763,6 +763,40 @@ document.addEventListener("click", function(e) {
 
 });
 
+
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                           LISTENER!!!                          x
+// x           RENDEZÉS - Az oszlopnevekre kattintva                x
+// x           Univerzális, mindegyik táblában működik              x
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+document.addEventListener("click", function(e) {
+    if (!e.target.classList.contains("rendezes")) return;
+
+    let colIndex = parseInt(e.target.dataset.col);
+    let table = e.target.closest("table");
+    let tbody = table.querySelector("tbody");
+    let rows = Array.from(tbody.querySelectorAll("tr"));
+
+    // rendezési irány tárolása
+    let asc = e.target.dataset.asc === "true" ? false : true;
+    e.target.dataset.asc = asc;
+
+    rows.sort((a, b) => {
+        let A = a.children[colIndex].innerText.toLowerCase();
+        let B = b.children[colIndex].innerText.toLowerCase();
+
+        // számok esetén
+        if (!isNaN(A) && !isNaN(B)) {
+            return asc ? A - B : B - A;
+        }
+
+        // szöveg esetén
+        return asc ? A.localeCompare(B) : B.localeCompare(A);
+    });
+
+    // újrarajzolás
+    rows.forEach(r => tbody.appendChild(r));
+});
 
 
 
