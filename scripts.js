@@ -51,9 +51,27 @@ function ujDolgozoMentes() {
                 body: "action=a_dolgozok"
             })
             .then(r => r.text())
-            .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
-                const box = document.querySelector(".admin_box3");
-                box.innerHTML = html;
+            .then(data => { // a szerver válaszát beírjuk az admin_box3 div-be
+                
+                const cimsor = document.querySelector(".cimsor");
+                const targetBox = document.querySelector(".admin_box3");
+
+                // Ideiglenes DOM
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                // Fejléc kivétele
+                const moduleActions = tempDiv.querySelector(".module_actions");
+                if (moduleActions) moduleActions.remove();
+
+                // Címsor frissítése
+                if (cimsor) {
+                    cimsor.innerHTML = "";
+                    if (moduleActions) cimsor.appendChild(moduleActions);
+                }
+
+                // Tartalom beírása
+                targetBox.innerHTML = tempDiv.innerHTML;
             });
 
         } else {
@@ -70,9 +88,27 @@ function ujDolgozoMegse() {
         body: "action=a_dolgozok"
     })
     .then(r => r.text())
-    .then(html => {
-        const box = document.querySelector(".admin_box3");
-        box.innerHTML = html;
+    .then(data => {
+
+        const cimsor = document.querySelector(".cimsor");
+        const targetBox = document.querySelector(".admin_box3");
+
+        // Ideiglenes DOM
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = data;
+
+        // Fejléc kivétele
+        const moduleActions = tempDiv.querySelector(".module_actions");
+        if (moduleActions) moduleActions.remove();
+
+        // Címsor frissítése
+        if (cimsor) {
+            cimsor.innerHTML = "";
+            if (moduleActions) cimsor.appendChild(moduleActions);
+        }
+
+        // Tartalom beírása
+        targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
 
@@ -120,9 +156,23 @@ function modDolgozoMentes() {
                 body: "action=a_dolgozok"
             })
             .then(r => r.text())
-            .then(html => {
-                const box = document.querySelector(".admin_box3");
-                box.innerHTML = html;
+            .then(data => {
+                const cimsor = document.querySelector(".cimsor");
+                const targetBox = document.querySelector(".admin_box3");
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                const moduleActions = tempDiv.querySelector(".module_actions");
+                if (moduleActions) moduleActions.remove();
+
+                if (cimsor) {
+                    cimsor.innerHTML = "";
+                    if (moduleActions) cimsor.appendChild(moduleActions);
+                }
+
+                // ITT VOLT A HIBA: html → data
+                targetBox.innerHTML = tempDiv.innerHTML;
             });
 
         } else {
@@ -139,9 +189,27 @@ function modDolgozoMegse() {
         body: "action=a_dolgozok"
     })
     .then(r => r.text())
-    .then(html => {
-        const box = document.querySelector(".admin_box3");
-        box.innerHTML = html;
+    .then(data => {
+        
+        const cimsor = document.querySelector(".cimsor");
+        const targetBox = document.querySelector(".admin_box3");
+
+        // Ideiglenes DOM
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = data;
+
+        // Fejléc kivétele
+        const moduleActions = tempDiv.querySelector(".module_actions");
+        if (moduleActions) moduleActions.remove();
+
+        // Címsor frissítése
+        if (cimsor) {
+            cimsor.innerHTML = "";
+            if (moduleActions) cimsor.appendChild(moduleActions);
+        }
+
+        // Tartalom beírása
+        targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
 
@@ -184,9 +252,24 @@ function ujFelhasznaloMentes() {
                 body: "action=a_felhasznalok"
             })
             .then(r => r.text())
-            .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
-                const box = document.querySelector(".admin_box3");
-                box.innerHTML = html;
+            .then(data => { // a szerver válaszát beírjuk az admin_box3 div-be
+                
+                const cimsor = document.querySelector(".cimsor");
+                const targetBox = document.querySelector(".admin_box3");
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                // A fejlécet ki kell venni a tempDiv-ből
+                const moduleActions = tempDiv.querySelector(".module_actions");
+                if (moduleActions) moduleActions.remove();
+
+                if (cimsor) {
+                    cimsor.innerHTML = "";
+                    if (moduleActions) cimsor.appendChild(moduleActions);
+                }
+
+                targetBox.innerHTML = tempDiv.innerHTML;
             });
 
         } else {
@@ -203,9 +286,27 @@ function ujFelhasznaloMegse() {
         body: "action=a_felhasznalok"
     })
     .then(r => r.text())
-    .then(html => {
-        const box = document.querySelector(".admin_box3");
-        box.innerHTML = html;
+    .then(data => {
+        
+        const cimsor = document.querySelector(".cimsor");
+        const targetBox = document.querySelector(".admin_box3");
+
+        // Ideiglenes DOM
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = data;
+
+        // Fejléc kivétele
+        const moduleActions = tempDiv.querySelector(".module_actions");
+        if (moduleActions) moduleActions.remove();
+
+        // Címsor frissítése
+        if (cimsor) {
+            cimsor.innerHTML = "";
+            if (moduleActions) cimsor.appendChild(moduleActions);
+        }
+
+        // Tartalom beírása
+        targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
 
@@ -249,9 +350,23 @@ function modFelhasznaloMentes() {
                 body: "action=a_felhasznalok"
             })
             .then(r => r.text())
-            .then(html => {
-                const box = document.querySelector(".admin_box3");
-                box.innerHTML = html;
+            .then(data => {
+
+                const cimsor = document.querySelector(".cimsor");
+                const targetBox = document.querySelector(".admin_box3");
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                const moduleActions = tempDiv.querySelector(".module_actions");
+                if (moduleActions) moduleActions.remove();
+
+                if (cimsor) {
+                    cimsor.innerHTML = "";
+                    if (moduleActions) cimsor.appendChild(moduleActions);
+                }
+
+                targetBox.innerHTML = tempDiv.innerHTML;
             });
 
         } else {
@@ -268,9 +383,27 @@ function modFelhasznaloMegse() {
         body: "action=a_felhasznalok"
     })
     .then(r => r.text())
-    .then(html => {
-        const box = document.querySelector(".admin_box3");
-        box.innerHTML = html;
+    .then(data => {
+        
+        const cimsor = document.querySelector(".cimsor");
+        const targetBox = document.querySelector(".admin_box3");
+
+        // Ideiglenes DOM
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = data;
+
+        // Fejléc kivétele
+        const moduleActions = tempDiv.querySelector(".module_actions");
+        if (moduleActions) moduleActions.remove();
+
+        // Címsor frissítése
+        if (cimsor) {
+            cimsor.innerHTML = "";
+            if (moduleActions) cimsor.appendChild(moduleActions);
+        }
+
+        // Tartalom beírása
+        targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
 
@@ -313,9 +446,25 @@ function ujEszkozMentes() {
                 body: "action=a_eszkozok"
             })
             .then(r => r.text())
-            .then(html => { // a szerver válaszát beírjuk az admin_box3 div-be
-                const box = document.querySelector(".admin_box3");
-                box.innerHTML = html;
+            .then(data => { // a szerver válaszát beírjuk az admin_box3 div-be
+                
+                const cimsor = document.querySelector(".cimsor");
+                const targetBox = document.querySelector(".admin_box3");
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                // Fejlécet ki kell venni a tempDiv-ből
+                const moduleActions = tempDiv.querySelector(".module_actions");
+                if (moduleActions) moduleActions.remove();
+
+                // Címsort frissíteni kell
+                if (cimsor) {
+                    cimsor.innerHTML = "";
+                    if (moduleActions) cimsor.appendChild(moduleActions);
+                }
+
+                targetBox.innerHTML = tempDiv.innerHTML;
             });
 
         } else {
@@ -332,9 +481,27 @@ function ujEszkozMegse() {
         body: "action=a_eszkozok"
     })
     .then(r => r.text())
-    .then(html => {
-        const box = document.querySelector(".admin_box3");
-        box.innerHTML = html;
+    .then(data => {
+        
+        const cimsor = document.querySelector(".cimsor");
+        const targetBox = document.querySelector(".admin_box3");
+
+        // Ideiglenes DOM
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = data;
+
+        // Fejléc kivétele
+        const moduleActions = tempDiv.querySelector(".module_actions");
+        if (moduleActions) moduleActions.remove();
+
+        // Címsor frissítése
+        if (cimsor) {
+            cimsor.innerHTML = "";
+            if (moduleActions) cimsor.appendChild(moduleActions);
+        }
+
+        // Tartalom beírása
+        targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
 
@@ -374,9 +541,23 @@ function modEszkozMentes() {
                 body: "action=a_eszkozok"
             })
             .then(r => r.text())
-            .then(html => {
-                const box = document.querySelector(".admin_box3");
-                box.innerHTML = html;
+            .then(data => {
+
+                const cimsor = document.querySelector(".cimsor");
+                const targetBox = document.querySelector(".admin_box3");
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                const moduleActions = tempDiv.querySelector(".module_actions");
+                if (moduleActions) moduleActions.remove();
+
+                if (cimsor) {
+                    cimsor.innerHTML = "";
+                    if (moduleActions) cimsor.appendChild(moduleActions);
+                }
+
+                targetBox.innerHTML = tempDiv.innerHTML;
             });
 
         } else {
@@ -393,9 +574,27 @@ function modEszkozMegse() {
         body: "action=a_eszkozok"
     })
     .then(r => r.text())
-    .then(html => {
-        const box = document.querySelector(".admin_box3");
-        box.innerHTML = html;
+    .then(data => {
+        
+        const cimsor = document.querySelector(".cimsor");
+        const targetBox = document.querySelector(".admin_box3");
+
+        // Ideiglenes DOM
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = data;
+
+        // Fejléc kivétele
+        const moduleActions = tempDiv.querySelector(".module_actions");
+        if (moduleActions) moduleActions.remove();
+
+        // Címsor frissítése
+        if (cimsor) {
+            cimsor.innerHTML = "";
+            if (moduleActions) cimsor.appendChild(moduleActions);
+        }
+
+        // Tartalom beírása
+        targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
 
@@ -441,9 +640,27 @@ function ujKiadasMentes() {
                 body: "action=a_kiadas"
             })
             .then(r => r.text())
-            .then(html => {
-                const box = document.querySelector(".admin_box3");
-                box.innerHTML = html;
+            .then(data => {
+
+                const cimsor = document.querySelector(".cimsor");
+                const targetBox = document.querySelector(".admin_box3");
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                // A fejlécet ki kell venni a tempDiv-ből
+                const moduleActions = tempDiv.querySelector(".module_actions");
+                if (moduleActions) moduleActions.remove();
+
+
+                // cimsort frissíteni kell
+                if (cimsor) {
+                    cimsor.innerHTML = "";
+                    if (moduleActions) cimsor.appendChild(moduleActions);
+                }
+
+                // 🔥 ITT VOLT A HIBA: html → data
+                targetBox.innerHTML = tempDiv.innerHTML;
             });
         }
     });
@@ -457,9 +674,27 @@ function ujKiadasMegse() {
         body: "action=a_kiadas"
     })
     .then(r => r.text())
-    .then(html => {
-        const box = document.querySelector(".admin_box3");
-        box.innerHTML = html;
+    .then(data => {
+
+        const cimsor = document.querySelector(".cimsor");
+        const targetBox = document.querySelector(".admin_box3");
+
+        // Ideiglenes DOM
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = data;
+
+        // Fejléc kivétele
+        const moduleActions = tempDiv.querySelector(".module_actions");
+        if (moduleActions) moduleActions.remove();
+
+        // Címsor frissítése
+        if (cimsor) {
+            cimsor.innerHTML = "";
+            if (moduleActions) cimsor.appendChild(moduleActions);
+        }
+
+        // Tartalom beírása
+        targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
 
@@ -545,9 +780,25 @@ function VisszavetMentes(){
                 body: "action=a_kiadas"
             })
             .then(r => r.text())
-            .then(html => {
-                const box = document.querySelector(".admin_box3");
-                box.innerHTML = html;
+            .then(data => {
+
+                const cimsor = document.querySelector(".cimsor");
+                const targetBox = document.querySelector(".admin_box3");
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                // a fejlécet ki kell venni a tempDiv-ből
+                const moduleActions = tempDiv.querySelector(".module_actions");
+                if (moduleActions) moduleActions.remove();
+
+                // a cimsort frissiteni kell
+                if (cimsor) {
+                    cimsor.innerHTML = "";
+                    if (moduleActions) cimsor.appendChild(moduleActions);
+                }
+
+                targetBox.innerHTML = tempDiv.innerHTML;
             });
         }
     });
@@ -581,8 +832,21 @@ function VisszavetMegse() {
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 document.addEventListener("DOMContentLoaded", () => { // megvárja, hogy betöltődjön a teljes html
 
+    // Ha az admin.php betöltődött és a kezdőoldal HTML már bent van,
+    // akkor automatikusan rajzoljuk ki a diagramot.
+    // (Ez bejelentkezés UTÁN történik.)
+    // 1) AUTOMATIKUS KEZDŐOLDAL BETÖLTÉS BEJELENTKEZÉS UTÁN
+
+    const targetBox = document.querySelector(".admin_box3") 
+                   || document.querySelector(".operator_box3");
+
+    if (targetBox && targetBox.innerHTML.includes("Kezdőoldal")) {
+        diagram1();
+    }
+
     // Megkeressük az összes menü linket, és eseményfigyelőt adunk hozzá
     document.querySelectorAll(".menu_link").forEach(link => { //megkeresi az összes menü-linket
+
         link.addEventListener("click", (event) => { // hozzáad egy eseményfigyelőt
             event.preventDefault(); // aaz oldal újratöltésének megakadályozása
 
@@ -611,6 +875,10 @@ document.addEventListener("DOMContentLoaded", () => { // megvárja, hogy betölt
                 // module_actions kivétele
                 const moduleActions = tempDiv.querySelector(".module_actions");
 
+                if (moduleActions) {
+                    moduleActions.remove();
+                }
+
                 // Ha van module_actions → cimsorba tesszük
                 if (cimsor) {
                     cimsor.innerHTML = ""; // előző címsor törlése
@@ -621,6 +889,14 @@ document.addEventListener("DOMContentLoaded", () => { // megvárja, hogy betölt
 
                 // A maradék HTML megy az admin_box3-ba
                 targetBox.innerHTML = tempDiv.innerHTML;
+
+                if (action === "kezdolap") { //kezdooldalba a diagram1 behívása
+
+                    const tipusId = document.querySelector("#diagramTipusSelect").value;
+
+                    diagram1(tipusId);
+                    diagram2(tipusId);
+                }
 
                 targetBox.scrollTo({ top: 0, behavior: "smooth" }); // görgetés az oldal tetejére, hogy a felhasználó az elejéről lássa a tartalmat
             });
@@ -815,6 +1091,35 @@ document.addEventListener("click", function(e) {
     rows.forEach(r => tbody.appendChild(r));
 });
 
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                               LISTENER!!!                             x
+// x         A KEZDŐOLDAL diagram1 legördülő menüjének figyelése           x
+// x  Csak a kezdőoldalon működik, mert a legördülő lista id-jét figyeli   x
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+document.addEventListener("change", (e) => {
+    if (e.target.id === "diagramTipusSelect") {
+        const tipusId = e.target.value;
+
+        diagram1(tipusId);
+        diagram2(tipusId);
+    }
+});
+
+
+/*
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                               LISTENER!!!                             x
+// x        A KEZDŐOLDAL diagram2 legördülő menüjének figyelése            x
+// x  Csak a kezdőoldalon működik, mert a legördülő lista id-jét figyeli   x
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+document.addEventListener("change", (e) => {
+    if (e.target.id === "diagramTipusSelect2") {
+        const tipusId = e.target.value;
+        diagram2(tipusId);
+    }
+});*/
+
+
 
 
 // KEZDŐOLDAL
@@ -827,7 +1132,16 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .then(r => r.text())
     .then(html => {
+
+        // Kezdőoldal HTML betöltése
         document.querySelector(".admin_box3").innerHTML = html;
+
+        // A legördülő már létezik → most már le tudjuk kérni
+        const tipusId = document.querySelector("#diagramTipusSelect").value;
+
+        // mindkét diagram automatikusan betölt
+        diagram1(tipusId);
+        diagram2(tipusId);
     });
 
 });
@@ -839,3 +1153,86 @@ function torolEszkoz(btn) {
     btn.closest("tr").remove();
 }
 
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                              DIAGRAM1 FV.                            x
+// x                                                                      X
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+function diagram1(tipusId = 1) {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=kezdolap_diagram&tipus_id=" + tipusId
+    })
+    .then(r => r.text())
+    .then(html => {
+
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+
+    const items = temp.querySelectorAll(".item");
+
+    const xArray = [];
+    const yArray = [];
+
+    items.forEach(item => {
+            xArray.push(item.dataset.label);
+            yArray.push(parseInt(item.dataset.value));
+        });
+
+    const layout = {
+        title:"Eszközök állapota",
+        height: 300
+    };
+
+    const data = [{
+        labels:xArray,
+        values:yArray,
+        type:"pie"
+    }];
+
+    Plotly.newPlot("myPlot", data, layout, {responsive: true});
+});
+}
+
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// x                              DIAGRAM2 FV.                            x
+// x                                                                      X
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+function diagram2(tipusId = 1) {
+
+    fetch("ajax.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "action=kezdolap_diagram2&tipus_id=" + tipusId
+    })
+    .then(r => r.text())
+    .then(html => {
+
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+
+    const items = temp.querySelectorAll(".item2");
+
+    const xArray = [];
+    const yArray = [];
+
+    items.forEach(item => {
+            xArray.push(item.dataset.label);
+            yArray.push(parseInt(item.dataset.value));
+        });
+
+    const layout = {
+        title:"Méret szerinti megoszlás:",
+        height: 300
+    };
+
+    const data = [{
+        labels:xArray,
+        values:yArray,
+        type:"pie"
+    }];
+
+    Plotly.newPlot("myPlot2", data, layout, {responsive: true});
+});
+}

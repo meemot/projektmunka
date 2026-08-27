@@ -34,11 +34,55 @@ $action = $_POST["action"] ?? "";
 // xxxxxxxxxxxxxxxxx
 
 if ($jog === "a") {
-    switch ($action) {
+
+    switch ($_POST["action"]) {
+
         case "kezdolap":
             kezdolap_modul();
             break;
 
+        case "kezdolap_diagram":
+
+            $tipus_id = intval($_POST["tipus_id"]);
+
+            $sql = "SELECT et.megnevezes, ea.allapot, COUNT(e.eszkoz_id) AS darabszam
+                    FROM eszkozok e
+                    JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
+                    JOIN eszkoz_allapot ea ON e.allapot_id = ea.allapot_id
+                    WHERE ea.allapot_id < 4 and et.tipus_id = $tipus_id
+                    GROUP BY et.megnevezes, ea.allapot
+                    ORDER BY et.megnevezes";
+
+            $result = $conn->query($sql);
+
+            while ($row = $result->fetch_assoc()) {
+                echo "<div class='item' data-label='{$row["allapot"]}' data-value='{$row["darabszam"]}'></div>";
+            }
+
+            echo "</div>";
+            break;
+
+        case "kezdolap_diagram2":
+
+            $tipus_id = intval($_POST["tipus_id"]);
+
+            $sql = "SELECT et.megnevezes, e.meret, COUNT(e.meret) AS darabszam
+                    FROM eszkozok e
+                    JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
+                    JOIN eszkoz_allapot ea ON e.allapot_id = ea.allapot_id
+                    WHERE ea.allapot_id < 4 and et.tipus_id = $tipus_id
+                    GROUP BY e.meret
+                    ORDER BY et.tipus_id";
+
+            $result = $conn->query($sql);
+
+            while ($row = $result->fetch_assoc()) {
+                echo "<div class='item2' data-label='{$row["meret"]}' data-value='{$row["darabszam"]}'></div>";
+            }
+
+            echo "</div>";
+            break;
+    
         case "a_dolgozok":
             a_dolgozok_modul($conn);
             break;
@@ -169,8 +213,27 @@ if ($jog === "a") {
 
 function kezdolap_modul() {
     echo "
-        <h3>Kezdőoldal</h3>
-        <p>joaergra äjg aőr gjőa gjő</p>
+        <h1>Kezdőoldal</h1>
+        <p>Üdvözlünk a fedélzeten!</p>
+        <div class='diagram-container'>
+            <div class='diagram-card'>
+                <h4>Az eszközök állapotának aránya az eszközök típusa szerint:</h4>
+
+                <select id='diagramTipusSelect'>
+                    <option value='1'>Védőcipő</option>
+                    <option value='2'>Esőkabát</option>
+                    <option value='3'>Láthatósági mellény</option>
+                    <option value='4'>Telefon</option>
+                    <option value='5'>Tablet</option>
+                </select>
+                <div id='myPlot'></div>
+            </div>
+
+            <div class='diagram-card'>
+                <h4>Kiválasztott eszköz méret szerinti megoszlása:</h4>
+                <div id='myPlot2'></div>
+            </div>
+        </div>
     ";
 }
 
@@ -926,7 +989,7 @@ function update_eszkoz($conn) {
     $megjegyzes     = $_POST["megjegyzes"];
 
       // -2) Ellenőrzés: minden mező ki van-e töltve?
-    if ($azonosito === "" || $kategoria_id === "" || $tipus_id === "" || $allapot_id === "" || $meret === "" || $megjegyzes === "") {
+    if ($azonosito === "" || $kategoria_id === "" || $tipus_id === "" || $allapot_id === "" || $meret === "") {
         echo "HIBA: Minden mezőt ki kell tölteni!";
         return;
     }
@@ -1057,7 +1120,7 @@ function uj_eszkoz_mentes($conn) {
     $megjegyzes     = $_POST["megjegyzes"];
 
     // -2) Ellenőrzés: minden mező ki van-e töltve?
-    if ($azonosito === "" || $kategoria_id === "" || $tipus_id === "" || $allapot === "" || $meret === "" || $megjegyzes === "") {
+    if ($azonosito === "" || $kategoria_id === "" || $tipus_id === "" || $allapot === "" || $meret === "") {
         echo "HIBA: Minden mezőt ki kell tölteni!";
         return;
     }
@@ -1471,7 +1534,7 @@ function uj_kiadas_form($conn) {
                 <tr>
                     <th>Típus</th>
                     <th>Azonosító</th>
-                    <th>Törlés</th> 
+                    <th>Visszavonás</th> 
                 </tr>
             </thead>
             <tbody></tbody>
@@ -1798,5 +1861,3 @@ function operator_dolgozok_modul($conn) {
 
     echo "</table>";
 }
-
-?>

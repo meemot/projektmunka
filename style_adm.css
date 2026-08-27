@@ -114,6 +114,7 @@ body {
     padding-top: 0;
     overflow-x: auto;
     overflow-y: auto;
+    display: block;
 }
 
 
@@ -166,6 +167,43 @@ body {
 .admin_box3 table td {
     border: 0;              /* minden cellahatár eltűnik */
 }
+
+
+.diagram-container {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    justify-content: space-around;
+}
+
+#myPlot, #myPlot2 {
+    margin: 0;
+    padding: 0;
+    width: 100%;   /* vagy: max-content */
+    height: 300px;
+}
+
+.diagram-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    min-height: 350px;
+    justify-content: flex-start;
+    overflow: hidden;
+}s
+
+.diagram-card h2 {
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
 
 
 
