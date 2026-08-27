@@ -213,19 +213,20 @@ if ($jog === "a") {
 
 function kezdolap_modul() {
     echo "
-        <h1>Kezdőoldal</h1>
-        <p>Üdvözlünk a fedélzeten!</p>
-        <div class='diagram-container'>
-            <div class='diagram-card'>
-                <h4>Az eszközök állapotának aránya az eszközök típusa szerint:</h4>
-
-                <select id='diagramTipusSelect'>
+        <h1>Kezdőoldal</h1><br>
+        <p>Válassz eszközt!</p>
+        <select id='diagramTipusSelect' class='form-select'>
                     <option value='1'>Védőcipő</option>
                     <option value='2'>Esőkabát</option>
                     <option value='3'>Láthatósági mellény</option>
                     <option value='4'>Telefon</option>
                     <option value='5'>Tablet</option>
                 </select>
+
+        <div class='diagram-container'>
+            <div class='diagram-card'>
+                <h4>Az eszközök állapotának aránya az eszközök típusa szerint:</h4>
+
                 <div id='myPlot'></div>
             </div>
 
@@ -315,7 +316,7 @@ function dolgozo_szerkesztes_form($conn) { // Dolgozó adatainak lekérése az a
     echo "
         <h3>Dolgozó módosítása</h3>
 
-        <form id='modDolgozoForm'>
+        <form id='modDolgozoForm' class='form-select'>
             <input type='hidden' name='id' value='$id'>
 
             <label>Név:</label>
@@ -425,7 +426,7 @@ function uj_dolgozo_form() {
     echo "
     <h3>Új dolgozó létrehozása</h3>
 
-    <form id='ujDolgozoForm' class='form-control'>
+    <form id='ujDolgozoForm'>
 
         <label>Név:</label>
         <input type='text' name='nev' class='form-control' required>
