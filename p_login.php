@@ -7,7 +7,10 @@
     $jl = $_POST["jl"];
     
     //SELECT u.dolgozo_id, u.jogkor, d.dolgozo_nev, d.beosztas FROM users u JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id WHERE u.usernev = 'memot' AND u.jelszo = 'jelszo11' AND u.torolve IS NULL
-    $sql = "SELECT u.dolgozo_id, u.jogkor, d.dolgozo_nev, d.beosztas FROM users u JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id WHERE u.usernev = ? AND u.jelszo = ? AND (u.torolve IS NULL or u.torolve = 0)";
+    $sql = "SELECT u.dolgozo_id, u.jogkor, d.dolgozo_nev, d.beosztas 
+            FROM users u 
+            JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id 
+            WHERE u.usernev = ? AND u.jelszo = ? AND (u.torolve IS NULL or u.torolve = 0)";
     $stmt = $conn->prepare($sql);
 
     $stmt->bind_param("ss", $fh, $jl);

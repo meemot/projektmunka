@@ -33,14 +33,6 @@
                 
                 <div class="logo_category mb-4">LOGO</div>
 
-                <!-- Felhasználó mező a menük fölött -->
-                <div class="admin_top card mb-4">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
-                        <span class="badge bg-primary">Admin</span>
-                    </div>
-                </div>
-
                 <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="kezdolap">Kezdőoldal</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
@@ -48,6 +40,14 @@
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Eszköz kiadás</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavett eszközök</a>
                 <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_osszes_kiadas">Összes eszközmozgás</a>
+
+                <!-- Felhasználó mező a menük alatt -->
+                <div class="admin_top card">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
+                        <span class="badge bg-primary">Admin</span>
+                    </div>
+                </div>
 
                 <div class="menu_footer mt-auto text-center">
                     <small class="text-white-50">Verzió: 1.0.3</small>
@@ -70,8 +70,7 @@
     </div>
 
 <script src="scripts.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+<script>document.addEventListener("DOMContentLoaded", () => {
     fetch("ajax.php", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -86,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 </script>
-
 
 </body>
 </html>

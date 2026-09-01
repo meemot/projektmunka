@@ -1024,8 +1024,8 @@ function runFilters(e) {
             let colIndex = kilepettFilter.dataset.col;
             let cellText = row.children[colIndex].textContent.trim();
 
-            // Csak akkor látszik, ha VAN érték a kilépett oszlopban
-            if (cellText === "") {
+            // Csak akkor látszik, ha NNCS érték a kilépett oszlopban
+            if (cellText !== "") {
                 visible = false;
             }
         }
@@ -1223,7 +1223,7 @@ function diagram2(tipusId = 1) {
         });
 
     const layout = {
-        title:"Méret szerinti megoszlás:",
+        title:"Eszközök mérete:",
         height: 300
     };
 

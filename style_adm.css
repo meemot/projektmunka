@@ -60,8 +60,8 @@ body {
    ========================= */
 
 .logo_category {
+    height: 100px;
     width: 100%;
-    aspect-ratio: 1 / 1;
     background-color: #444;
 
     display: flex;
@@ -76,6 +76,7 @@ body {
    FELSŐ ADMIN INFORMÁCIÓ
    ========================= */
 
+
 .admin_top .card-body {
     padding: 6px 12px;
     min-height: 50px;
@@ -83,6 +84,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.admin_top {
+    margin-top: auto !important;
+    margin-bottom: 1.5vh !important;
+}
+
+.menu_footer {
+    margin-top: 0 !important;
 }
 
 

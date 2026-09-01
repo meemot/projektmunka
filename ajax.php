@@ -225,7 +225,7 @@ function kezdolap_modul() {
 
         <div class='diagram-container'>
             <div class='diagram-card'>
-                <h4>Az eszközök állapotának aránya az eszközök típusa szerint:</h4>
+                <h4>Kiválasztott eszköz állapot szerinti megoszlása:</h4>
 
                 <div id='myPlot'></div>
             </div>
@@ -271,7 +271,7 @@ function a_dolgozok_modul($conn) {
                     <th class='rendezes' data-col='1'>Beosztás ▲▼</th>
                     <th class='rendezes' data-col='2'>Email ▲▼</th>
                     <th class='rendezes' data-col='3'>Telefon ▲▼</th>
-                    <th class='rendezes' data-col='4'>Kilépett ▲▼</th>
+                    <th class='rendezes' data-col='4'>Aktív dolgozók ▲▼</th>
                 </tr>
                 <tr class='filter-row'>
                     <th><input type='text' class='filter-input' data-col='0'></th>
@@ -287,7 +287,7 @@ function a_dolgozok_modul($conn) {
 
         // Kilépett mező átalakítása
         $kilepett = $row['kilepett'] 
-            ? "Igen ({$row['kilepett']})" 
+            ? "Kilépett: {$row['kilepett']}" 
             : "";
 
         echo "<tr ondblclick=\"dolgozoSzerkesztes({$row['dolgozo_id']})\">
@@ -527,7 +527,7 @@ function a_felhasznalok_modul($conn) {
                     <th class='rendezes' data-col='1'>Beosztás ▲▼</th>
                     <th class='rendezes' data-col='2'>Hozzáférés ▲▼</th>
                     <th class='rendezes' data-col='3'>Felhasználónév ▲▼</th>
-                    <th class='rendezes' data-col='4'>Törölve ▲▼</th>
+                    <th class='rendezes' data-col='4'>Aktív felhasználók ▲▼</th>
                 </tr>
                 <tr class='filter-row'>
                     <th><input type='text' class='filter-input' data-col='0'></th>
@@ -549,7 +549,7 @@ function a_felhasznalok_modul($conn) {
 
         // Törölve mező átalakítása
         $torolve = $row['torolve'] 
-            ? "Inaktív  ({$row['torolve']})" 
+            ? "Inaktív: {$row['torolve']}" 
             : "";
 
         echo "<tr ondblclick=\"felhasznaloSzerkesztes({$row['user_id']})\">
