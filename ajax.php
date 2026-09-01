@@ -1189,7 +1189,7 @@ function a_osszes_kiadas_modul($conn) {
                 ON ea1.allapot_id = r.visszavet_allapot
             LEFT JOIN dolgozok d2
                 ON d2.dolgozo_id = r.ki_vette_vissza
-        ORDER BY kiadas_datum ASC;";
+        ORDER BY kiadas_datum DESC;";
 
     $result = $conn->query($sql);
 
@@ -1286,7 +1286,7 @@ function a_kiadas_modul($conn) {
             JOIN dolgozok d1
                 ON k.ki_adta_ki = d1.dolgozo_id
         WHERE r.visszavet_datum is null
-        ORDER BY kiadas_datum ASC;";
+        ORDER BY kiadas_datum DESC;";
     $result = $conn->query($sql);
 
     
@@ -1330,7 +1330,7 @@ function a_kiadas_modul($conn) {
     echo "</tbody></table>";
 }
 
-// ====== "ESZKÖZ VISSZAVÉTEL" modul =====
+// ====== "VISSZAVETT ESZKÖZÖK" modul =====
 
 function a_visszavetel_modul($conn) {
 
@@ -1352,17 +1352,18 @@ function a_visszavetel_modul($conn) {
             ea.allapot AS visszavet_allapot,
             d.dolgozo_nev AS visszavette,
             r.megjegyzes
-            FROM reszletek r
+        FROM reszletek r
             JOIN eszkozok e
-            	ON e.eszkoz_id = r.eszkoz_id
+                ON e.eszkoz_id = r.eszkoz_id
             JOIN eszkoz_tipus et
-            	ON et.tipus_id = e.tipus_id
+                ON et.tipus_id = e.tipus_id
             JOIN eszkoz_allapot ea
-            	ON ea.allapot_id = r.visszavet_allapot
+                ON ea.allapot_id = r.visszavet_allapot
             JOIN dolgozok d
-            	ON d.dolgozo_id = r.ki_vette_vissza
+                ON d.dolgozo_id = r.ki_vette_vissza
             JOIN eszkoz_allapot ea1
-            	ON r.kiadas_allapot = ea1.allapot_id";
+                ON r.kiadas_allapot = ea1.allapot_id
+        ORDER BY visszavet_datum DESC;";
     $result = $conn->query($sql);
 
     
