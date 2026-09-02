@@ -989,12 +989,22 @@ document.addEventListener("click", function(e) {
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 document.addEventListener("keyup", runFilters);
 document.addEventListener("change", runFilters);
+document.addEventListener("click", function(e) {              // Selejtezett elrejtése gomb (toggle)
+    if (!e.target.classList.contains("filter-button")) return; // ha a szűrő gombra kattintunk, ne fusson le újra{
+    
+    // toggle osztály
+    e.target.classList.toggle("active");
+
+    // újra szűrés lefuttatása   
+    runFilters(e);
+});
 
 function runFilters(e) {
-    // Csak akkor fut, ha filter mezőben gépelünk vagy checkbox pipálás van
+    // Csak akkor fut, ha filter mezőben gépelünk vagy a select/checkbox változik
     if (
         !e.target.classList.contains("filter-input") &&
-        !e.target.classList.contains("filter-kilepett")
+        !e.target.classList.contains("filter-kilepett") &&
+        !e.target.classList.contains("filter-button")
     ) return;
 
     let table = e.target.closest("table");
@@ -1002,6 +1012,7 @@ function runFilters(e) {
 
     let textFilters = table.querySelectorAll(".filter-input");
     let kilepettFilter = table.querySelector(".filter-kilepett");
+    let hideButton = table.querySelector(".filter-button"); // selejtezett elrejtése gomb
 
     rows.forEach(row => {
         let visible = true;
@@ -1026,6 +1037,17 @@ function runFilters(e) {
 
             // Csak akkor látszik, ha NNCS érték a kilépett oszlopban
             if (cellText !== "") {
+                visible = false;
+            }
+        }
+
+        // 3) Selejtezett elrejtése gomb (toggle)
+        if (hideButton && hideButton.classList.contains("active")) {
+            let colIndex = hideButton.dataset.col;
+            let cellText = row.children[colIndex].textContent.trim();
+
+            // Ha az állapot "Selejtezett", akkor NE jelenjen meg
+            if (cellText === "Selejtezett") {
                 visible = false;
             }
         }
@@ -1075,8 +1097,9 @@ document.addEventListener("click", function(e) {
     e.target.dataset.asc = asc;
 
     rows.sort((a, b) => {
-        let A = a.children[colIndex].innerText.toLowerCase();
-        let B = b.children[colIndex].innerText.toLowerCase();
+        let A = a.children[colIndex].dataset.sort || a.children[colIndex].innerText.toLowerCase();
+        let B = b.children[colIndex].dataset.sort || b.children[colIndex].innerText.toLowerCase();
+
 
         // számok esetén
         if (!isNaN(A) && !isNaN(B)) {
@@ -1104,21 +1127,6 @@ document.addEventListener("change", (e) => {
         diagram2(tipusId);
     }
 });
-
-
-/*
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// x                               LISTENER!!!                             x
-// x        A KEZDŐOLDAL diagram2 legördülő menüjének figyelése            x
-// x  Csak a kezdőoldalon működik, mert a legördülő lista id-jét figyeli   x
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-document.addEventListener("change", (e) => {
-    if (e.target.id === "diagramTipusSelect2") {
-        const tipusId = e.target.value;
-        diagram2(tipusId);
-    }
-});*/
-
 
 
 

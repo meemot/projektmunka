@@ -159,6 +159,28 @@ body {
     line-height: 1.2;            /* ne legyen extra függőleges tér */
 }
 
+/* Az eszközök menüben az állapot fejlécben a gomb formázása */
+.filter-button {
+    width: 100%;
+    height: 32px;                 /* ugyanakkora, mint az input */
+    border: 1px solid #ccc;       /* ugyanaz a keret */
+    background: #fff;             /* ugyanaz a háttér */
+    padding: 3px 6px;             /* ugyanaz a belső margó */
+    font-size: 14px;              /* ugyanaz a betűméret */
+    text-align: left;             /* úgy néz ki, mint egy input */
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+.filter-button:hover {
+    background: #f2f2f2;          /* kis hover, mint az input */
+}
+.filter-button.active {
+    background: #e6e6e6;      /* halvány szürke */
+    border-color: #999;       /* kicsit sötétebb keret */
+}
+
+
+
 
 /* Adatok */
 .admin_box3 table td {

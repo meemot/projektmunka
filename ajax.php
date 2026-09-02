@@ -415,7 +415,7 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
     if ($conn->query($sql)) {
         echo "OK";
     } else {
-        echo "Hiba: " . $conn->error;
+        echo "Hiba: err001: " . $conn->error;
     }
 
     exit;
@@ -492,7 +492,7 @@ function uj_dolgozo_mentes($conn) {
     if ($conn->query($sql)) {
         echo "OK";
     } else {
-        echo "Hiba: " . $sql . "<br>" . $conn->error;
+        echo "Hiba: err002:" . $sql . "<br>" . $conn->error;
     }
 
 }
@@ -692,7 +692,7 @@ function update_felhasznalo($conn) {
     if ($conn->query($sql)) {
         echo "OK";
     } else {
-        echo "Hiba történt: " . $conn->error;
+        echo "Hiba: err003: " . $conn->error;
     }
 }
 
@@ -781,7 +781,7 @@ function uj_felhasznalo_mentes($conn) {
     if ($conn->query($sql)) {
         echo "OK";
     } else {
-        echo "Hiba: " . $sql . "<br>" . $conn->error;
+        echo "Hiba: err004: " . $sql . "<br>" . $conn->error;
     }
 
 }
@@ -804,12 +804,11 @@ function a_eszkozok_modul($conn) {
 
     // TÁBLÁZAT
     $sql = 
-        "SELECT e.eszkoz_id, et.megnevezes, ek.kategoria, e.azonosito, e.meret, ea.allapot ,e.megjegyzes 
+        "SELECT e.eszkoz_id, et.megnevezes, ek.kategoria, e.azonosito, e.meret, ea.allapot, ea.allapot_id, e.megjegyzes 
         FROM eszkozok e 
         JOIN eszkoz_allapot ea ON e.allapot_id = ea.allapot_id 
         JOIN eszkoz_kategoria ek ON e.kategoria_id = ek.kategoria_id
-        JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id
-       /* WHERE e.allapot_id != 4;*/";
+        JOIN eszkoz_tipus et ON e.tipus_id = et.tipus_id";
     $result = $conn->query($sql);
 
     
@@ -828,7 +827,11 @@ function a_eszkozok_modul($conn) {
                     <th><input type='text' class='filter-input' data-col='1'></th>
                     <th><input type='text' class='filter-input' data-col='2'></th>
                     <th><input type='text' class='filter-input' data-col='3'></th>
-                    <th><input type='text' class='filter-input' data-col='4'></th>
+                    <th>
+                        <button class='filter-button' data-col='4'>
+                            Selejtezettek elrejtése
+                        </button>
+                    </th>
                     <th><input type='text' class='filter-input' data-col='5'></th>
                 </tr>
             </thead>
@@ -840,7 +843,7 @@ function a_eszkozok_modul($conn) {
                 <td>{$row['kategoria']}</td>
                 <td>{$row['azonosito']}</td>
                 <td>{$row['meret']}</td>
-                <td>{$row['allapot']}</td>
+                <td data-sort='{$row['allapot_id']}'>{$row['allapot']}</td>
                 <td>{$row['megjegyzes']}</td>
               </tr>";
     }
@@ -1017,7 +1020,7 @@ function update_eszkoz($conn) {
     if ($conn->query($sql)) {
         echo "OK";
     } else {
-        echo "Hiba: " . $conn->error;
+        echo "Hiba: err005: " . $conn->error;
     }
 
     exit;
@@ -1147,7 +1150,7 @@ function uj_eszkoz_mentes($conn) {
     if ($conn->query($sql)) {
         echo "OK";
     } else {
-        echo "Hiba: " . $sql . "<br>" . $conn->error;
+        echo "Hiba: err006: " . $sql . "<br>" . $conn->error;
     }
 
 }
@@ -1592,7 +1595,7 @@ function kiadas_mentes($conn) {
             VALUES ($dolgozo_id, $user_id, '$datum')";
 
     if (!$conn->query($sql)) {
-        echo "SQL hiba: " . $conn->error;
+        echo "SQL hiba: err007: " . $conn->error;
         return;
     }
 
@@ -1654,7 +1657,7 @@ function visszavet_form($conn) {
     $result = $conn->query($sql);
 
     if (!$result || $result->num_rows === 0) {
-        echo "<p class='text-danger'>Hiba: a kiadás nem található!</p>";
+        echo "<p class='text-danger'>Hiba: a kiadás nem található (err008)!</p>";
         return;
     }
 
@@ -1731,7 +1734,7 @@ function VisszavetMentes() {
             WHERE reszletek_id = $reszletek_id";
 
     if (!$conn->query($sql)) {
-        echo "SQL hiba: " . $conn->error;
+        echo "SQL hiba: err009: " . $conn->error;
         return;
     }
 
@@ -1750,7 +1753,7 @@ function VisszavetMentes() {
                  WHERE eszkoz_id = $eszkoz_id";
 
         if (!$conn->query($sql3)) {
-            echo "SQL hiba (eszkoz frissítés): " . $conn->error;
+            echo "SQL hiba (eszkoz frissítés, err010): " . $conn->error;
             return;
         }
 
@@ -1777,7 +1780,7 @@ function VisszavetMentes() {
                  WHERE eszkoz_id = $eszkoz_id";
 
         if (!$conn->query($sql5)) {
-            echo "SQL hiba (megjegyzes frissítés): " . $conn->error;
+            echo "SQL hiba (megjegyzes frissítés, err011): " . $conn->error;
             return;
         }
     }
