@@ -36,7 +36,6 @@ $action = $_POST["action"] ?? "";
 if ($jog === "a") {
 
     switch ($_POST["action"]) {
-
         case "kezdolap":
             kezdolap_modul();
             break;
@@ -595,10 +594,10 @@ function felhasznalo_szerkesztes_form($conn) {
             </select>
 
             <label>Jelszó:</label>
-            <input type='password' name='jelszo' value='{$row['jelszo']}' class='form-control'>
+            <input type='password' name='jelszo' class='form-control' placeholder='Új jelszó megadása, ha szükséges'>
 
             <label>Jelszó újra:</label>
-            <input type='password' name='jelszo2' value='{$row['jelszo']}' class='form-control'>
+            <input type='password' name='jelszo2' class='form-control' placeholder='Jelszó újra'>
 
             <label>Törölve:</label>
             <input type='checkbox' name='torolve' ".($row['torolve'] != NULL ? "checked" : "").">
@@ -627,19 +626,31 @@ function update_felhasznalo($conn) {
     $result = $conn->query($ellenorzes); */
 
      // -2) Ellenőrzés: minden mező ki van-e töltve?
-    if ($usernev === "" || $jogkor === "" || $jelszo === "" || $jelszo2 === "") {
+    if ($usernev === "" || $jogkor === "") {
         echo "HIBA: Minden mezőt ki kell tölteni!";
         return;
     }
 
     // Jelszó ellenőrzés
-    if ($jelszo !== $jelszo2) {
-        echo "A két jelszó nem egyezik!";
-        return;
+    if ($jelszo !== "" || $jelszo2 !== "") {
+
+        if ($jelszo !== $jelszo2) {
+            echo "A két jelszó nem egyezik!";
+            return;
+        }
+    
+        // Jelszó hash
+        $jelszo_hash = password_hash($jelszo, PASSWORD_DEFAULT);
+
+        //SQL-be kerülő rész
+        $jelszo_sql = "jelszo_hash = '$jelszo_hash',";
+
+    } else {
+        // Jelszó nem változik
+        $jelszo_sql = "";
     }
 
-    // Jelszó hash
-    $jelszo_hash = password_hash($jelszo, PASSWORD_DEFAULT);
+
 
     // TÖRÖLVE Checkbox
     // lekérjük a régi értéket
@@ -667,13 +678,13 @@ function update_felhasznalo($conn) {
 
 
 
-    // SQL frissítés
+    // SQL frissítés, a " jelszo = '$jelszo', " sor csak a fejlesztés során szabad benne legyen!!! (ellenőrzéshez)
     $sql = "
         UPDATE users SET
             usernev = '$usernev',
             jogkor = '$jogkor',
             jelszo = '$jelszo',
-            jelszo_hash = '$jelszo_hash',
+            $jelszo_sql
             torolve = $torolve_sql
         WHERE user_id = $id
     ";
@@ -744,7 +755,7 @@ function uj_felhasznalo_mentes($conn) {
         return;
     }
 
-    // Jelszó ellenőrzés
+    // -1 Jelszó ellenőrzés
     if ($jelszo !== $jelszo2) {
         echo "A két jelszó nem egyezik!";
         return;
@@ -760,14 +771,12 @@ function uj_felhasznalo_mentes($conn) {
         return;
     }
 
-    // 1) felhasználó mentése
-    //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
+    // 1) Jelszó hash
+    $jelszo_hash = password_hash($jelszo, PASSWORD_DEFAULT);
 
-        /*   INSERT INTO `dolgozok`(`dolgozo_nev`, `beosztas`, `email`, `telefon`)
-             VALUES ('laca faca','lacafacázó', 'laca@faca.com','06201234567');*/
-
-    $sql = "INSERT INTO users(dolgozo_id, jogkor, usernev, jelszo)
-            VALUES ('$dolgozo_id', '$jogkor', '$usernev', '$jelszo')";
+    // 2) Felhasználó mentése az adatbázisba: fejlesztés alatt a jelszó mezőbe beírjuk az eredeti jelszót is, teszteléshez!
+    $sql = "INSERT INTO users(dolgozo_id, jogkor, usernev, jelszo, jelszo_hash)
+            VALUES ('$dolgozo_id', '$jogkor', '$usernev', '$jelszo', '$jelszo_hash')";
 
     if ($conn->query($sql)) {
         echo "OK";
