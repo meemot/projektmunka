@@ -368,28 +368,38 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
     }
 
     // 0) Ellenőrzés: létezik-e már ilyen név másik dolgozónál?
-    $ellenorzes = "SELECT dolgozo_id 
-                   FROM dolgozok 
-                   WHERE dolgozo_nev = '$nev' AND dolgozo_id != $id";
+    $stmt = $conn->prepare(
+        "SELECT dolgozo_id 
+        FROM dolgozok
+        WHERE dolgozo_nev = ? AND dolgozo_id != ?"
+    );
+    $stmt->bind_param("si", $nev, $id);
+    $stmt->execute();
+    $stmt->store_result();
 
-    $result = $conn->query($ellenorzes);
-
-    if ($result->num_rows > 0) {
+    if ($stmt->num_rows > 0) {
         echo "HIBA: Már létezik ilyen nevű dolgozó!";
         return;
     }
+    $stmt->close();
 
     // KILÉPETT Checkbox
     // lekérjük a régi értéket
-    $sql_old = "SELECT kilepett FROM dolgozok WHERE dolgozo_id = $id";
-    $result_old = $conn->query($sql_old);
+    $stmt = $conn->prepare(
+        "SELECT kilepett 
+        FROM dolgozok
+        WHERE dolgozo_id = ?"
+    );
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result_old = $stmt->get_result();
     $old = $result_old->fetch_assoc();
+    $stmt->close();
+
     $regi_datum = $old['kilepett'];   // lehet NULL vagy dátum
 
     //Döntés
-
     if ($kilepett === "1") {
-
         if ($regi_datum === NULL) {
             // most lép ki, tehát új dátumot kap
             $kilepett_sql = "NOW()";
@@ -397,29 +407,40 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
             // már kilépett (volt dátum), a régi dátum marad
             $kilepett_sql = "'$regi_datum'";
         }
-    
     } else {
         // nincs pipálva - NULL
         $kilepett_sql = "NULL";
     }
-    
-    // 1) Dolgozó adatainak frissítése az adatbázisban
-    $sql = "UPDATE dolgozok
-            SET dolgozo_nev='$nev',
-                beosztas='$beosztas',
-                email='$email',
-                telefon='$telefon',
-                kilepett=$kilepett_sql
-            WHERE dolgozo_id = $id";
 
-    if ($conn->query($sql)) {
+    // 1) Dolgozó adatainak frissítése az adatbázisban
+    $stmt = $conn->prepare(
+        "UPDATE dolgozok SET
+            dolgozo_nev = ?,
+            beosztas = ?,
+            email = ?,
+            telefon = ?,
+            kilepett = ?
+        WHERE dolgozo_id = ?"
+    );
+
+    $stmt->bind_param("sssssi",
+        $nev,
+        $beosztas,
+        $email,
+        $telefon,
+        $kilepett_sql,
+        $id
+    );
+
+    if ($stmt->execute()) {
         echo "OK";
     } else {
-        echo "Hiba: err001: " . $conn->error;
+        echo "HIBA: err001: " . $stmt->error;
+        return;
     }
-
-    exit;
 }
+
+
 
 function uj_dolgozo_form() {
     echo "
@@ -471,25 +492,34 @@ function uj_dolgozo_mentes($conn) {
     }
 
     // 0) Ellenőrzés: létezik-e már ilyen név?
-        $ellenorzes = "SELECT dolgozo_id FROM dolgozok WHERE dolgozo_nev = '$nev'";
-        $result = $conn->query($ellenorzes);
+    $stmt = $conn->prepare(
+        "SELECT dolgozo_id
+        FROM dolgozok
+        WHERE dolgozo_nev = ?"
+    );
+    $stmt->bind_param("s", $nev);
+    $stmt->execute();
+    $stmt->store_result();
 
-        if ($result->num_rows > 0) {
-            echo "HIBA: Már létezik ilyen nevű dolgozó! Adja meg máshogy a nevet, vagy használjon kiegészítő azonosítót a név mellett!";
-            return; // fontos: ne fusson tovább a mentés
-        }
+    if ($stmt->num_rows > 0) {
+        echo "HIBA: Már létezik ilyen nevű dolgozó! Adja meg máshogy a nevet, vagy használjon kiegészítő azonosítót a név mellett!";
+        return; // fontos: ne fusson tovább a mentés
+    }
+    $stmt->close();
+
 
     // 1) dolgozó mentése
     //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
 
-        /*   INSERT INTO `dolgozok`(`dolgozo_nev`, `beosztas`, `email`, `telefon`)
-             VALUES ('laca faca','lacafacázó', 'laca@faca.com','06201234567');*/
+    /*   INSERT INTO `dolgozok`(`dolgozo_nev`, `beosztas`, `email`, `telefon`)
+        VALUES ('laca faca','lacafacázó', 'laca@faca.com','06201234567');*/
+    $stmt = $conn->prepare(
+        "INSERT INTO dolgozok (dolgozo_nev, beosztas, email, telefon)
+        VALUES (?, ?, ?, ?)"
+    );
+    $stmt->bind_param("ssss", $nev, $beosztas, $email, $telefon);
 
-    $sql = "INSERT INTO dolgozok(dolgozo_nev, beosztas, email, telefon)
-            VALUES ('$nev', '$beosztas', '$email', '$telefon')";
-    
-
-    if ($conn->query($sql)) {
+    if ($stmt->execute()) {
         echo "OK";
     } else {
         echo "Hiba: err002:" . $sql . "<br>" . $conn->error;
@@ -616,7 +646,7 @@ function update_felhasznalo($conn) {
     $jogkor  = $_POST["jogkor"];
     $jelszo  = $_POST["jelszo"];
     $jelszo2 = $_POST["jelszo2"];
-    $torolve = $_POST["torolve"];   // dátum vagy üres string
+    $torolve = $_POST["torolve"];   // 1 vagy ""
 
     /* Duplikáció ellenőrzés - kell ez bele??????
     $ellenorzes = "SELECT user_id 
@@ -632,68 +662,125 @@ function update_felhasznalo($conn) {
     }
 
     // Jelszó ellenőrzés
-    if ($jelszo !== "" || $jelszo2 !== "") {
+    $jelszo_valtozik = ($jelszo !== "" || $jelszo2 !== "");
+
+    if ($jelszo_valtozik) {
 
         if ($jelszo !== $jelszo2) {
             echo "A két jelszó nem egyezik!";
             return;
         }
-    
-        // Jelszó hash
+
         $jelszo_hash = password_hash($jelszo, PASSWORD_DEFAULT);
-
-        //SQL-be kerülő rész
-        $jelszo_sql = "jelszo_hash = '$jelszo_hash',";
-
-    } else {
-        // Jelszó nem változik
-        $jelszo_sql = "";
     }
-
 
 
     // TÖRÖLVE Checkbox
-    // lekérjük a régi értéket
-    $sql_old = "SELECT torolve FROM users WHERE user_id = $id";
-    $result_old = $conn->query($sql_old);
-    $old = $result_old->fetch_assoc();
-    $regi_datum = $old['torolve'];   // lehet NULL vagy dátum
+    // lekérjük a régi törlési dátum értéket
+    $stmt = $conn->prepare(
+        "SELECT torolve 
+         FROM users
+         WHERE user_id = ?"
+    );
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
 
-    //Döntés
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
 
-    if ($torolve === "1") {
+    $regi_torolve = $user['torolve'];   // lehet NULL vagy dátum
 
-        if ($regi_datum === NULL) {
-            // most lép ki, tehát új dátumot kap
-            $torolve_sql = "NOW()";
+
+    // -------------------
+    // update
+    // -------------------
+
+    if ($jelszo_valtozik) { 
+        // Jelszó is változik 
+        if ($torolve === "1") {
+            if ($regi_torolve === NULL) {
+                // Most lett törölve
+                $sql = 
+                " UPDATE users SET 
+                    usernev = ?,
+                    jogkor = ?,
+                    torolve = NOW(),
+                    jelszo = ?,
+                    jelszo_hash = ?
+                  WHERE user_id = ?";
+            } else {
+                // Már korábban törölve volt
+                $sql = 
+                " UPDATE users SET
+                    usernev = ?,
+                    jogkor = ?,
+                    torolve = torolve,
+                    jelszo = ?,
+                    jelszo_hash = ?
+                WHERE user_id = ? ";
+            }
+                    
         } else {
-            // már kilépett (volt dátum), a régi dátum marad
-            $torolve_sql = "'$regi_datum'";
+            // Nincs törölve
+            $sql = 
+                " UPDATE users SET
+                    usernev = ?,
+                    jogkor = ?, 
+                    torolve = NULL,
+                    jelszo = ?,
+                    jelszo_hash = ?
+                WHERE user_id = ?
+            ";
         }
-    
+            
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param( "ssssi", $usernev, $jogkor, $jelszo, $jelszo_hash, $id );
     } else {
-        // nincs pipálva - NULL
-        $torolve_sql = "NULL";
+        // Jelszó NEM változik
+        if ($torolve === "1") {
+            if ($regi_torolve === NULL) {
+                // Most lett törölve
+                $sql =
+                    " UPDATE users SET 
+                        usernev = ?,
+                        jogkor = ?,
+                        torolve = NOW()
+                    WHERE user_id = ?
+                ";              
+            } else {
+                // Már korábban törölve volt
+                $sql =
+                    " UPDATE users SET
+                        usernev = ?, 
+                        jogkor = ?,
+                        torolve = torolve
+                    WHERE user_id = ?
+                ";
+            }
+        } else {
+            // Nincs törölve
+            $sql =
+                " UPDATE users SET
+                    usernev = ?,
+                    jogkor = ?,
+                    torolve = NULL
+                WHERE user_id = ?
+            ";
+        }
     }
 
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param( "ssi", $usernev, $jogkor, $id );
 
-
-    // SQL frissítés, a " jelszo = '$jelszo', " sor csak a fejlesztés során szabad benne legyen!!! (ellenőrzéshez)
-    $sql = "
-        UPDATE users SET
-            usernev = '$usernev',
-            jogkor = '$jogkor',
-            jelszo = '$jelszo',
-            $jelszo_sql
-            torolve = $torolve_sql
-        WHERE user_id = $id
-    ";
-
-    if ($conn->query($sql)) {
+    // update végrehajtása
+    if ($stmt->execute()) {
         echo "OK";
     } else {
-        echo "Hiba: err003: " . $conn->error;
+        echo "HIBA: err003: " . $stmt->error;
     }
+    $stmt->close();
+
 }
 
 function uj_felhasznalo_form($conn) {
@@ -763,26 +850,38 @@ function uj_felhasznalo_mentes($conn) {
 
 
     // 0) Ellenőrzés: van-e már felhasználó ehhez a dolgozóhoz?
-    $ellenorzes = "SELECT user_id FROM users WHERE dolgozo_id = '$dolgozo_id'";
-    $result = $conn->query($ellenorzes);
+    $stmt = $conn->prepare(
+        "SELECT user_id
+        FROM users
+        WHERE dolgozo_id = ?"
+    );
+    $stmt->bind_param("i", $dolgozo_id);
+    $stmt->execute();
+    $stmt->store_result();
 
-    if ($result->num_rows > 0) {
+    if ($stmt->num_rows > 0) {
         echo "HIBA: Ehhez a dolgozóhoz már tartozik felhasználói fiók!";
         return;
     }
+    $stmt->close();
 
     // 1) Jelszó hash
     $jelszo_hash = password_hash($jelszo, PASSWORD_DEFAULT);
 
     // 2) Felhasználó mentése az adatbázisba: fejlesztés alatt a jelszó mezőbe beírjuk az eredeti jelszót is, teszteléshez!
-    $sql = "INSERT INTO users(dolgozo_id, jogkor, usernev, jelszo, jelszo_hash)
-            VALUES ('$dolgozo_id', '$jogkor', '$usernev', '$jelszo', '$jelszo_hash')";
+    $stmt = $conn->prepare(
+        "INSERT INTO users (dolgozo_id, jogkor, usernev, jelszo, jelszo_hash)
+            VALUES (?, ?, ?, ?, ?)"
+    );
+    $stmt->bind_param("issss", $dolgozo_id, $jogkor, $usernev, $jelszo, $jelszo_hash);
 
-    if ($conn->query($sql)) {
+    if ($stmt->execute()) {
         echo "OK";
     } else {
-        echo "Hiba: err004: " . $sql . "<br>" . $conn->error;
+        echo "Hiba: err004: " . $stmt->error;
     }
+
+    $stmt->close();
 
 }
 
@@ -1008,21 +1107,32 @@ function update_eszkoz($conn) {
     }
 
     // Adatok frissítése az adatbázisban
-    $sql = "UPDATE eszkozok
-            SET azonosito = '$azonosito',
-                kategoria_id = $kategoria_id,
-                tipus_id = $tipus_id,
-                allapot_id = $allapot_id,
-                meret = '$meret',
-                megjegyzes = '$megjegyzes'
-            WHERE eszkoz_id = $id";
+    $stmt = $conn->prepare(
+        "UPDATE eszkozok
+         SET azonosito = ?,
+             kategoria_id = ?,
+             tipus_id = ?,
+             allapot_id = ?,
+             meret = ?,
+             megjegyzes = ?
+        WHERE eszkoz_id = ?"
+    );
+    $stmt->bind_param("siiissi", 
+        $azonosito,
+        $kategoria_id,
+        $tipus_id,
+        $allapot_id,
+        $meret,
+        $megjegyzes,
+        $id
+    );
 
-    if ($conn->query($sql)) {
+    if ($stmt->execute()) {
         echo "OK";
     } else {
-        echo "Hiba: err005: " . $conn->error;
+        echo "Hiba: err005: " . $stmt->error;
     }
-
+    $stmt->close();
     exit;
 }
 
@@ -1128,9 +1238,9 @@ function uj_eszkoz_mentes($conn) {
     $kategoria_id = $_POST["eszkoz_kategoria"];
     $tipus_id     = $_POST["tipus"];
     $azonosito    = $_POST["azonosito"];
-    $meret     = strtoupper($_POST["meret"]);
-    $allapot     = $_POST["allapot"];
-    $megjegyzes     = $_POST["megjegyzes"];
+    $meret        = strtoupper($_POST["meret"]);
+    $allapot      = $_POST["allapot"];
+    $megjegyzes   = $_POST["megjegyzes"];
 
     // -2) Ellenőrzés: minden mező ki van-e töltve?
     if ($azonosito === "" || $kategoria_id === "" || $tipus_id === "" || $allapot === "" || $meret === "") {
@@ -1139,20 +1249,26 @@ function uj_eszkoz_mentes($conn) {
     }
 
     // 1) eszköz mentése
-    //Az SQL parancsot meg kell írni a táblának megfelelően!!!!!!!!!!!
 
-        /*   INSERT INTO `dolgozok`(`dolgozo_nev`, `beosztas`, `email`, `telefon`)
-             VALUES ('laca faca','lacafacázó', 'laca@faca.com','06201234567');*/
+    $stmt = $conn->prepare(
+        "INSERT INTO eszkozok (kategoria_id, tipus_id, azonosito, meret, allapot_id, megjegyzes)
+         VALUES (?, ?, ?, ?, ?, ?)"
+    );
+    $stmt->bind_param("iissis", 
+        $kategoria_id,
+        $tipus_id,
+        $azonosito,
+        $meret,
+        $allapot,
+        $megjegyzes
+    );
 
-    $sql = "INSERT INTO eszkozok(kategoria_id, tipus_id, azonosito, meret, allapot_id, megjegyzes)
-            VALUES ('$kategoria_id', '$tipus_id', '$azonosito', '$meret', '$allapot', '$megjegyzes')";
-
-    if ($conn->query($sql)) {
+    if ($stmt->execute()) {
         echo "OK";
     } else {
-        echo "Hiba: err006: " . $sql . "<br>" . $conn->error;
+        echo "Hiba: err006: " . $stmt->error;
     }
-
+    $stmt->close();
 }
 
 
@@ -1726,43 +1842,71 @@ function VisszavetMentes() {
     $reszletek_id = intval($_POST['reszletek_id']);
 
     // 1) visszavét mentése db-be
-    $sql = "UPDATE reszletek
-            SET ki_vette_vissza = $user_id,
-                visszavet_datum = NOW(),
-                visszavet_allapot = $allapot,
-                megjegyzes = '$megjegyzes'
-            WHERE reszletek_id = $reszletek_id";
+    $stmt = $conn->prepare(
+        "UPDATE reszletek
+        SET ki_vette_vissza = ?,
+            visszavet_datum = NOW(),
+            visszavet_allapot = ?,
+            megjegyzes = ?
+        WHERE reszletek_id = ?"
+    );
 
-    if (!$conn->query($sql)) {
-        echo "SQL hiba: err009: " . $conn->error;
+    $stmt->bind_param("iisi", 
+        $user_id,
+        $allapot,
+        $megjegyzes,
+        $reszletek_id
+    );
+
+    if (!$stmt->execute()) {
+        echo "SQL hiba: err009: " . $stmt->error;
         return;
     }
+    $stmt->close();
 
     // 2) lekérjük, melyik eszköz tartozik ehhez a reszletek_id-hoz
-    $sql2 = "SELECT eszkoz_id FROM reszletek WHERE reszletek_id = $reszletek_id";
-    $result2 = $conn->query($sql2);
+    $stmt = $conn->prepare(
+        "SELECT eszkoz_id 
+        FROM reszletek 
+        WHERE reszletek_id = ?"
+        );
+    $stmt->bind_param("i", $reszletek_id);
+    $stmt->execute();
+    $result2 = $stmt->get_result();
+    $stmt->close();
 
     if ($result2 && $result2->num_rows > 0) {
         $row = $result2->fetch_assoc();
         $eszkoz_id = intval($row['eszkoz_id']);
+    }else {
+        echo "SQL HIBA: err010a - Nem található eszköz a reszletek_id alapján!";
+        return;
     }
 
     // 3) frissítjük az eszközök táblában az állapotot
-        $sql3 = "UPDATE eszkozok
-                 SET allapot_id = $allapot
-                 WHERE eszkoz_id = $eszkoz_id";
+    $stmt = $conn->prepare(
+        "UPDATE eszkozok
+        SET allapot_id = ?
+        WHERE eszkoz_id = ?"
+    );
+    $stmt->bind_param("ii", $allapot, $eszkoz_id);
 
-        if (!$conn->query($sql3)) {
-            echo "SQL hiba (eszkoz frissítés, err010): " . $conn->error;
-            return;
-        }
+    if (!$stmt->execute()) {
+        echo "SQL hiba (eszkoz frissítés, err010): " . $stmt->error;
+         return;
+    }
+    $stmt->close();
 
     // 4) megjegyzés hozzáfűzése az eszközök táblához
-    $sql4 = "SELECT megjegyzes
-             FROM eszkozok
-             WHERE eszkoz_id = $eszkoz_id";
-
-    $result4 = $conn->query($sql4);
+    $stmt = $conn->prepare(
+        "SELECT megjegyzes
+         FROM eszkozok
+         WHERE eszkoz_id = ?"
+    );
+    $stmt->bind_param("i", $eszkoz_id);
+    $stmt->execute();
+    $result4 = $stmt->get_result();
+    $stmt->close();
 
     if ($result4 && $result4->num_rows > 0) {
         $row2 = $result4->fetch_assoc();
@@ -1774,15 +1918,20 @@ function VisszavetMentes() {
         if (trim($megjegyzes) != "") {
             $uj_megjegyzes .= "\n, " . $megjegyzes;
         }
+        
+        // megjegyzés frissítése az eszközök táblában
+        $stmt = $conn->prepare(
+            "UPDATE eszkozok
+             SET megjegyzes = ?
+             WHERE eszkoz_id = ?"
+        );
+        $stmt->bind_param("si", $uj_megjegyzes, $eszkoz_id);
 
-        $sql5 = "UPDATE eszkozok
-                 SET megjegyzes = '$uj_megjegyzes'
-                 WHERE eszkoz_id = $eszkoz_id";
-
-        if (!$conn->query($sql5)) {
-            echo "SQL hiba (megjegyzes frissítés, err011): " . $conn->error;
+        if (!$stmt->execute()) {
+            echo "SQL hiba (megjegyzes frissítés, err011): " . $stmt->error;
             return;
         }
+        $stmt->close();
     }
 
     echo "A visszavétel sikeresen mentve (ID: $reszletek_id)";
