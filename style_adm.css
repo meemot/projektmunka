@@ -4,47 +4,199 @@ body {
     margin: 0;
 }
 
-
-/* Bootstrap fő konténer */
-.container-fluid {
+.layout {
+    display: flex;
     height: 100vh;
-    padding: 0;
-}
-
-
-/* Bootstrap sor */
-.container-fluid > .row {
-    height: 100%;
-    margin: 0;
+    overflow: hidden;
 }
 
 
 /* =========================
    BAL OLDALI MENÜ
    ========================= */
-
-.admin_box1 {
-    height: 100%;
+.sidebar {
+    width: 250px;
+    background-color: #343a40;
+    color: #fff;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    padding: 1rem;
+    overflow-y: auto;
+    flex-shrink: 0;
 }
+
+
+/* =========================
+   JOBB OLDALI TARTALOM
+   ========================= */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: hsl(225, 40%, 98%);
+    padding: 1rem;
+    overflow-x: hidden;
+}
+
+/* A táblázatos rész scrollozható */
+.admin_box3 {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: #f8f9fc;
+    border-radius: 10px;
+    padding: 1rem 0;
+    padding-top: 0;
+}
+
+/* ----- Táblázatok formázása ----- */
+
+.admin_box3 table.table {
+    table-layout: fixed; /* fix oszlop szélesség */
+}
+
+.admin_box3 table {
+    width: max-content;
+    table-layout: fixed; /* fix oszlop szélesség */
+    border-collapse: collapse;
+}
+
+/* Fejléc és a cellák fix, egyésges stílus */
+.admin_box3 table th,
+.admin_box3 table td {
+    min-width: clamp(150px, 15vw, 250px); /* minimum 100px, maximum 200px, de a képernyő szélességének 15%-a */
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* A szűrők inputjai fix szélességűek legyenek */
+.admin_box3 table thead tr.filter-row th input, 
+.admin_box3 table thead tr.filter-row th select {
+    width: 100%;
+    min-width: 80px;
+    max-width: 150px;
+    box-sizing: border-box;
+}
+
+/* A checkbox is fix méretet kapjon */
+.admin_box3 table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Szűrősor sticky de stabil szélességgel */
+.admin_box3 table thead tr.filter-row th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fc;
+    z-index: 2;
+}
+
+/* Az oszlopnév sticky de stabil szélességgel */
+.admin_box3 table thead {
+    position: sticky;
+    top: 0;
+    z-index: 3;                 /* a szűrősor fölé kerüljön */
+    background-color: #f8f9fc; /* háttér, hogy ne legyen átlátszó */
+}
+
+
+
+/* Gombok egy sorba a címmel */
+.module_actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.actionGombok {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actionGombok button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 120px;
+    white-space: nowrap;
+}
+
 
 
 /* =========================
    MENÜ LINK
    ========================= */
-
 .menu_link {
     text-decoration: none;
     color: #fff;
+    padding: 0.5rem 0;
+    display: block;
+    font-size: 1rem;
 }
 
 .menu_link:hover {
-    text-decoration: none;
-    color: #fff;
-    font-weight: 600;
+    font-weight: bold;
 }
+
+
+/* =========================
+   LOGO
+   ========================= */
+.logo_category {
+    height: 80px;
+    background: #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+/* Admin információs rész a menü alján */
+.admin_top {
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+
+
+/* =========================
+   MOBIL
+   ========================= */
+
+@media (max-width: 767px) {
+    .sidebar {
+        width: 70px;
+        padding: 0.5rem;
+    }
+
+    .menu_link {
+        font-size: 0.8rem;
+        padding: 0.25rem 0;
+    }
+
+    .menu_link::after {
+        content: "•";
+        font-size: 22px;
+        color: #fff;
+    }
+}
+
+
 
 
 /* Elválasztó */
@@ -54,272 +206,4 @@ body {
     margin-bottom: 8px;
 }
 
-
-/* =========================
-   LOGO
-   ========================= */
-
-.logo_category {
-    height: 100px;
-    width: 100%;
-    background-color: #444;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 1.2rem;
-}
-
-
-/* =========================
-   FELSŐ ADMIN INFORMÁCIÓ
-   ========================= */
-
-
-.admin_top .card-body {
-    padding: 6px 12px;
-    min-height: 50px;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.admin_top {
-    margin-top: auto !important;
-    margin-bottom: 1.5vh !important;
-}
-
-.menu_footer {
-    margin-top: 0 !important;
-}
-
-
-/* =========================
-   JOBB OLDALI TARTALOM
-   ========================= */
-
-.admin_container2 {
-    height: 100%;
-    min-height: 0;
-
-    padding: 1rem;
-
-    display: flex;
-    flex-direction: column;
-}
-
-
-/* =========================
-   AJAX TARTALOM / TÁBLÁZAT
-   ========================= */
-
-.admin_box3 {
-    flex: 1 1 auto;
-    background-color:#f8f9fc;
-    border-radius: 10px;
-    min-height: 100vh;
-    width: 100%;
-    padding: 1rem 0;
-    padding-top: 0;
-    overflow-x: auto;
-    overflow-y: auto;
-    display: block;
-}
-
-
-/* =========================
-   TÁBLÁZAT
-   ========================= */
-
-.admin_box3 table {
-    width: 100%;
-    min-width: max-content;
-
-    /* FONTOS:
-       ne kényszerítse össze az oszlopokat */
-    table-layout: auto;
-
-    border-collapse: collapse;
-}
-
-/* Táblázat: összeérjenek a cellák */
-.admin_box3 table {
-    border-collapse: collapse;   /* összehúzza a cellákat */
-    border-spacing: 0;           /* eltünteti az alap 2px rést */
-}
-
-/* Fejléc */
-.admin_box3 table th {
-    white-space: nowrap;
-    text-align: left;
-    padding: 0.75rem;
-    vertical-align: middle;
-    line-height: 1.2;            /* ne legyen extra függőleges tér */
-}
-
-/* Az eszközök menüben az állapot fejlécben a gomb formázása */
-.filter-button {
-    width: 100%;
-    height: 32px;                 /* ugyanakkora, mint az input */
-    border: 1px solid #ccc;       /* ugyanaz a keret */
-    background: #fff;             /* ugyanaz a háttér */
-    padding: 3px 6px;             /* ugyanaz a belső margó */
-    font-size: 14px;              /* ugyanaz a betűméret */
-    text-align: left;             /* úgy néz ki, mint egy input */
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-}
-.filter-button:hover {
-    background: #f2f2f2;          /* kis hover, mint az input */
-}
-.filter-button.active {
-    background: #e6e6e6;      /* halvány szürke */
-    border-color: #999;       /* kicsit sötétebb keret */
-}
-
-
-
-
-/* Adatok */
-.admin_box3 table td {
-    white-space: nowrap;
-    text-align: left;
-    padding: 0.75rem;
-    vertical-align: middle;
-    line-height: 1.2;            /* ugyanaz, hogy szépen összeérjen */
-}
-
-/* A hajszálnyi rés eltüntetése */
-.admin_box3 table tr {
-    border-bottom: 0;
-}
-
-.admin_box3 table th,
-.admin_box3 table td {
-    border: 0;              /* minden cellahatár eltűnik */
-}
-
-
-.diagram-container {
-    display: flex;
-    gap: 20px;
-    align-items: stretch;
-    justify-content: space-around;
-}
-
-#myPlot, #myPlot2 {
-    margin: 0;
-    padding: 0;
-    width: 100%;   /* vagy: max-content */
-    height: 300px;
-}
-
-.diagram-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 20px 0;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    min-height: 350px;
-    justify-content: flex-start;
-    overflow: hidden;
-}s
-
-.diagram-card h2 {
-    margin-top: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-}
-
-
-
-
-
-
-/* =========================
-   SZŰRŐSOR
-   ========================= */
-
-.admin_box3 table thead tr.filter-row th {
-    position: sticky;
-    top: 0;
-
-    background: #cfcfcf;
-
-    z-index: 2;
-}
-
-.teszt1 {
-    position: sticky;
-    top: 0;
-}
-
-
-/* =========================
-   MŰVELETEK
-   ========================= */
-
-.module_actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 15px;
-    position: sticky;
-    top: 0;
-}
-
-
-.actionGombok {
-    display: flex;
-    gap: 10px;          /* gombok közti távolság */
-}
-
-.rendezes {
-    cursor: pointer;
-    user-select: none;
-}
-
-.rendezes:hover {
-    background-color: #bfd3f8;
-}
-
-
-
-
-/* =========================
-   MOBIL
-   ========================= */
-
-@media (max-width: 767px) {
-
-    .container-fluid > .row {
-        height: auto;
-        min-height: 100vh;
-    }
-
-    .admin_box1 {
-        height: auto;
-        min-height: 100vh;
-        overflow: visible;
-    }
-
-    .admin_container2 {
-        height: auto;
-        min-height: 100vh;
-    }
-
-    .admin_box3 {
-        min-height: 0;
-        overflow-x: auto;
-        overflow-y: auto;
-    }
-}
 

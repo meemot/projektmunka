@@ -25,48 +25,40 @@
 
 <body>
 
-    <div class="container-fluid">
-        <div class="row">
+    <div class="layout">
+        <!-- Bal oldali menü -->
+        <nav class="sidebar">
+            <div class="logo_category mb-4">LOGO</div>
 
-            <!-- Bal oldali menü -->
-            <nav class="col-12 col-md-3 col-lg-2 bg-dark text-white p-3 admin_box1">
-                
-                <div class="logo_category mb-4">LOGO</div>
-
-                <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="kezdolap">Kezdőoldal</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
-                <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="a_eszkozok">Eszközök</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Eszköz kiadás</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavett eszközök</a>
-                <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_osszes_kiadas">Összes eszközmozgás</a>
+            <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="kezdolap">Kezdőoldal</a>
+            <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
+            <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>
+            <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="a_eszkozok">Eszközök</a>
+            <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_kiadas">Eszköz kiadás</a>
+            <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavett eszközök</a>
+            <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_osszes_kiadas">Összes eszközmozgás</a>
 
                 <!-- Felhasználó mező a menük alatt -->
-                <div class="admin_top card">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
-                        <span class="badge bg-primary">Admin</span>
-                    </div>
+            <div class="admin_top card">
+                <div class="card-body">
+                    <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
+                    <span class="badge bg-primary">Admin</span>
                 </div>
+            </div>
 
-                <div class="menu_footer mt-auto text-center">
-                    <small class="text-white-50">Verzió: 1.0.3</small>
-                </div>
+            <div class="menu_footer">Verzió: 1.0.3</div>
 
-            </nav>
+        </nav>
 
-            <!-- Jobb oldali tartalom -->
-            <main class="col-12 col-md-9 col-lg-10 p-4 admin_container2">
-                <!-- Táblázat feletti fix rész -->
-                 <div class="cimsor"></div>
-                <!-- AJAX tartalom - görgethető -->
-                <div class="admin_box3">
-                    Box3
-                </div>
+        <!-- Jobb oldali tartalom -->
+        <main class="content">
+            <!-- Táblázat feletti fix rész -->
+            <div class="cimsor"></div>
+            <!-- AJAX tartalom - görgethető -->
+            <div class="admin_box3">Box3</div>
 
-            </main>
+        </main>
 
-        </div>
     </div>
 
 <script src="scripts.js"></script>
