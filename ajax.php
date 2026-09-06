@@ -188,12 +188,16 @@ if ($jog === "a") {
             operator_dolgozok_modul($conn);
             break;
 
-        case "o_kiadas":
-            operator_kiadas_modul($conn);
+        case "a_kiadas":
+            a_kiadas_modul($conn);
             break;
 
-        case "o_visszavetel":
-            operator_visszavetel_modul($conn);
+        case "a_visszavetel":
+            a_visszavetel_modul($conn);
+            break;
+        
+        case "a_osszes_kiadas":
+            a_osszes_kiadas_modul($conn);
             break;
 
         default:
@@ -2044,3 +2048,108 @@ function operator_dolgozok_modul($conn) {
 
     echo "</table>";
 }
+
+/*
+// OPERATOR Összes eszkozmozgas modul
+function o_osszes_kiadas_modul($conn) {
+
+    // FELSŐ MŰVELETI SÁV
+    echo "
+    <div class='module_actions'>
+        <h3>Összes eszközmozgás</h3>
+        <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn' onclick=\"szures()\">Szűrők törlése</button>
+    </div>
+    ";
+
+    // TÁBLÁZAT
+    $sql = 
+        "SELECT 
+            k.kiadas_datum,
+            et.megnevezes,
+            e.azonosito,
+            e.meret,
+            ea.allapot,
+            r.kiadas_megjegyzes AS megjegyzes_kiadasnal,
+            d.dolgozo_nev AS felvette,
+            d1.dolgozo_nev AS kiadta,
+            r.visszavet_datum,
+            ea1.allapot AS visszavet_allapot,
+            d2.dolgozo_nev AS visszavette,
+            r.megjegyzes AS megjegyzes_visszavetnel
+        FROM reszletek r
+            JOIN kiadas k
+                ON r.kiad_id = k.kiad_id
+            JOIN eszkozok e
+                ON e.eszkoz_id = r.eszkoz_id
+            JOIN eszkoz_tipus et
+                ON et.tipus_id = e.tipus_id
+            JOIN eszkoz_allapot ea
+                ON ea.allapot_id = r.kiadas_allapot
+            JOIN dolgozok d
+                ON k.ki_vette_fel = d.dolgozo_id
+            JOIN dolgozok d1
+                ON k.ki_adta_ki = d1.dolgozo_id
+            LEFT JOIN eszkoz_allapot ea1
+                ON ea1.allapot_id = r.visszavet_allapot
+            LEFT JOIN dolgozok d2
+                ON d2.dolgozo_id = r.ki_vette_vissza
+        ORDER BY kiadas_datum DESC;";
+
+    $result = $conn->query($sql);
+
+    
+    echo "<table class='tabla table table-striped table-hover'>
+            <thead class='teszt1'>
+                <tr>
+                    <th class='rendezes' data-col='0'>Kiadás dátuma ▲▼</th>
+                    <th class='rendezes' data-col='1'>Eszköz megnevezése ▲▼</th>
+                    <th class='rendezes' data-col='2'>Eszköz azonosító ▲▼</th>
+                    <th class='rendezes' data-col='3'>Méret ▲▼</th>
+                    <th class='rendezes' data-col='4'>Állapot kiadáskor ▲▼</th>
+                    <th class='rendezes' data-col='5'>Megjegyzés ▲▼</th>
+                    <th class='rendezes' data-col='6'>Felvette ▲▼</th>
+                    <th class='rendezes' data-col='7'>Kiadta ▲▼</th>
+                    <th class='rendezes' data-col='8'>Visszavétel dátuma ▲▼</th>
+                    <th class='rendezes' data-col='9'>Állapot visszavételkor ▲▼</th>
+                    <th class='rendezes' data-col='10'>Visszavette ▲▼</th>
+                    <th class='rendezes' data-col='11'>Megjegyzés a visszavételhez ▲▼</th>
+                </tr>
+                <tr class='filter-row'>
+                    <th><input type='text' class='filter-input' data-col='0'></th>
+                    <th><input type='text' class='filter-input' data-col='1'></th>
+                    <th><input type='text' class='filter-input' data-col='2'></th>
+                    <th><input type='text' class='filter-input' data-col='3'></th>
+                    <th><input type='text' class='filter-input' data-col='4'></th>
+                    <th><input type='text' class='filter-input' data-col='5'></th>
+                    <th><input type='text' class='filter-input' data-col='6'></th>
+                    <th><input type='text' class='filter-input' data-col='7'></th>
+                    <th><input type='text' class='filter-input' data-col='8'></th>
+                    <th><input type='text' class='filter-input' data-col='9'></th>
+                    <th><input type='text' class='filter-input' data-col='10'></th>
+                    <th><input type='text' class='filter-input' data-col='11'></th>
+                </tr>
+            </thead>
+            <tbody>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>{$row['kiadas_datum']}</td>
+                <td>{$row['megnevezes']}</td>
+                <td>{$row['azonosito']}</td>
+                <td>{$row['meret']}</td>
+                <td>{$row['allapot']}</td>
+                <td>{$row['megjegyzes_kiadasnal']}</td>
+                <td>{$row['felvette']}</td>
+                <td>{$row['kiadta']}</td>
+                <td>{$row['visszavet_datum']}</td>
+                <td>{$row['visszavet_allapot']}</td>
+                <td>{$row['visszavette']}</td>
+                <td>{$row['megjegyzes_visszavetnel']}</td>
+              </tr>";
+    }
+
+    echo "</tbody></table>";
+}
+
+// ===== Eszközök =====
+*/

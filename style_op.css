@@ -1,10 +1,290 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+h4 {
+    text-indent: 10px;
+}
+
+
+.layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+/* =========================
+   BAL OLDALI MENÜ
+   ========================= */
+.sidebar {
+    width: 250px;
+    background-color: #303030;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+/* Név és admin gomb egymás mellett */
+.operator_top .card-body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.operator_box2 {
+    white-space: normal;
+    line-height: 1.1;
+    max-width: 140px;
+    word-break: break-word;
+}
+
+
+/* =========================
+   JOBB OLDALI TARTALOM
+   ========================= */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: hsl(225, 40%, 98%);
+    padding: 1rem;
+    overflow-x: hidden;
+}
+
+/* A táblázatos rész scrollozható */
+.operator_box3 {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: #f8f9fc;
+    border-radius: 10px;
+    padding: clamp(10px, 2vw, 25px);                 /* Reszponzív padding */
+    padding: 0;
+    border: clamp(1px, 0.4vw, 3px) solid #dee2e6;  /* Reszponzív border vastagság */
+    border-radius: clamp(6px, 1vw, 12px);   /* reszponzív lekerekítés */
+}
+
+/* ----- Táblázatok formázása ----- */
+
+.operator_box3 table thead tr th {
+    background-color: #bebebe;   /* az oszlopfejlécek háttérszíne */
+}
+
+
+.operator_box3 table.table {
+    table-layout: fixed; /* fix oszlop szélesség */
+}
+
+.operator_box3 table {
+    width: max-content;
+    table-layout: fixed; /* fix oszlop szélesség */
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Fejléc és a cellák fix, egyésges stílus */
+.operator_box3 table th,
+.operator_box3 table td {
+    min-width: clamp(150px, 15vw, 250px); /* minimum 100px, maximum 200px, de a képernyő szélességének 15%-a */
+    padding: 0.5rem;
+    /*border: 1px solid #dee2e6; */
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* A szűrők inputjai fix szélességűek legyenek */
+.operator_box3 table thead tr.filter-row th input, 
+.operator_box3 table thead tr.filter-row th select {
+    width: 100%;
+    min-width: 80px;
+    max-width: 150px;
+    box-sizing: border-box;
+    border: 0;
+    background-color: #fdfdfd;      /* halvány kék háttér */
+    padding: 4px 6px;               /* belső tér */
+    border-radius: 6px;             /* lekerekítés */
+    color: #222;                    /* jól olvasható szöveg */
+}
+
+
+/* A checkbox is fix méretet kapjon */
+.operator_box3 table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Szűrősor sticky de stabil szélességgel */
+.operator_box3 table thead tr.filter-row th {
+    position: sticky;
+    top: 0;
+    background-color: #bebebe;
+    z-index: 2;
+    border: 0;
+}
+
+/* Az oszlopnév sticky de stabil szélességgel */
+.operator_box3 table thead {
+    position: sticky;
+    top: 0;
+    z-index: 3;                 /* a szűrősor fölé kerüljön */
+    background-color: #bebebe; /* háttér, hogy ne legyen átlátszó */
+}
+
+
+
+/* Gombok egy sorba a címmel */
+.module_actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.actionGombok {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actionGombok button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 120px;
+    white-space: nowrap;
+}
+
+
+
+/* =========================
+   MENÜ LINK
+   ========================= */
 .menu_link {
     text-decoration: none;
-    color: #333;
+    color: #fff;
+    padding: 0.5rem 0;
+    display: block;
+    font-size: 1rem;
 }
 
 .menu_link:hover {
-    text-decoration: none;
-    color: #000;
-    font-weight: 600;
+    font-weight: bold;
+}
+
+
+.menu_footer {
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 1rem;
+}
+
+
+
+/* =========================
+   LOGO
+   ========================= */
+.logo_category {
+    width: 100%;
+    height: 80px;
+    background: #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    margin-top: 20px;
+}
+
+
+.logo_category img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Admin információs rész a menü alján */
+.operator_top {
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+
+/* diagramok megjelenése */
+.diagramok {
+    width: clamp(800px, 25vw, 1000px);  /* reszponzív szélesség */
+    flex-shrink: 0;
+    margin-right: 20px;
+    background-color: #eeeeee;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+
+.diagram-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: clamp(12px, 4vw, 60px);        /* távolság a két ablak között */
+    margin-top: 20px;
+}
+
+.diagram-card {
+    flex: 0 1 350px;             /* mindkét ablak egyenlő széles */
+    max-width: 400px;        
+    background: #bebebe;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+
+
+/* =========================
+   MOBIL
+   ========================= */
+
+@media (max-width: 767px) {
+    .sidebar {
+        width: 70px;
+        padding: 0.5rem;
+    }
+
+    .menu_link {
+        font-size: 0.8rem;
+        padding: 0.25rem 0;
+    }
+
+    .menu_link::after {
+        content: "•";
+        font-size: 22px;
+        color: #fff;
+    }
+}
+
+
+/* Elválasztó */
+.eszkozok_separator {
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    margin-bottom: 8px;
 }

@@ -28,7 +28,7 @@
     <div class="layout">
         <!-- Bal oldali menü -->
         <nav class="sidebar">
-            <div class="logo_category mb-4"><img src="logo.png" alt="Céglogó" class="app-logo"></div>
+            <div class="logo_category mb-4"><img src="logo_a.png" alt="Céglogó" class="app-logo"></div>
             <br>
             <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="kezdolap">Kezdőoldal</a>
             <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
@@ -38,7 +38,7 @@
             <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_visszavetel">Visszavett eszközök</a>
             <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_osszes_kiadas">Összes eszközmozgás</a>
 
-                <!-- Felhasználó mező a menük alatt -->
+            <!-- Felhasználó mező a menük alatt -->
             <div class="admin_top card">
                 <div class="card-body">
                     <div class="admin_box2"><?php echo $_SESSION["nev"]; ?></div>
@@ -56,9 +56,7 @@
             <div class="cimsor"></div>
             <!-- AJAX tartalom - görgethető -->
             <div class="admin_box3">Box3</div>
-
         </main>
-
     </div>
 
 <script src="scripts.js"></script>

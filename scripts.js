@@ -27,7 +27,6 @@ function ujDolgozo() {
         });
 }
 
-
 function ujDolgozoMentes() {
     const form = document.getElementById("ujDolgozoForm"); //a böngésző megkeresi a formot az ID alapján
     const formData = new FormData(form); // a form adatainak összegyűjtése a FormData objektumba: nem kell kézzel írni a mezőket, a FormData automatikusan összegyűjti az összes mezőt a formból
@@ -737,7 +736,6 @@ function hozzaadEszkoz() {
         select.innerHTML = "<option value=''>--Nincs több eszköz--</option>";
     }
 }
-
 
 // Visszavét gomb
 
