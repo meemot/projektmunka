@@ -12,7 +12,7 @@
 
 
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu">    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,8 +28,8 @@
     <div class="layout">
         <!-- Bal oldali menü -->
         <nav class="sidebar">
-            <div class="logo_category mb-4">LOGO</div>
-
+            <div class="logo_category mb-4"><img src="logo.png" alt="Céglogó" class="app-logo"></div>
+            <br>
             <a href="#" class="d-block text-white mb-2 menu_link eszkozok_separator" data-action="kezdolap">Kezdőoldal</a>
             <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_dolgozok">Dolgozók</a>
             <a href="#" class="d-block text-white mb-2 menu_link" data-action="a_felhasznalok">Felhasználók</a>

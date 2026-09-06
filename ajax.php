@@ -213,25 +213,28 @@ if ($jog === "a") {
 function kezdolap_modul() {
     echo "
         <h1>Kezdőoldal</h1><br>
-        <p>Válassz eszközt!</p>
-        <select id='diagramTipusSelect' class='form-select'>
-                    <option value='1'>Védőcipő</option>
-                    <option value='2'>Esőkabát</option>
-                    <option value='3'>Láthatósági mellény</option>
-                    <option value='4'>Telefon</option>
-                    <option value='5'>Tablet</option>
-                </select>
+        <div class='diagramok'>
+            <h4>Eszközök statisztikái:</h4>
+            <p>Válassz eszközt!</p>
+            <select id='diagramTipusSelect' class='form-select'>
+                        <option value='1'>Védőcipő</option>
+                        <option value='2'>Esőkabát</option>
+                        <option value='3'>Láthatósági mellény</option>
+                        <option value='4'>Telefon</option>
+                        <option value='5'>Tablet</option>
+                    </select>
 
-        <div class='diagram-container'>
-            <div class='diagram-card'>
-                <h4>Kiválasztott eszköz állapot szerinti megoszlása:</h4>
+            <div class='diagram-container'>
+                <div class='diagram-card'>
+                    <h4>Kiválasztott eszköz állapot szerinti megoszlása:</h4>
 
-                <div id='myPlot'></div>
-            </div>
+                    <div id='myPlot'></div>
+                </div>
 
-            <div class='diagram-card'>
-                <h4>Kiválasztott eszköz méret szerinti megoszlása:</h4>
-                <div id='myPlot2'></div>
+                <div class='diagram-card'>
+                    <h4>Kiválasztott eszköz méret szerinti megoszlása:</h4>
+                    <div id='myPlot2'></div>
+                </div>
             </div>
         </div>
     ";
@@ -249,7 +252,7 @@ function a_dolgozok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h3>Dolgozók - (név szerint sorba rendezve)</h3>
+        <h4>Dolgozók - (név szerint sorba rendezve)</h4>
         <div class='actionGombok'>
             <button class='btn btn-primary' onclick=\"ujDolgozo()\">Új dolgozó</button>
             <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
@@ -313,7 +316,9 @@ function dolgozo_szerkesztes_form($conn) { // Dolgozó adatainak lekérése az a
     $row = $result->fetch_assoc();
 
     echo "
-        <h3>Dolgozó módosítása</h3>
+        <br>
+        <h4>Dolgozó módosítása</h4>
+        <br>
 
         <form id='modDolgozoForm' class='form-select'>
             <input type='hidden' name='id' value='$id'>
@@ -444,7 +449,9 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
 
 function uj_dolgozo_form() {
     echo "
-    <h3>Új dolgozó létrehozása</h3>
+    <br>
+    <h4>Új dolgozó létrehozása</h4>
+    <br>
 
     <form id='ujDolgozoForm'>
 
@@ -535,7 +542,7 @@ function a_felhasznalok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h3>Felhasználók</h3>
+        <h4>Felhasználók</h4>
         <div class='actionGombok'>
             <button class='btn btn-primary' onclick=\"ujFelhasznalo()\">Új felhasználó</button>
             <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
@@ -606,7 +613,9 @@ function felhasznalo_szerkesztes_form($conn) {
     $row = $result->fetch_assoc();
 
     echo "
-        <h3>Felhasználó módosítása</h3>
+        <br>
+        <h4>Felhasználó módosítása</h4>
+        <br>
 
         <form id='modFelhasznaloForm'>
             <input type='hidden' name='id' value='$id'>
@@ -792,7 +801,9 @@ function uj_felhasznalo_form($conn) {
     $result = $conn->query($sql);
 
     echo "
-    <h3>Új felhasználó létrehozása</h3>
+    <br>
+    <h4>Új felhasználó létrehozása</h4>
+    <br>
     <form id='ujFelhasznaloForm' class='form-control'>
         <label>Név:</label>
         <select name='dolgozo_id' id='dolgozo_id' class='form-control' required>
@@ -893,7 +904,7 @@ function a_eszkozok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h3>Eszközök</h3>
+        <h4>Eszközök</h4>
         <div class='actionGombok'>
             <button class='btn btn-primary' onclick=\"ujEszkozok()\">Új eszköz</button>
             <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
@@ -967,11 +978,13 @@ function eszkoz_szerkesztes_form($conn) {
 
 
     echo "
-    <h3>Eszköz módosítása</h3>
-    
-    <form id='modEszkozForm' class='form-control'>
-        <input type='hidden' name='id' value='$id'>
-    ";
+        <br>
+        <h4>Eszköz módosítása</h4>
+        <br>
+        
+        <form id='modEszkozForm' class='form-control'>
+            <input type='hidden' name='id' value='$id'>
+        ";
 
 
     // ===============================
@@ -979,10 +992,10 @@ function eszkoz_szerkesztes_form($conn) {
     // ===============================
 
     echo "
-    <label>Eszköz kategória:</label>
-    <select name='eszkoz_kategoria' id='eszkoz_kategoria' class='form-control' required>
-        <option value=''>-- Válaszd ki az eszköz kategóriáját! --</option>
-    ";
+        <label>Eszköz kategória:</label>
+        <select name='eszkoz_kategoria' id='eszkoz_kategoria' class='form-control' required>
+            <option value=''>-- Válaszd ki az eszköz kategóriáját! --</option>
+        ";
 
     $sql = "SELECT * FROM eszkoz_kategoria ORDER BY kategoria";
     $result = $conn->query($sql);
@@ -1000,10 +1013,10 @@ function eszkoz_szerkesztes_form($conn) {
     // ===============================
 
     echo "
-    <label>Eszköz típus:</label>
-    <select name='tipus' id='tipus' class='form-control' required>
-        <option value=''>-- Válaszd ki az eszköz típusát! --</option>
-    ";
+        <label>Eszköz típus:</label>
+        <select name='tipus' id='tipus' class='form-control' required>
+            <option value=''>-- Válaszd ki az eszköz típusát! --</option>
+        ";
 
     $kategoria = $eszkoz['kategoria_id'];
 
@@ -1026,9 +1039,9 @@ function eszkoz_szerkesztes_form($conn) {
     // ===============================
 
     echo "
-    <label>Eszköz azonosító:</label>
-    <input type='text' name='azonosito' class='form-control' value='{$eszkoz['azonosito']}' required>
-    ";
+        <label>Eszköz azonosító:</label>
+        <input type='text' name='azonosito' class='form-control' value='{$eszkoz['azonosito']}' required>
+        ";
 
 
     // ===============================
@@ -1049,10 +1062,10 @@ function eszkoz_szerkesztes_form($conn) {
     $result = $conn->query($sql);
 
     echo "
-    <label>Eszköz állapota:</label>
-    <select name='allapot' id='allapot' class='form-control' required>
-        <option value=''>-- Válaszd ki az eszköz állapotát! --</option>
-    ";
+        <label>Eszköz állapota:</label>
+        <select name='allapot' id='allapot' class='form-control' required>
+            <option value=''>-- Válaszd ki az eszköz állapotát! --</option>
+        ";
 
     while ($row = $result->fetch_assoc()) {
         $selected = ($eszkoz['allapot_id'] == $row['allapot_id']) ? "selected" : "";
@@ -1067,9 +1080,9 @@ function eszkoz_szerkesztes_form($conn) {
     // ===============================
 
     echo "
-    <label>Eszköz méret:</label>
-    <input type='text' name='meret' class='form-control' value='{$eszkoz['meret']}' required>
-    ";
+        <label>Eszköz méret:</label>
+        <input type='text' name='meret' class='form-control' value='{$eszkoz['meret']}' required>
+        ";
 
 
     // ===============================
@@ -1077,15 +1090,15 @@ function eszkoz_szerkesztes_form($conn) {
     // ===============================
 
     echo "
-    <label>Megjegyzés:</label>
-    <input type='text' name='megjegyzes' class='form-control' value='{$eszkoz['megjegyzes']}' required>
-    <br>
-    
-    <button type='button' onclick='modEszkozMentes()' class='btn btn-primary mt-3'>Mentés</button>
-    <button type='button' onclick='modEszkozMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
+        <label>Megjegyzés:</label>
+        <input type='text' name='megjegyzes' class='form-control' value='{$eszkoz['megjegyzes']}' required>
+        <br>
+        
+        <button type='button' onclick='modEszkozMentes()' class='btn btn-primary mt-3'>Mentés</button>
+        <button type='button' onclick='modEszkozMegse()' class='btn btn-secondary mt-3 ms-2'>Mégse</button>
 
-    </form>
-    ";
+        </form>
+        ";
 
 
 }
@@ -1138,7 +1151,9 @@ function update_eszkoz($conn) {
 
 function uj_eszkoz_form($conn) {
     echo "
-    <h3>Új eszköz létrehozása</h3>
+    <br>
+    <h4>Új eszköz létrehozása</h4>
+    <br>
     
     <form id='ujEszkozForm' class='form-control'>
 
@@ -1280,7 +1295,7 @@ function a_osszes_kiadas_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h3>Összes eszközmozgás</h3>
+        <h4>Összes eszközmozgás</h4>
         <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn' onclick=\"szures()\">Szűrők törlése</button>
     </div>
     ";
@@ -1382,7 +1397,7 @@ function a_kiadas_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h3>Kiadott, még nem visszavett eszközök</h3>
+        <h4>Kiadott, még nem visszavett eszközök</h4>
         <div class='actionGombok'>
             <button class='btn btn-primary' onclick=\"ujKiadas()\">Új kiadás</button>
             <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
@@ -1465,7 +1480,7 @@ function a_visszavetel_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h3>Visszavett eszközök</h3>
+        <h4>Visszavett eszközök</h4>
         <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
     </div>
     ";
@@ -1607,7 +1622,9 @@ function uj_kiadas_form($conn) {
     $result = $conn->query($sql);
 
     echo "
-    <h3>Új eszköz kiadása (A selejtezett tételek nem jelennek meg!)</h3>
+    <br>
+    <h4>Új eszköz kiadása (A selejtezett tételek nem jelennek meg!)</h4>
+    <br>
 
     <form id='ujKiadasForm' class='form-control'>
         
@@ -1657,7 +1674,7 @@ function uj_kiadas_form($conn) {
         <button type='button' class='btn btn-success mb-3' onclick='hozzaadEszkoz()'>
             Eszköz hozzáadása
         </button><br><br>
-        <h3>Kiadásra előkészített eszközök</h3><br>
+        <h4>Kiadásra előkészített eszközök</h4><br>
 
         <table id='kiadottEszkozok' class='table table-bordered'>
             <thead>
@@ -1781,7 +1798,7 @@ function visszavet_form($conn) {
 
     // FORM KIÍRÁSA
     echo "
-    <h3>Eszköz visszavétele</h3>
+    <h4>Eszköz visszavétele</h4>
 
     <form id='visszavet_form' class='form-control'>
 
