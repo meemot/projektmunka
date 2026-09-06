@@ -410,7 +410,7 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
             $kilepett_sql = "NOW()";
         } else {
             // már kilépett (volt dátum), a régi dátum marad
-            $kilepett_sql = "'$regi_datum'";
+            $kilepett_sql = "'" . $regi_datum . "'";
         }
     } else {
         // nincs pipálva - NULL
@@ -424,16 +424,15 @@ function update_dolgozo($conn) { // Dolgozó adatainak frissítése az adatbázi
             beosztas = ?,
             email = ?,
             telefon = ?,
-            kilepett = ?
+            kilepett = $kilepett_sql
         WHERE dolgozo_id = ?"
     );
 
-    $stmt->bind_param("sssssi",
+    $stmt->bind_param("ssssi",
         $nev,
         $beosztas,
         $email,
         $telefon,
-        $kilepett_sql,
         $id
     );
 
@@ -777,10 +776,13 @@ function update_felhasznalo($conn) {
                 WHERE user_id = ?
             ";
         }
+        
     }
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param( "ssi", $usernev, $jogkor, $id );
+
+    
 
     // update végrehajtása
     if ($stmt->execute()) {
