@@ -62,19 +62,12 @@
     </div>
 
 <script src="scripts.js"></script>
-<script>document.addEventListener("DOMContentLoaded", () => {
-    fetch("ajax.php", {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "action=kezdolap"
-    })
-    .then(r => r.text())
-    .then(data => {
-        const targetBox = document.querySelector(".admin_box3");
-        targetBox.innerHTML = data;
-        diagram1(); // <-- itt rajzoljuk ki automatikusan
-        diagram2();
-    });
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const kezdolapLink = document.querySelector('.menu_link[data-action="kezdolap"]');
+    if (kezdolapLink) {
+        kezdolapLink.click();   // ugyanaz a logika fut, mint kézi kattintáskor
+    }
 });
 </script>
 

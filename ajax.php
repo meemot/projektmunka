@@ -212,22 +212,23 @@ if ($jog === "a") {
 
 function kezdolap_modul() {
     echo "
-        <h1>Kezdőoldal</h1><br>
+    <div class='module_actions'>
+        <h3>Kezdőoldal</h3><br>
+    </div>
         <div class='diagramok'>
             <h4>Eszközök statisztikái:</h4>
             <p>Válassz eszközt!</p>
             <select id='diagramTipusSelect' class='form-select'>
-                        <option value='1'>Védőcipő</option>
-                        <option value='2'>Esőkabát</option>
-                        <option value='3'>Láthatósági mellény</option>
-                        <option value='4'>Telefon</option>
-                        <option value='5'>Tablet</option>
-                    </select>
+                <option value='1'>Védőcipő</option>
+                <option value='2'>Esőkabát</option>
+                <option value='3'>Láthatósági mellény</option>
+                <option value='4'>Telefon</option>
+                <option value='5'>Tablet</option>
+            </select>
 
             <div class='diagram-container'>
                 <div class='diagram-card'>
                     <h4>Kiválasztott eszköz állapot szerinti megoszlása:</h4>
-
                     <div id='myPlot'></div>
                 </div>
 
@@ -252,7 +253,7 @@ function a_dolgozok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h4>Dolgozók - (név szerint sorba rendezve)</h4>
+        <h3>Dolgozók - (név szerint sorba rendezve)</h3>
         <div class='actionGombok'>
             <button class='btn btn-primary' onclick=\"ujDolgozo()\">Új dolgozó</button>
             <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
@@ -541,7 +542,7 @@ function a_felhasznalok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h4>Felhasználók</h4>
+        <h3>Felhasználók</h3>
         <div class='actionGombok'>
             <button class='btn btn-primary' onclick=\"ujFelhasznalo()\">Új felhasználó</button>
             <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
@@ -906,7 +907,7 @@ function a_eszkozok_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h4>Eszközök</h4>
+        <h3>Eszközök</h3>
         <div class='actionGombok'>
             <button class='btn btn-primary' onclick=\"ujEszkozok()\">Új eszköz</button>
             <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
@@ -1297,7 +1298,7 @@ function a_osszes_kiadas_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h4>Összes eszközmozgás</h4>
+        <h3>Összes eszközmozgás</h3>
         <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn' onclick=\"szures()\">Szűrők törlése</button>
     </div>
     ";
@@ -1399,7 +1400,7 @@ function a_kiadas_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h4>Kiadott, még nem visszavett eszközök</h4>
+        <h3>Kiadott, még nem visszavett eszközök</h3>
         <div class='actionGombok'>
             <button class='btn btn-primary' onclick=\"ujKiadas()\">Új kiadás</button>
             <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
@@ -1482,7 +1483,7 @@ function a_visszavetel_modul($conn) {
     // FELSŐ MŰVELETI SÁV
     echo "
     <div class='module_actions'>
-        <h4>Visszavett eszközök</h4>
+        <h3>Visszavett eszközök</h3>
         <button class='btn btn-sm btn-secondary ms-2' id='szuroTorlesBtn'>Szűrők törlése</button>
     </div>
     ";

@@ -21,7 +21,7 @@ h4 {
    ========================= */
 .sidebar {
     width: 250px;
-    background-color: #343a40;
+    background-color: #303030;
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -73,7 +73,7 @@ h4 {
 /* ----- Táblázatok formázása ----- */
 
 .admin_box3 table thead tr th {
-    background-color: #343a404b;   /* az oszlopfejlécek háttérszíne */
+    background-color: #bebebe;   /* az oszlopfejlécek háttérszíne */
 }
 
 
@@ -84,7 +84,8 @@ h4 {
 .admin_box3 table {
     width: max-content;
     table-layout: fixed; /* fix oszlop szélesség */
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 /* Fejléc és a cellák fix, egyésges stílus */
@@ -100,14 +101,6 @@ h4 {
     text-overflow: ellipsis;
 }
 
-/*
-.admin_box3 table thead tr.filter-row th {
-    position: sticky;
-    top: 0;
-    background-color: #3162f4fd;
-    z-index: 2;
-}*/
-
 
 /* A szűrők inputjai fix szélességűek legyenek */
 .admin_box3 table thead tr.filter-row th input, 
@@ -120,7 +113,7 @@ h4 {
     background-color: #fdfdfd;      /* halvány kék háttér */
     padding: 4px 6px;               /* belső tér */
     border-radius: 6px;             /* lekerekítés */
-    color: #fefefe;                    /* jól olvasható szöveg */
+    color: #222;                    /* jól olvasható szöveg */
 }
 
 
@@ -137,7 +130,7 @@ h4 {
 .admin_box3 table thead tr.filter-row th {
     position: sticky;
     top: 0;
-    background-color: #343a404b;
+    background-color: #bebebe;
     z-index: 2;
     border: 0;
 }
@@ -147,7 +140,7 @@ h4 {
     position: sticky;
     top: 0;
     z-index: 3;                 /* a szűrősor fölé kerüljön */
-    background-color: transparent; /* háttér, hogy ne legyen átlátszó */
+    background-color: #bebebe; /* háttér, hogy ne legyen átlátszó */
 }
 
 
@@ -239,7 +232,7 @@ h4 {
     width: clamp(800px, 25vw, 1000px);  /* reszponzív szélesség */
     flex-shrink: 0;
     margin-right: 20px;
-    background-color: rgba(59, 133, 245, 0.093);
+    background-color: #eeeeee;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
@@ -258,7 +251,7 @@ h4 {
 .diagram-card {
     flex: 0 1 350px;             /* mindkét ablak egyenlő széles */
     max-width: 400px;        
-    background: #fff;
+    background: #bebebe;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 6px rgba(0,0,0,0.1);
@@ -287,8 +280,6 @@ h4 {
         color: #fff;
     }
 }
-
-
 
 
 /* Elválasztó */
