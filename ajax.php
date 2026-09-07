@@ -181,7 +181,7 @@ if ($jog === "a") {
 } elseif ($jog === "o") {
     switch ($action) {
         case "o_eszkozok":
-            operator_eszkozok_modul($conn);
+            a_eszkozok_modul($conn);
             break;
 
         case "o_dolgozok":

@@ -60,14 +60,6 @@
     </div>
 
 <script src="scripts.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const kezdolapLink = document.querySelector('.menu_link[data-action="kezdolap"]');
-    if (kezdolapLink) {
-        kezdolapLink.click();   // ugyanaz a logika fut, mint kézi kattintáskor
-    }
-});
-</script>
 
 </body>
 </html>

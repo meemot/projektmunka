@@ -835,9 +835,11 @@ document.addEventListener("DOMContentLoaded", () => { // megvárja, hogy betölt
     // (Ez bejelentkezés UTÁN történik.)
     // 1) AUTOMATIKUS KEZDŐOLDAL BETÖLTÉS BEJELENTKEZÉS UTÁN
 
+    const cimsor = document.querySelector(".cimsor");
     const targetBox = document.querySelector(".admin_box3") 
                    || document.querySelector(".operator_box3");
 
+    // Automatikus diagram rajzolás, ha a kezdooldal már bent van
     if (targetBox && targetBox.innerHTML.includes("Kezdőoldal")) {
         diagram1();
     }
@@ -875,6 +877,9 @@ document.addEventListener("DOMContentLoaded", () => { // megvárja, hogy betölt
 
                 if (moduleActions) {
                     moduleActions.remove();
+
+                    // Több modul action törlése
+                    tempDiv.querySelectorAll(".module_actions").forEach(el => el.remove());
                 }
 
                 // Ha van module_actions → cimsorba tesszük
