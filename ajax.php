@@ -781,13 +781,10 @@ function update_felhasznalo($conn) {
                 WHERE user_id = ?
             ";
         }
-        
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param( "ssi", $usernev, $jogkor, $id );
     }
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param( "ssi", $usernev, $jogkor, $id );
-
-    
 
     // update végrehajtása
     if ($stmt->execute()) {

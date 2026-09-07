@@ -1135,26 +1135,44 @@ document.addEventListener("change", (e) => {
 
 // KEZDŐOLDAL
 document.addEventListener("DOMContentLoaded", () => {
+    //Admin oldal
+    if (document.querySelector(".admin_box3")) {
 
-    fetch("ajax.php", {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "action=kezdolap"
-    })
-    .then(r => r.text())
-    .then(html => {
+        fetch("ajax.php", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: "action=kezdolap"
+        })
+        .then(r => r.text())
+        .then(html => {
 
-        // Kezdőoldal HTML betöltése
-        document.querySelector(".admin_box3").innerHTML = html;
+            // Kezdőoldal HTML betöltése
+            document.querySelector(".admin_box3").innerHTML = html;
 
-        // A legördülő már létezik → most már le tudjuk kérni
-        const tipusId = document.querySelector("#diagramTipusSelect").value;
+            // A legördülő már létezik → most már le tudjuk kérni
+            const tipusId = document.querySelector("#diagramTipusSelect").value;
 
-        // mindkét diagram automatikusan betölt
-        diagram1(tipusId);
-        diagram2(tipusId);
-    });
+            // mindkét diagram automatikusan betölt
+            diagram1(tipusId);
+            diagram2(tipusId);
+        });
+    }
 
+    //Operator oldal
+    if (document.querySelector(".operator_box3")) {
+
+        fetch("ajax.php", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: "action=a_osszes_kiadas"
+        })
+        .then(r => r.text())
+        .then(html => {
+
+            // Kezdőoldal HTML betöltése
+            document.querySelector(".operator_box3").innerHTML = html;
+        });
+    }
 });
 
 

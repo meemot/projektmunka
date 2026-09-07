@@ -55,7 +55,8 @@
     </div>
 
 <script src="scripts.js"></script>
-<script>
+
+<!--<script>
 document.addEventListener("DOMContentLoaded", () => {
     const kezdolapLink = document.querySelector('.menu_link[data-action="a_osszes_kiadas"]');
     if (kezdolapLink) {
@@ -63,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 </script>
+-->
 
 </body>
 </html>
