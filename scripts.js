@@ -417,7 +417,8 @@ function ujEszkozok() {
     })
     .then(r => r.text())
     .then(html => {
-        const box = document.querySelector(".admin_box3");
+        const box = document.querySelector(".admin_box3") ||
+                    document.querySelector(".operator_box3");
         box.innerHTML = html;
     });
 }
@@ -437,18 +438,21 @@ function ujEszkozMentes() {
     .then(valasz => {    // itt kapjuk meg a szerver válaszát, amit a php visszaadott
 
         if (valasz.trim() === "OK") {
+            const actionName =
+                    document.querySelector(".admin_box3") ? "a_eszkozok" : "o_eszkozok";
 
             // sikeres mentés után újratöltjük a dolgozók táblát
             fetch("ajax.php", {
                 method: "POST",
                 headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                body: "action=a_eszkozok"
+                body: "action=" + actionName
             })
             .then(r => r.text())
             .then(data => { // a szerver válaszát beírjuk az admin_box3 div-be
                 
                 const cimsor = document.querySelector(".cimsor");
-                const targetBox = document.querySelector(".admin_box3");
+                const targetBox = document.querySelector(".admin_box3") ||
+                                  document.querySelector(".operator_box3");
 
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = data;
@@ -474,16 +478,20 @@ function ujEszkozMentes() {
 
 function ujEszkozMegse() {
 
+    const actionName =
+        document.querySelector(".admin_box3") ? "a_eszkozok" : "o_eszkozok";
+
     fetch("ajax.php", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "action=a_eszkozok"
+        body: "action=" + actionName
     })
     .then(r => r.text())
     .then(data => {
         
         const cimsor = document.querySelector(".cimsor");
-        const targetBox = document.querySelector(".admin_box3");
+        const targetBox = document.querySelector(".admin_box3") ||
+            document.querySelector(".operator_box3");
 
         // Ideiglenes DOM
         const tempDiv = document.createElement("div");
@@ -712,9 +720,9 @@ function hozzaadEszkoz() {
     const eszkozTipus = option.dataset.tipus || "";
     const eszkozText = select.options[select.selectedIndex].text;
 
-    const tbody = document.querySelector("#kiadottEszkozok tbody");
+    const tbody = document.querySelector("#kiadottEszkozok tbody"); // táblázat kiválasztása, ahová az új sor kerül
 
-    const row = document.createElement("tr");
+    const row = document.createElement("tr"); //új sor létrehozása
     row.innerHTML = `
         <td>${eszkozTipus}</td>
         <td>${eszkozText}</td>
@@ -723,8 +731,8 @@ function hozzaadEszkoz() {
         </td>
     `;
 
-    tbody.appendChild(row);
-    hozzaadottEszkozok.push(eszkozId); //a kiválasztott eszközök tárolása a hozzaadottEszkozok-be (634. sor)
+    tbody.appendChild(row);  // új sor hozzáadása a táblázathoz
+    hozzaadottEszkozok.push(eszkozId); //a kiválasztott eszközök tárolása a hozzaadottEszkozok-be
 
 
     // HOZZÁADÁS UTÁN A LEGÖRDÜLŐK VISSZAÁLLÍTÁSA ALAPÉRTELMEZETTRE
