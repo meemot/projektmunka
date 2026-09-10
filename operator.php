@@ -37,10 +37,11 @@
             <div class="operator_top card">
                 <div class="card-body">
                     <div class="operator_box2"><?php echo $_SESSION["nev"]; ?></div>
-                    <span class="badge bg-danger">Operator</span>
+                    <span class="badge operator_badge">Operator</span>
                 </div>
             </div>
 
+            <a href="logout.php" class="logout_btn">Kijelentkezés</a>
             <div class="menu_footer">Verzió: 1.0.3</div>
 
         </nav>

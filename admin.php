@@ -46,6 +46,7 @@
                 </div>
             </div>
 
+            <a href="logout.php" class="logout_btn">Kijelentkezés</a>
             <div class="menu_footer">Verzió: 1.0.3</div>
 
         </nav>
