@@ -614,7 +614,7 @@ function felhasznalo_szerkesztes_form($conn) {
 
     $id = $_POST["id"];
 
-    $sql = "SELECT u.usernev, u.jogkor, d.dolgozo_nev, u.jelszo, u.torolve
+    $sql = "SELECT u.usernev, u.jogkor, d.dolgozo_nev, u.torolve
             FROM users u
             JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id
             WHERE u.user_id = $id";
@@ -725,7 +725,6 @@ function update_felhasznalo($conn) {
                     usernev = ?,
                     jogkor = ?,
                     torolve = NOW(),
-                    jelszo = ?,
                     jelszo_hash = ?
                   WHERE user_id = ?";
             } else {
@@ -735,7 +734,6 @@ function update_felhasznalo($conn) {
                     usernev = ?,
                     jogkor = ?,
                     torolve = torolve,
-                    jelszo = ?,
                     jelszo_hash = ?
                 WHERE user_id = ? ";
             }
@@ -747,14 +745,13 @@ function update_felhasznalo($conn) {
                     usernev = ?,
                     jogkor = ?, 
                     torolve = NULL,
-                    jelszo = ?,
                     jelszo_hash = ?
                 WHERE user_id = ?
             ";
         }
             
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param( "ssssi", $usernev, $jogkor, $jelszo, $jelszo_hash, $id );
+        $stmt->bind_param( "sssi", $usernev, $jogkor, $jelszo_hash, $id );
     } else {
         // Jelszó NEM változik
         if ($torolve === "1") {
@@ -891,10 +888,10 @@ function uj_felhasznalo_mentes($conn) {
 
     // 2) Felhasználó mentése az adatbázisba: fejlesztés alatt a jelszó mezőbe beírjuk az eredeti jelszót is, teszteléshez!
     $stmt = $conn->prepare(
-        "INSERT INTO users (dolgozo_id, jogkor, usernev, jelszo, jelszo_hash)
-            VALUES (?, ?, ?, ?, ?)"
+        "INSERT INTO users (dolgozo_id, jogkor, usernev, jelszo_hash)
+            VALUES (?, ?, ?, ?)"
     );
-    $stmt->bind_param("issss", $dolgozo_id, $jogkor, $usernev, $jelszo, $jelszo_hash);
+    $stmt->bind_param("isss", $dolgozo_id, $jogkor, $usernev, $jelszo_hash);
 
     if ($stmt->execute()) {
         echo "OK";
