@@ -1141,7 +1141,7 @@ document.addEventListener("change", (e) => {
 
 
 
-// KEZDŐOLDAL
+// Admin KEZDŐOLDAL
 document.addEventListener("DOMContentLoaded", () => {
     //Admin oldal
     if (document.querySelector(".admin_box3")) {
@@ -1153,9 +1153,16 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(r => r.text())
         .then(html => {
+            const temp = document.createElement("div");
+            temp.innerHTML = html;
 
-            // Kezdőoldal HTML betöltése
-            document.querySelector(".admin_box3").innerHTML = html;
+            // cimsorba kerül
+            document.querySelector(".cimsor").innerHTML =
+                temp.querySelector(".module_actions").outerHTML;
+
+            // Admin_box3-ba kerül a többi
+            document.querySelector(".admin_box3").innerHTML =
+                temp.querySelector(".diagramok").outerHTML;
 
             // A legördülő már létezik → most már le tudjuk kérni
             const tipusId = document.querySelector("#diagramTipusSelect").value;
@@ -1177,8 +1184,16 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(r => r.text())
         .then(html => {
 
-            // Kezdőoldal HTML betöltése
-            document.querySelector(".operator_box3").innerHTML = html;
+            const temp = document.createElement("div");
+            temp.innerHTML = html;
+
+            // Címsorba kerül a module_actions
+            document.querySelector(".cimsor").innerHTML =
+                temp.querySelector(".module_actions").outerHTML;
+
+            // A táblázat kerül az operator_box3-ba
+            document.querySelector(".operator_box3").innerHTML =
+                temp.querySelector("table").outerHTML;
         });
     }
 });
