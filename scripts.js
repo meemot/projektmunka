@@ -616,7 +616,8 @@ function ujKiadas() { // katt az új kiadás gombra
     })
     .then(r => r.text())
     .then(html => {
-        const box = document.querySelector(".admin_box3");
+        const box = document.querySelector(".admin_box3") ||
+                    document.querySelector(".operator_box3");
         box.innerHTML = html;
     });
 }
@@ -650,7 +651,6 @@ function ujKiadasMentes() {
             .then(data => {
 
                 const cimsor = document.querySelector(".cimsor");
-                const targetBox = document.querySelector(".admin_box3");
 
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = data;
@@ -666,7 +666,12 @@ function ujKiadasMentes() {
                     if (moduleActions) cimsor.appendChild(moduleActions);
                 }
 
-                // 🔥 ITT VOLT A HIBA: html → data
+                // Választás, hogy admin v operator boxba írja ki
+                const targetBox =
+                    document.querySelector(".admin_box3") ||
+                    document.querySelector(".operator_box3");
+
+                // ITT VOLT A HIBA: html → data
                 targetBox.innerHTML = tempDiv.innerHTML;
             });
         }
@@ -704,6 +709,22 @@ function ujKiadasMegse() {
         targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
+
+// új kiadás - hozzáadott eszközt táblázatban - törlés gomb
+function torolEszkoz(btn) {
+    btn.closest("tr").remove();
+
+    // dolgozó mező újra engedélyezése, ha nincs több eszköz
+    const tbody = document.querySelector("#kiadottEszkozok tbody");
+    const dolgozoSelect = document.getElementById("dolgozo_id");
+
+    // ha nincs több eszköz akkor újra engedélyezzük
+    if (tbody.children.length === 0) {
+        dolgozoSelect.style.pointerEvents = "auto";
+        dolgozoSelect.style.backgroundColor = "";
+    }
+}
+
 
 // KIADÁSBAN, az eszköz hozzáadása gomb!
 let hozzaadottEszkozok = [];
@@ -743,6 +764,13 @@ function hozzaadEszkoz() {
     if (select.options.length === 0) {
         select.innerHTML = "<option value=''>--Nincs több eszköz--</option>";
     }
+
+    // A dolgozó mező tiltása, ha már van eszköz
+    const dolgozoSelect = document.getElementById("dolgozo_id");
+    if (tbody.children.length > 0) {
+        dolgozoSelect.style.pointerEvents = "none";     // nem kattintható
+        dolgozoSelect.style.backgroundColor = "#e9ecef"; // szürkítés
+    }
 }
 
 // Visszavét gomb
@@ -755,7 +783,8 @@ function Visszavet(reszletek_id) {
     })
     .then(r => r.text())
     .then(html => {
-        const box = document.querySelector(".admin_box3");
+        const box = document.querySelector(".admin_box3") ||
+                    document.querySelector(".operator_box3");
         box.innerHTML = html;
     });
 }
@@ -789,7 +818,6 @@ function VisszavetMentes(){
             .then(data => {
 
                 const cimsor = document.querySelector(".cimsor");
-                const targetBox = document.querySelector(".admin_box3");
 
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = data;
@@ -803,6 +831,9 @@ function VisszavetMentes(){
                     cimsor.innerHTML = "";
                     if (moduleActions) cimsor.appendChild(moduleActions);
                 }
+
+                const targetBox = document.querySelector(".admin_box3") ||
+                                  document.querySelector(".operator_box3");
 
                 targetBox.innerHTML = tempDiv.innerHTML;
             });
@@ -824,7 +855,6 @@ function VisszavetMegse() {
         box.innerHTML = html;
     });
 }
-
 
 
 
@@ -1199,11 +1229,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
-// új kiadás - hozzáadott eszközt táblázatban - törlés gomb
-function torolEszkoz(btn) {
-    btn.closest("tr").remove();
-}
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 // x                              DIAGRAM1 FV.                            x

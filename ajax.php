@@ -205,6 +205,20 @@ if ($jog === "a") {
         case "uj_eszkoz_mentes":
             uj_eszkoz_mentes($conn);
             break;
+        case "uj_kiadas_form":
+            uj_kiadas_form($conn);
+            break;
+
+        case "kiadas_mentes":
+            kiadas_mentes($conn);
+            break;
+        case "visszavet_form":
+            visszavet_form($conn);
+            break;
+
+        case "VisszavetMentes":
+            VisszavetMentes($conn);
+            break;
 
         default:
             echo "Ismeretlen operátor modul.";
@@ -463,7 +477,7 @@ function uj_dolgozo_form() {
     <h4>Új dolgozó létrehozása</h4>
     <br>
 
-    <form id='ujDolgozoForm'>
+    <form id='ujDolgozoForm' class='form-control'>
 
         <label>Név:</label>
         <input type='text' name='nev' class='form-control' required>
@@ -627,7 +641,7 @@ function felhasznalo_szerkesztes_form($conn) {
         <h4>Felhasználó módosítása</h4>
         <br>
 
-        <form id='modFelhasznaloForm'>
+        <form id='modFelhasznaloForm' class='form-control'>
             <input type='hidden' name='id' value='$id'>
 
             <label>Dolgozó neve:</label>
@@ -804,6 +818,7 @@ function uj_felhasznalo_form($conn) {
     // dolgozók lekérése adatbázisból
     $sql = "SELECT dolgozo_nev, dolgozo_id
             FROM dolgozok 
+            WHERE kilepett IS NULL
             ORDER BY dolgozo_nev";
     $result = $conn->query($sql);
 
@@ -1777,7 +1792,6 @@ function visszavet_form($conn) {
     }
 
     $reszletek_id = intval($_POST["reszletek_id"]);
-    echo "<p>DEBUG: kapott reszletek_id = $reszletek_id</p>";
 
     // A kiadás részleteinek lekérése
     $sql = "SELECT

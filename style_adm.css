@@ -230,31 +230,49 @@ h4 {
 /* diagramok megjelenése */
 .diagramok {
     width: clamp(800px, 25vw, 1000px);  /* reszponzív szélesség */
+    max-width: 1100px;
     flex-shrink: 0;
-    margin-right: 20px;
+    margin: 30px auto 0 auto;
     background-color: #eeeeee;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.15);
-    border: 1px solid rgba(0,0,0,0.1);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-top: 3px solid #d0d0d0; /* finom felső elválasztó vonal */
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05); /* enyhe felső árnyék */
 }
 
 
 .diagram-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: clamp(12px, 4vw, 60px);        /* távolság a két ablak között */
+    justify-content: space-between;
+    gap: 24px;        /* távolság a két ablak között */
     margin-top: 20px;
 }
 
 .diagram-card {
     flex: 0 1 350px;             /* mindkét ablak egyenlő széles */
     max-width: 400px;        
-    background: #bebebe;
+    background: #ffffff;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+.diagram-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: .5px;
+}
+
+.diagramok h2 {
+    background: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .logout_btn {
