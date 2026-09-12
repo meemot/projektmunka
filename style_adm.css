@@ -143,6 +143,27 @@ h4 {
     background-color: #bebebe; /* háttér, hogy ne legyen átlátszó */
 }
 
+.filter-button {
+    width: 100%;
+    min-width: 80px;
+    max-width: 150px;
+    box-sizing: border-box;
+
+    background-color: #fdfdfd;     /* ugyanaz, mint az input */
+    border: 0;                     /* inputoknál is 0 */
+    padding: 4px 6px;              /* ugyanaz a belső tér */
+    border-radius: 6px;            /* ugyanaz a lekerekítés */
+    color: #222;                   /* jól olvasható szöveg */
+    cursor: pointer;
+
+    text-align: left;              /* input-szerű megjelenés */
+    font-size: 14px;
+}
+
+.filter-button:hover {
+    background-color: #e9e9e9;     /* finom hover, mint egy input fókusz */
+}
+
 
 
 /* Gombok egy sorba a címmel */
