@@ -311,6 +311,12 @@ function ujFelhasznaloMegse() {
 
 function felhasznaloSzerkesztes(id) {
 
+    // Ha saját ID → ne engedjük
+    if (id == CURRENT_USER_ID) {
+        alert("Saját felhasználói fiókot nem módosíthatod.");
+        return;
+    }
+
     fetch("ajax.php", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -680,16 +686,21 @@ function ujKiadasMentes() {
 
 function ujKiadasMegse() {
 
+    const actionName = 
+        document.querySelector(".admin_box3") ? "a_kiadas" : "a_kiadas";
+
     fetch("ajax.php", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "action=a_kiadas"
+        body: "action=" + actionName
     })
     .then(r => r.text())
     .then(data => {
 
         const cimsor = document.querySelector(".cimsor");
-        const targetBox = document.querySelector(".admin_box3");
+        const targetBox = document.querySelector(".admin_box3") ||
+                          document.querySelector(".operator_box3");
+            
 
         // Ideiglenes DOM
         const tempDiv = document.createElement("div");
@@ -844,15 +855,37 @@ function VisszavetMentes(){
 
 function VisszavetMegse() {
 
+    const actionName =
+        document.querySelector(".admin_box3") ? "a_kiadas" : "a_kiadas";
+
     fetch("ajax.php", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "action=a_kiadas"
+        body: "action=" + actionName
     })
     .then(r => r.text())
-    .then(html => {
-        const box = document.querySelector(".admin_box3");
-        box.innerHTML = html;
+    .then(data => {
+
+        const cimsor = document.querySelector(".cimsor");
+        const targetBox = document.querySelector(".admin_box3") ||
+                          document.querySelector(".operator_box3")
+
+        // Ideiglenes DOM
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = data;
+
+        // Fejléc kivétele
+        const moduleActions = tempDiv.querySelector(".module_actions");
+        if (moduleActions) moduleActions.remove();
+
+        // Címsor frissítése
+        if (cimsor) {
+            cimsor.innerHTML = "";
+            if (moduleActions) cimsor.appendChild(moduleActions);
+        }
+
+        // Tartalom beírása
+        targetBox.innerHTML = tempDiv.innerHTML;
     });
 }
 

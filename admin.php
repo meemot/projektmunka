@@ -20,6 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="style_adm.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>const CURRENT_USER_ID = <?php echo intval($_SESSION["user_id"]); ?>;</script>
     <title>Admin oldal</title>
 </head>
 

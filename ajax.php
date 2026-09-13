@@ -626,8 +626,16 @@ function a_felhasznalok_modul($conn) {
 
 function felhasznalo_szerkesztes_form($conn) {
 
-    $id = $_POST["id"];
+    $id = intval($_POST["id"]);
+    $loggedId = intval($_SESSION["user_id"]);
 
+    // Saját magát nem módosíthatja
+    if ($id === $loggedId) {
+        echo "<div class='alert alert-danger'>Saját felhasználói fiókot nem módosíthatsz!</div>";
+        return;
+    }
+
+    $id = $_POST["id"];
     $sql = "SELECT u.usernev, u.jogkor, d.dolgozo_nev, u.torolve
             FROM users u
             JOIN dolgozok d ON u.dolgozo_id = d.dolgozo_id
@@ -1794,6 +1802,7 @@ function visszavet_form($conn) {
     $reszletek_id = intval($_POST["reszletek_id"]);
 
     // A kiadás részleteinek lekérése
+    
     $sql = "SELECT
                 r.reszletek_id,
                 r.kiadas_allapot,
